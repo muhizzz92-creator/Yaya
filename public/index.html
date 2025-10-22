@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Yaya English</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="modal-open">
+
+    <div id="sky-container" class="parallax-background">
+        <div class="stars-deep"></div>
+    </div>
+    
+    <div id="footer-clouds" style="opacity: 0.5;">
+        <img src="/img/fog_1.png" class="cloud-img layer1" alt="Cloud Layer 1">
+        <img src="/img/fog_2.png" class="cloud-img layer2" alt="Cloud Layer 2">
+        <img src="/img/fog_3.png" class="cloud-img layer3" alt="Cloud Layer 3">
+    </div>
+
+    <div id="hero-viewport">
+        <img src="/img/logo.png" alt="Yaya English Logo" class="hero-logo">
+        <h1 class="english-text">Yaya English</h1>
+        <div class="hero-buttons">
+            <a href="/dashboard.html" class="hero-btn primary">Login</a>
+            <button class="hero-btn" id="contact-btn">Contact</button>
+        </div>
+        <button id="open-chat-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20,2H4C2.9,2,2,2.9,2,4v18l4-4h14c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2z M13,17h-2v-2h2V17z M13,13h-2V7h2V13z"/></svg>
+        </button>
+    </div>
+
+    <div id="scroll-spacer" style="height: 100vh;"></div>
+
+    <footer style="position: fixed; bottom: 0; width: 100%; z-index: 20;">
+        <div class="copyright">&copy; 2025 Yaya English. All rights reserved.</div>
+        <!-- Language switcher can be added back if needed -->
+    </footer>
+
+    <div class="chatbot-container" id="chatbot-container">
+        <div class="chatbot-header">AI Assistant</div>
+        <div class="chatbot-body"></div>
+        <div class="chatbot-input"><input type="text" placeholder="Ask a question..."></div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatbotToggler = document.getElementById('open-chat-btn');
+            const chatbotContainer = document.getElementById('chatbot-container');
+
+            if(chatbotToggler && chatbotContainer) {
+                chatbotToggler.addEventListener('click', () => {
+                    chatbotContainer.classList.toggle('visible');
+                });
+            }
+            
+            const starsDeep = document.querySelector('.stars-deep');
+            if(starsDeep && starsDeep.children.length === 0) {
+                // Simplified star generation for brevity
+                // In a real scenario, you might have a more complex generation script
+            }
+        });
+    </script>
+</body>
+</html>

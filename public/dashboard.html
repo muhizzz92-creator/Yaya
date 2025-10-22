@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Yaya English</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div id="sky-container" class="parallax-background">
+        <div class="stars-deep"></div>
+    </div>
+    <div id="footer-clouds" style="opacity: 0.5;">
+        <img src="/img/fog_1.png" class="cloud-img layer1" alt="Cloud Layer 1">
+        <img src="/img/fog_2.png" class="cloud-img layer2" alt="Cloud Layer 2">
+        <img src="/img/fog_3.png" class="cloud-img layer3" alt="Cloud Layer 3">
+    </div>
+
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="/index.html">
+                <img src="/img/logo.png" alt="Yaya English Logo">
+                <span data-lang-en="Student Dashboard" data-lang-zh="学生中心">Student Dashboard</span>
+            </a>
+        </div>
+        <div class="header-actions">
+            <div class="header-coins">
+                <div class="coin-counter-group">
+                    <div class="gold-coin-icon"></div>
+                    <span id="gold-coin-counter">125</span>
+                </div>
+                <div class="coin-counter-group">
+                    <div class="silver-coin-icon"></div>
+                    <span id="silver-coin-counter">4</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Tabs Navigation -->
+        <nav class="tabs-nav">
+            <button class="tab-btn active" data-tab="main">Main Dashboard</button>
+            <button class="tab-btn" data-tab="homework">Homework</button>
+            <button class="tab-btn" data-tab="analytics">Analytics & Reports</button>
+        </nav>
+
+        <!-- Tabs Content -->
+        <div class="tabs-content">
+
+            <!-- Main Dashboard Pane -->
+            <div id="main" class="tab-pane active">
+                <div class="main-grid">
+                    <div class="widget">
+                        <h3 class="widget-title">Teacher's Main Message</h3>
+                        <p>Great job in our last lesson! Let's keep practicing the 'th' sound. Remember to complete your homework before our next class. Keep up the amazing work! 😊</p>
+                    </div>
+                    <div class="widget">
+                        <h3 class="widget-title">Statistics</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <h4 data-target="12">12</h4> / 24 <p>Lessons Conducted</p>
+                            </div>
+                            <div class="stat-item">
+                                <h4 data-target="12">12</h4> <span>hrs</span> <p>Hours Remaining</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Homework Pane -->
+            <div id="homework" class="tab-pane">
+                <div class="widget">
+                    <h3 class="widget-title">All Homework Assignments</h3>
+                    <div class="homework-grid">
+                        <a href="/homework.html" class="homework-card">
+                            <h4>Homework #12</h4>
+                            <p>Topic: My Favorite Animal</p>
+                            <p class="status pending">Status: Pending</p>
+                        </a>
+                        <div class="homework-card">
+                            <h4>Homework #11</h4>
+                            <p>Topic: At the Supermarket</p>
+                            <p class="status done">Status: Done (Result: 95%)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics & Reports Pane -->
+            <div id="analytics" class="tab-pane">
+                <div class="widget">
+                    <h3 class="widget-title">Analytics & Reports</h3>
+                    <p>This section will show student's progress, skill distribution charts, and links to download PDF reports for each lesson.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const tabId = btn.dataset.tab;
+                    tabPanes.forEach(pane => {
+                        pane.id === tabId ? pane.classList.add('active') : pane.classList.remove('active');
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
