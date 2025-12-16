@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yaya Ultimate: Transport 🚗</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --sidebar-w: 260px;
+        --primary: #5352ed;
+        --accent: #ff4757;
+        --success: #2ed573;
+        --warning: #ffa502;
+        --dark: #2f3542;
+        --light: #f1f2f6;
+    }
+
+    * { box-sizing: border-box; user-select: none; outline: none; }
+
+    body {
+        margin: 0;
+        font-family: 'Fredoka', sans-serif;
+        background: #dfe4ea;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+    }
+
+    /* --- SIDEBAR --- */
+    aside {
+        width: var(--sidebar-w);
+        background: var(--dark);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        z-index: 100;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+    }
+
+    .teacher-badge {
+        background: rgba(255,255,255,0.1);
+        padding: 10px; border-radius: 10px;
+        text-align: center; margin-bottom: 20px;
+        border: 2px solid var(--primary);
+    }
+    .teacher-badge h2 { margin: 0; font-size: 1.2rem; color: var(--primary); }
+    .teacher-badge span { font-size: 0.8rem; color: #a4b0be; }
+
+    .nav-btn {
+        background: transparent; color: #ced6e0;
+        border: none; padding: 12px 15px;
+        text-align: left; font-size: 1rem;
+        cursor: pointer; border-radius: 8px;
+        margin-bottom: 5px; transition: 0.2s;
+        display: flex; align-items: center; gap: 10px;
+        font-family: 'Fredoka', sans-serif;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+    .nav-btn.active { background: var(--primary); color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(83, 82, 237, 0.4); }
+
+    .tools-panel {
+        margin-top: auto; padding-top: 15px;
+        border-top: 1px solid #57606f;
+    }
+    .tool-row { display: flex; gap: 5px; margin-bottom: 10px; }
+    .tool-btn {
+        flex: 1; background: #57606f; border: none; color: white;
+        padding: 8px; border-radius: 5px; cursor: pointer; font-size: 0.9rem;
+    }
+    .tool-btn:hover { background: var(--warning); color: var(--dark); }
+
+    /* --- MAIN STAGE --- */
+    main {
+        flex: 1; position: relative;
+        background: radial-gradient(circle at center, #ffffff, #f1f2f6);
+        display: flex; justify-content: center; align-items: center;
+        padding: 20px;
+        perspective: 1000px;
+    }
+
+    .view {
+        display: none; width: 100%; height: 100%;
+        flex-direction: column; align-items: center;
+        animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .view.active { display: flex; }
+
+    @keyframes slideIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+    h1 { color: var(--primary); font-size: 3rem; margin: 0 0 10px 0; text-shadow: 2px 2px rgba(0,0,0,0.1); }
+    h2 { color: #747d8c; font-size: 1.5rem; margin: 0 0 30px 0; font-weight: normal; }
+
+    /* --- COMPONENT: CARDS --- */
+    .grid { display: grid; gap: 20px; width: 100%; max-width: 1000px; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .card {
+        background: white; border-radius: 20px; padding: 20px;
+        text-align: center; cursor: pointer;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        border: 4px solid white; transition: 0.3s;
+        position: relative; overflow: hidden;
+    }
+    .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+    .card.correct { border-color: var(--success); background: #daffda; }
+    .card.wrong { border-color: var(--accent); animation: shake 0.4s; }
+    
+    .card-icon { font-size: 5rem; line-height: 1; }
+    .card-text { font-size: 1.8rem; font-weight: bold; color: var(--dark); margin-top: 10px; }
+    .card-sub { font-size: 1.2rem; color: #a4b0be; }
+
+    /* --- MEMORY GAME --- */
+    .mem-card {
+        height: 180px; background: white; border-radius: 15px;
+        display: flex; justify-content: center; align-items: center;
+        font-size: 4rem; cursor: pointer;
+        transform-style: preserve-3d; transition: 0.6s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .mem-card.flipped { transform: rotateY(180deg); background: white; }
+    .mem-card .front, .mem-card .back {
+        position: absolute; width: 100%; height: 100%;
+        backface-visibility: hidden; border-radius: 15px;
+        display: flex; justify-content: center; align-items: center;
+    }
+    .mem-card .front { background: var(--primary); color: white; font-size: 3rem; transform: rotateY(0deg); }
+    .mem-card .back { background: white; transform: rotateY(180deg); border: 4px solid var(--primary); }
+    .mem-card.flipped .front { display: none; } /* Fix for some browsers */
+
+    /* --- SORTING GAME --- */
+    .sort-container { display: flex; width: 100%; height: 80%; gap: 20px; }
+    .zone {
+        flex: 1; border-radius: 20px; border: 4px dashed #ccc;
+        display: flex; flex-direction: column; align-items: center; padding: 20px;
+        transition: 0.3s; position: relative;
+    }
+    .zone-sky { background: #e0f7fa; border-color: #4dd0e1; }
+    .zone-road { background: #eceff1; border-color: #90a4ae; }
+    .zone-label { font-size: 2rem; font-weight: bold; opacity: 0.5; margin-bottom: 20px; }
+    
+    .sort-item {
+        font-size: 5rem; cursor: pointer; transition: 0.3s;
+        animation: popIn 0.5s;
+    }
+    .sort-item:hover { transform: scale(1.2); }
+
+    /* --- SENTENCE BUILDER --- */
+    .sentence-strip {
+        background: white; padding: 20px; border-radius: 15px;
+        width: 100%; min-height: 100px; margin-bottom: 30px;
+        display: flex; gap: 10px; align-items: center; justify-content: center;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+    }
+    .word-bank { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .tile {
+        padding: 10px 25px; background: white; border-radius: 10px;
+        font-size: 1.5rem; font-weight: bold; cursor: pointer;
+        box-shadow: 0 4px 0 #ccc; border: 2px solid #ccc;
+    }
+    .tile:active { transform: translateY(4px); box-shadow: none; }
+    .tile.placed { opacity: 0.5; pointer-events: none; }
+    
+    /* COLORS for tiles */
+    .t-red { color: #ff4757; border-color: #ff4757; }
+    .t-blue { color: #3742fa; border-color: #3742fa; }
+    .t-noun { color: var(--dark); }
+
+    /* --- WHEEL --- */
+    .wheel-wrapper { position: relative; width: 400px; height: 400px; }
+    .wheel {
+        width: 100%; height: 100%; border-radius: 50%;
+        border: 10px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        background: conic-gradient(
+            #ff4757 0deg 60deg, 
+            #3742fa 60deg 120deg, 
+            #2ed573 120deg 180deg, 
+            #ffa502 180deg 240deg, 
+            #1e90ff 240deg 300deg, 
+            #ff6b81 300deg 360deg
+        );
+        transition: transform 3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .wheel-arrow {
+        position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+        width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent;
+        border-top: 40px solid var(--dark); z-index: 2;
+    }
+    .spin-btn {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 80px; height: 80px; border-radius: 50%; border: none;
+        background: white; font-weight: bold; font-size: 1.2rem; cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 3;
+    }
+
+    /* --- GARAGE (REWARDS) --- */
+    .garage-bg {
+        width: 100%; height: 400px; background: #2f3542; border-radius: 20px;
+        position: relative; overflow: hidden; border-bottom: 10px solid #7f8c8d;
+    }
+    .car-frame {
+        position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+        width: 300px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 20px;
+        display: flex; justify-content: center; align-items: center; color: #57606f;
+    }
+    .part { position: absolute; transition: 0.5s; opacity: 0.3; filter: grayscale(100%); }
+    .part.unlocked { opacity: 1; filter: grayscale(0%); transform: scale(1.1); }
+    
+    .stars-ui {
+        position: absolute; top: 20px; right: 20px; font-size: 2rem;
+        background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 50px; color: var(--warning);
+    }
+
+    /* --- EFFECTS --- */
+    #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+    
+    @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-10px);} 75% {transform: translateX(10px);} }
+    @keyframes pop { 0% {transform: scale(0);} 80% {transform: scale(1.1);} 100% {transform: scale(1);} }
+
+    /* TIMER OVERLAY */
+    .timer-overlay {
+        position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+        background: var(--dark); color: white; padding: 10px 30px; border-radius: 30px;
+        font-size: 1.5rem; font-weight: bold; display: none; z-index: 200;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+<div class="timer-overlay" id="timerDisplay">00:00</div>
+
+<!-- SIDEBAR -->
+<aside>
+    <div class="teacher-badge">
+        <h2>Teacher Kevin</h2>
+        <span>Yaya English • Level 1</span>
+    </div>
+
+    <button class="nav-btn active" onclick="go('lobby')">🏠 Lobby</button>
+    <button class="nav-btn" onclick="go('vocab')">📚 Vocabulary</button>
+    <button class="nav-btn" onclick="go('memory')">🧠 Memory Game</button>
+    <button class="nav-btn" onclick="go('sort')">🚁 Sky vs Road</button>
+    <button class="nav-btn" onclick="go('sentence')">🏗️ Sentence Lab</button>
+    <button class="nav-btn" onclick="go('wheel')">🎡 Magic Wheel</button>
+    <button class="nav-btn" onclick="go('race')">🏁 Reaction Race</button>
+    <button class="nav-btn" style="color:var(--warning)" onclick="go('garage')">🏆 My Garage</button>
+
+    <div class="tools-panel">
+        <div style="font-size:0.8rem; color:#a4b0be; margin-bottom:5px;">Teacher Tools</div>
+        <div class="tool-row">
+            <button class="tool-btn" onclick="addStar()">+ ⭐ Star</button>
+            <button class="tool-btn" onclick="playSfx('correct')">🔊 Ding</button>
+        </div>
+        <div class="tool-row">
+            <button class="tool-btn" onclick="toggleTimer()">⏱️ Timer</button>
+            <button class="tool-btn" onclick="confettiEffect()">🎉 Party</button>
+        </div>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<main>
+
+    <!-- 1. LOBBY -->
+    <div id="lobby" class="view active">
+        <div style="font-size: 8rem; animation: pop 1s;">🦁</div>
+        <h1>Hello, Jayden!</h1>
+        <h2>How are you today?</h2>
+        <div class="grid grid-3" style="max-width: 800px;">
+            <div class="card" onclick="speak('I am happy'); confettiEffect()">
+                <div class="card-icon">😄</div><div class="card-text">Happy</div>
+            </div>
+            <div class="card" onclick="speak('I am sad')">
+                <div class="card-icon">😢</div><div class="card-text">Sad</div>
+            </div>
+            <div class="card" onclick="speak('I am angry')">
+                <div class="card-icon">😡</div><div class="card-text">Angry</div>
+            </div>
+        </div>
+        <div style="margin-top: 40px; text-align: center;">
+            <p>How is the weather?</p>
+            <div style="display:flex; gap: 20px; justify-content: center;">
+                <span style="font-size:3rem; cursor:pointer;" onclick="speak('It is Sunny')">☀️</span>
+                <span style="font-size:3rem; cursor:pointer;" onclick="speak('It is Rainy')">🌧️</span>
+                <span style="font-size:3rem; cursor:pointer;" onclick="speak('It is Cloudy')">☁️</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. VOCABULARY -->
+    <div id="vocab" class="view">
+        <h1>Learn Words</h1>
+        <h2>Listen and Repeat</h2>
+        <div class="grid grid-3" id="vocabGrid">
+            <!-- JS Injected -->
+        </div>
+    </div>
+
+    <!-- 3. MEMORY GAME -->
+    <div id="memory" class="view">
+        <h1>Memory Game</h1>
+        <h2>Find the pairs!</h2>
+        <div class="grid grid-4" id="memGrid" style="max-width: 800px;">
+            <!-- JS Injected -->
+        </div>
+        <button onclick="initMemory()" style="margin-top:20px; padding:10px 20px; border-radius:20px; border:none; background:var(--primary); color:white; cursor:pointer;">Restart</button>
+    </div>
+
+    <!-- 4. SORTING -->
+    <div id="sort" class="view">
+        <h1>Where does it go?</h1>
+        <h2>Sort: Sky (Air) vs Road (Land)</h2>
+        <div class="sort-container">
+            <div class="zone zone-sky" id="zoneSky" onclick="checkSort('sky')">
+                <div class="zone-label">☁️ SKY</div>
+            </div>
+            <div style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                <div id="sortItem" class="sort-item">🚗</div>
+            </div>
+            <div class="zone zone-road" id="zoneRoad" onclick="checkSort('road')">
+                <div class="zone-label">🛣️ ROAD</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. SENTENCE LAB -->
+    <div id="sentence" class="view">
+        <h1>Sentence Builder</h1>
+        <h2>Make: <span style="color:var(--primary)" id="targetSentence">I see a red car</span></h2>
+        
+        <div class="sentence-strip" id="sentenceStrip"></div>
+        
+        <div class="word-bank" id="sentenceBank">
+            <!-- JS Injected -->
+        </div>
+
+        <div style="margin-top:30px;">
+            <button onclick="resetSentence()" style="padding:10px 30px; background:#a4b0be; border:none; border-radius:10px; color:white; cursor:pointer; margin-right:10px;">Clear</button>
+            <button onclick="checkSentence()" style="padding:10px 30px; background:var(--success); border:none; border-radius:10px; color:white; cursor:pointer; font-weight:bold;">Check ✔</button>
+        </div>
+    </div>
+
+    <!-- 6. MAGIC WHEEL -->
+    <div id="wheel" class="view">
+        <h1>Magic Wheel</h1>
+        <h2>Spin and say: "I want a..."</h2>
+        <div class="wheel-wrapper">
+            <div class="wheel-arrow"></div>
+            <div class="wheel" id="theWheel"></div>
+            <button class="spin-btn" onclick="spinWheel()">SPIN</button>
+        </div>
+        <div id="wheelResult" style="margin-top:20px; font-size:2rem; font-weight:bold; height:50px;"></div>
+    </div>
+
+    <!-- 7. REACTION RACE -->
+    <div id="race" class="view">
+        <h1>Stop the Car!</h1>
+        <h2>Click the car when you see it!</h2>
+        <div style="width:100%; height:400px; background:#2f3542; position:relative; border-radius:20px; overflow:hidden;" id="raceTrack">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white;" id="raceMsg">Press Start</div>
+        </div>
+        <button onclick="startRace()" style="margin-top:20px; padding:15px 40px; background:var(--accent); color:white; border:none; border-radius:30px; font-size:1.5rem; font-weight:bold; cursor:pointer;">START GAME</button>
+    </div>
+
+    <!-- 8. GARAGE -->
+    <div id="garage" class="view">
+        <h1>My Super Garage</h1>
+        <h2>Collect Stars to build the car!</h2>
+        <div class="garage-bg">
+            <div class="stars-ui">⭐ <span id="starCount">0</span></div>
+            
+            <div class="car-frame">
+                <!-- Parts -->
+                <div class="part" id="p-body" style="font-size:10rem; z-index:1;">🏎️</div>
+                <div class="part" id="p-wheel1" style="font-size:4rem; bottom:-10px; left:20px; z-index:2;">⚫</div>
+                <div class="part" id="p-wheel2" style="font-size:4rem; bottom:-10px; right:20px; z-index:2;">⚫</div>
+                <div class="part" id="p-driver" style="font-size:4rem; top:-20px; left:100px; z-index:0;">😎</div>
+            </div>
+        </div>
+        <div style="margin-top:20px; display:flex; gap:10px;">
+            <button onclick="buyPart('p-body', 1)" style="padding:10px;">Buy Body (1 ⭐)</button>
+            <button onclick="buyPart('p-wheel1', 2)" style="padding:10px;">Buy Wheel 1 (2 ⭐)</button>
+            <button onclick="buyPart('p-wheel2', 3)" style="padding:10px;">Buy Wheel 2 (3 ⭐)</button>
+            <button onclick="buyPart('p-driver', 5)" style="padding:10px;">Buy Driver (5 ⭐)</button>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    /* --- DATA --- */
+    const vocab = [
+        { en: "Car", cn: "汽车", emo: "🚗", type: "road" },
+        { en: "Bus", cn: "公交车", emo: "🚌", type: "road" },
+        { en: "Plane", cn: "飞机", emo: "✈️", type: "sky" },
+        { en: "Train", cn: "火车", emo: "🚂", type: "road" },
+        { en: "Boat", cn: "船", emo: "🚤", type: "water" },
+        { en: "Bike", cn: "自行车", emo: "🚲", type: "road" },
+        { en: "Helicopter", cn: "直升机", emo: "🚁", type: "sky" },
+        { en: "Truck", cn: "卡车", emo: "🚚", type: "road" }
+    ];
+
+    let stars = 0;
+    let currentSentence = [];
+    let sortIdx = 0;
+    let timerInterval;
+
+    /* --- INIT --- */
+    window.onload = () => {
+        renderVocab();
+        initMemory();
+    }
+
+    function go(viewId) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        if(viewId === 'sort') initSort();
+        if(viewId === 'sentence') initSentence();
+    }
+
+    function speak(text) {
+        window.speechSynthesis.cancel();
+        let u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US'; u.rate = 0.8;
+        window.speechSynthesis.speak(u);
+    }
+
+    function addStar() {
+        stars++;
+        document.getElementById('starCount').innerText = stars;
+        playSfx('ding');
+    }
+
+    function playSfx(type) {
+        // Simulated sound logic or TTS trigger
+        if(type === 'correct') speak("Correct!");
+        if(type === 'ding') speak("Ding!");
+        if(type === 'wrong') speak("Try again");
+    }
+
+    /* --- VOCABULARY --- */
+    function renderVocab() {
+        const g = document.getElementById('vocabGrid');
+        g.innerHTML = vocab.map(w => `
+            <div class="card" onclick="speak('${w.en}')">
+                <div class="card-icon">${w.emo}</div>
+                <div class="card-text">${w.en}</div>
+                <div class="card-sub">${w.cn}</div>
+            </div>
+        `).join('');
+    }
+
+    /* --- MEMORY GAME --- */
+    function initMemory() {
+        const grid = document.getElementById('memGrid');
+        const items = vocab.slice(0,4); // take 4 items
+        let deck = [...items, ...items].sort(() => 0.5 - Math.random());
+        
+        grid.innerHTML = deck.map((w, i) => `
+            <div class="mem-card" id="mc-${i}" onclick="flipCard(${i}, '${w.en}')">
+                <div class="front">❓</div>
+                <div class="back">${w.emo}</div>
+            </div>
+        `).join('');
+    }
+
+    let hasFlipped = false;
+    let lockBoard = false;
+    let firstCard, secondCard;
+
+    function flipCard(id, word) {
+        if (lockBoard) return;
+        const card = document.getElementById(`mc-${id}`);
+        if (card.classList.contains('flipped')) return;
+
+        card.classList.add('flipped');
+        speak(word);
+
+        if (!hasFlipped) {
+            hasFlipped = true;
+            firstCard = { el: card, val: word };
+            return;
+        }
+
+        secondCard = { el: card, val: word };
+        checkForMatch();
+    }
+
+    function checkForMatch() {
+        if (firstCard.val === secondCard.val) {
+            disableCards();
+        } else {
+            unflipCards();
+        }
+    }
+
+    function disableCards() {
+        addStar();
+        resetBoard();
+    }
+
+    function unflipCards() {
+        lockBoard = true;
+        setTimeout(() => {
+            firstCard.el.classList.remove('flipped');
+            secondCard.el.classList.remove('flipped');
+            resetBoard();
+        }, 1000);
+    }
+
+    function resetBoard() {
+        [hasFlipped, lockBoard] = [false, false];
+        [firstCard, secondCard] = [null, null];
+    }
+
+    /* --- SORTING GAME --- */
+    function initSort() {
+        sortIdx = 0;
+        loadSortItem();
+    }
+
+    function loadSortItem() {
+        const item = vocab[sortIdx % vocab.length];
+        const el = document.getElementById('sortItem');
+        el.innerText = item.emo;
+        el.dataset.type = item.type; // sky or road
+        speak(item.en);
+    }
+
+    function checkSort(zone) {
+        const el = document.getElementById('sortItem');
+        const type = el.dataset.type;
+        
+        // Simple logic: Sky accepts 'sky', Road accepts 'road' or 'water' (for simplicity in this lesson context)
+        const correct = (zone === 'sky' && type === 'sky') || (zone === 'road' && (type === 'road' || type === 'water'));
+
+        if(correct) {
+            playSfx('correct');
+            addStar();
+            sortIdx++;
+            loadSortItem();
+        } else {
+            playSfx('wrong');
+        }
+    }
+
+    /* --- SENTENCE BUILDER --- */
+    function initSentence() {
+        const words = ["I", "see", "a", "red", "blue", "green", "car", "bus", "plane"];
+        const bank = document.getElementById('sentenceBank');
+        bank.innerHTML = words.map(w => {
+            let cls = "";
+            if(["red","blue","green"].includes(w)) cls = "t-" + w;
+            return `<div class="tile ${cls}" onclick="addWord('${w}')">${w}</div>`;
+        }).join('');
+        resetSentence();
+    }
+
+    function addWord(w) {
+        currentSentence.push(w);
+        renderSentence();
+        speak(w);
+    }
+
+    function renderSentence() {
+        const s = document.getElementById('sentenceStrip');
+        s.innerHTML = currentSentence.map((w, i) => 
+            `<div class="tile" onclick="removeWord(${i})">${w}</div>`
+        ).join('');
+    }
+
+    function removeWord(i) {
+        currentSentence.splice(i, 1);
+        renderSentence();
+    }
+
+    function resetSentence() {
+        currentSentence = [];
+        renderSentence();
+    }
+
+    function checkSentence() {
+        const text = currentSentence.join(" ");
+        speak(text);
+        if(text === "I see a red car") { // Simplified check logic
+            confettiEffect();
+            addStar();
+        }
+    }
+
+    /* --- WHEEL --- */
+    let wheelDeg = 0;
+    function spinWheel() {
+        const wheel = document.getElementById('theWheel');
+        const extra = Math.floor(Math.random() * 360) + 720;
+        wheelDeg += extra;
+        wheel.style.transform = `rotate(${wheelDeg}deg)`;
+        
+        setTimeout(() => {
+            const items = ["Car", "Bus", "Plane", "Train", "Bike", "Boat"];
+            const res = items[Math.floor(Math.random()*items.length)];
+            document.getElementById('wheelResult').innerText = "I want a " + res + "!";
+            speak("I want a " + res);
+        }, 3000);
+    }
+
+    /* --- REACTION RACE --- */
+    function startRace() {
+        const track = document.getElementById('raceTrack');
+        document.getElementById('raceMsg').style.display = 'none';
+        
+        let count = 0;
+        let interval = setInterval(() => {
+            if(count > 10) { clearInterval(interval); return; }
+            
+            const car = document.createElement('div');
+            car.innerText = "🚗";
+            car.style.fontSize = "4rem";
+            car.style.position = "absolute";
+            car.style.left = "-100px";
+            car.style.top = Math.random() * 300 + "px";
+            car.style.transition = "left 2s linear";
+            car.style.cursor = "pointer";
+            
+            car.onmousedown = () => {
+                car.innerText = "💥";
+                addStar();
+                setTimeout(() => car.remove(), 500);
+            };
+
+            track.appendChild(car);
+            setTimeout(() => car.style.left = "120%", 100);
+            setTimeout(() => car.remove(), 2100);
+            
+            count++;
+        }, 800);
+    }
+
+    /* --- GARAGE --- */
+    function buyPart(id, cost) {
+        if(stars >= cost) {
+            document.getElementById(id).classList.add('unlocked');
+            stars -= cost;
+            document.getElementById('starCount').innerText = stars;
+            playSfx('ding');
+        } else {
+            speak("Need more stars");
+        }
+    }
+
+    /* --- TEACHER TOOLS --- */
+    function toggleTimer() {
+        const el = document.getElementById('timerDisplay');
+        if(el.style.display === 'block') {
+            el.style.display = 'none';
+            clearInterval(timerInterval);
+        } else {
+            el.style.display = 'block';
+            let sec = 0;
+            timerInterval = setInterval(() => {
+                sec++;
+                let m = Math.floor(sec / 60).toString().padStart(2,'0');
+                let s = (sec % 60).toString().padStart(2,'0');
+                el.innerText = `${m}:${s}`;
+            }, 1000);
+        }
+    }
+
+    /* --- CONFETTI ENGINE (Simplified) --- */
+    function confettiEffect() {
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const pieces = [];
+        for(let i=0; i<100; i++) {
+            pieces.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                color: `hsl(${Math.random()*360}, 100%, 50%)`,
+                size: Math.random() * 10 + 5,
+                speed: Math.random() * 5 + 2
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            pieces.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+                p.y += p.speed;
+                if(p.y > canvas.height) p.y = -20;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+        setTimeout(() => ctx.clearRect(0,0,canvas.width,canvas.height), 3000);
+    }
+
+</script>
+</body>
+</html>
