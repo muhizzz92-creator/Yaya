@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Jayden's Adventure!</title>
+    <style>
+        /* --- 1. Beautiful Visuals --- */
+        body {
+            font-family: 'Comic Sans MS', 'Verdana', sans-serif;
+            background: linear-gradient(180deg, #A1C4FD 0%, #C2E9FB 100%);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden; /* Prevent scrolling */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+        }
+
+        /* Progress Bar */
+        #progress-container {
+            position: absolute;
+            top: 20px;
+            width: 80%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid white;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #FF9800;
+            transition: width 0.5s;
+        }
+
+        /* Game Card Container */
+        .game-screen {
+            display: none; /* Hidden by default */
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px 20px;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 5px solid #fff;
+            text-align: center;
+            animation: popIn 0.5s ease;
+        }
+        
+        /* Show active screen */
+        .game-screen.active {
+            display: block;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        h1 { color: #FF5722; font-size: 1.8rem; margin: 0 0 10px 0; }
+        p { color: #555; font-size: 1.2rem; margin: 0 0 20px 0; }
+
+        /* Buttons */
+        .big-btn {
+            font-size: 4rem;
+            background: #f0f8ff;
+            border: 3px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 10px;
+            padding: 10px;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 5px #ccc;
+        }
+        .big-btn:active {
+            transform: scale(0.95) translateY(5px);
+            box-shadow: 0 0 #ccc;
+            background: #e0f0ff;
+        }
+
+        .action-btn {
+            background: #4CAF50;
+            color: white;
+            font-size: 1.5rem;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px #2E7D32;
+        }
+        .action-btn:active { transform: translateY(5px); box-shadow: 0 0; }
+
+        /* Animations */
+        .shake { animation: shake 0.5s; }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } 100% { transform: translateX(0); } }
+
+        .hidden { visibility: hidden; }
+        
+        /* Confetti for the end */
+        .confetti {
+            position: fixed;
+            top: -10px;
+            z-index: 999; 
+            font-size: 20px;
+            animation: fall linear forwards;
+        }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <!-- === START SCREEN === -->
+    <div id="level-0" class="game-screen active">
+        <h1>🐼 Jayden's Adventure!</h1>
+        <p>Are you ready?</p>
+        <button class="action-btn" onclick="startAdventure()">START ▶️</button>
+    </div>
+
+    <!-- === GAME 1: VOCAB === -->
+    <div id="level-1" class="game-screen">
+        <h1>Level 1</h1>
+        <p>Say hello to Panda!</p>
+        <button class="big-btn" onclick="checkVoice('Panda. Hello Panda.')">🐼</button>
+    </div>
+
+    <!-- === GAME 2: VOCAB === -->
+    <div id="level-2" class="game-screen">
+        <h1>Level 2</h1>
+        <p>Say hello to Bear!</p>
+        <button class="big-btn" onclick="checkVoice('Bear. I see a bear.')">🐻</button>
+    </div>
+
+    <!-- === GAME 3: TIGER FIGHT (INTERACTIVE) === -->
+    <div id="level-3" class="game-screen">
+        <h1>Level 3</h1>
+        <p>Oh no! A Scary Tiger!</p>
+        <div id="tiger-img" style="font-size: 5rem; display:block;">🐯</div>
+        <br>
+        <button class="action-btn" style="background:#f44336;" onclick="fightTiger()">Say "GO AWAY!" 🗣️</button>
+    </div>
+
+    <!-- === GAME 4: COUNTING === -->
+    <div id="level-4" class="game-screen">
+        <h1>Level 4</h1>
+        <p>How many Bears?</p>
+        <div style="font-size: 3rem;">🐻 🐻 🐻</div>
+        <br>
+        <button class="big-btn" style="font-size:2rem;" onclick="wrong()">1</button>
+        <button class="big-btn" style="font-size:2rem;" onclick="wrong()">2</button>
+        <button class="big-btn" style="font-size:2rem;" onclick="correct('Three! Three bears!')">3</button>
+    </div>
+
+    <!-- === GAME 5: VOCAB RHINO === -->
+    <div id="level-5" class="game-screen">
+        <h1>Level 5</h1>
+        <p>Who is strong?</p>
+        <button class="big-btn" onclick="correct('Rhino! Strong Rhino!')">🦏</button>
+    </div>
+
+    <!-- === GAME 6: MEMORY MATCH === -->
+    <div id="level-6" class="game-screen">
+        <h1>Level 6</h1>
+        <p>Find the OTHER Tiger!</p>
+        <div style="font-size: 3rem; margin-bottom:10px;">🐯</div>
+        <button class="big-btn" onclick="wrong()">🐻</button>
+        <button class="big-btn" onclick="correct('Yes! Match!')">🐯</button>
+        <button class="big-btn" onclick="wrong()">🐼</button>
+    </div>
+
+    <!-- === GAME 7: FEEDING === -->
+    <div id="level-7" class="game-screen">
+        <h1>Level 7</h1>
+        <p>Panda is hungry!</p>
+        <div id="hungry-panda" style="font-size: 4rem;">🐼</div>
+        <button class="big-btn" id="food-btn" onclick="feedPanda()">🎋 Give Bamboo</button>
+    </div>
+
+    <!-- === GAME 8: LISTENING === -->
+    <div id="level-8" class="game-screen">
+        <h1>Level 8</h1>
+        <p>Listen carefully...</p>
+        <button class="action-btn" style="background:#2196F3;" onclick="speak('Touch the Bear')">👂 Listen</button>
+        <br><br>
+        <button class="big-btn" onclick="wrong()">🐼</button>
+        <button class="big-btn" onclick="correct('Good job! Bear!')">🐻</button>
+    </div>
+
+    <!-- === GAME 9: COLORS (SILLY) === -->
+    <div id="level-9" class="game-screen">
+        <h1>Level 9</h1>
+        <p>Find the <b>RED</b> Car!</p>
+        <button class="big-btn" onclick="wrong()">🚙</button>
+        <button class="big-btn" onclick="correct('Red Car! Beep Beep!')">🚗</button>
+    </div>
+
+    <!-- === GAME 10: SIMON SAYS === -->
+    <div id="level-10" class="game-screen">
+        <h1>Level 10</h1>
+        <p>Simon Says...</p>
+        <button class="action-btn" style="background:#9C27B0;" onclick="speak('Touch your nose!')">👂 Listen</button>
+        <p>Did you do it?</p>
+        <button class="big-btn" style="font-size:2rem;" onclick="correct('Good job!')">✅ YES</button>
+    </div>
+
+    <!-- === GAME 11: FINDING === -->
+    <div id="level-11" class="game-screen">
+        <h1>Level 11</h1>
+        <p>Where is the Panda?</p>
+        <button class="big-btn" onclick="wrong()">🐯</button>
+        <button class="big-btn" onclick="correct('I see a Panda!')">🐼</button>
+        <button class="big-btn" onclick="wrong()">🦏</button>
+    </div>
+
+    <!-- === GAME 12: PHRASES === -->
+    <div id="level-12" class="game-screen">
+        <h1>Level 12</h1>
+        <p>Finish the sentence:</p>
+        <h3>"I want to..."</h3>
+        <button class="big-btn" style="font-size:2rem" onclick="wrong()">Sleep 😴</button>
+        <button class="big-btn" style="font-size:2rem" onclick="correct('I want to See! Good!')">See 👀</button>
+    </div>
+
+    <!-- === GAME 13: VICTORY === -->
+    <div id="level-13" class="game-screen">
+        <h1 style="color:gold; font-size:3rem;">YOU WIN! 🏆</h1>
+        <p>Hey Wonderful! You are #1!</p>
+        <div style="font-size: 5rem;" onclick="finalCelebrate()">🎁</div>
+        <p>Tap the gift!</p>
+    </div>
+
+    <script>
+        let currentLevel = 0;
+        const totalLevels = 13;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function updateProgress() {
+            let pct = (currentLevel / totalLevels) * 100;
+            document.getElementById('progress-bar').style.width = pct + "%";
+        }
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'win') {
+                osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } else if (type === 'pop') {
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function speak(text, callback) {
+            window.speechSynthesis.cancel();
+            let msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'en-US';
+            msg.rate = 1.0;
+            msg.pitch = 1.1;
+            msg.onend = callback;
+            window.speechSynthesis.speak(msg);
+        }
+
+        // --- Core Navigation ---
+        function nextLevel() {
+            // Hide current
+            document.getElementById(`level-${currentLevel}`).classList.remove('active');
+            
+            // Increment
+            currentLevel++;
+            updateProgress();
+
+            if (currentLevel <= totalLevels) {
+                // Show next
+                document.getElementById(`level-${currentLevel}`).classList.add('active');
+                playSound('pop');
+            }
+        }
+
+        function startAdventure() {
+            // Unlock Audio Engine
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            playSound('win');
+            nextLevel();
+        }
+
+        // --- Logic Helpers ---
+        function checkVoice(text) {
+            speak(text, () => {
+                setTimeout(nextLevel, 500);
+            });
+        }
+
+        function correct(text) {
+            playSound('win');
+            document.getElementById(`level-${currentLevel}`).style.background = "#e8f5e9"; // flash green
+            speak(text, () => {
+                setTimeout(nextLevel, 500);
+            });
+        }
+
+        function wrong() {
+            playSound('wrong');
+            const card = document.getElementById(`level-${currentLevel}`);
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 500);
+            speak("Try again!");
+        }
+
+        // --- Specific Games ---
+        function fightTiger() {
+            let tiger = document.getElementById('tiger-img');
+            speak("Go Away Tiger!", () => {
+                tiger.style.transition = "all 1s";
+                tiger.style.transform = "scale(0.1) rotate(360deg)";
+                tiger.style.opacity = "0";
+                setTimeout(() => {
+                    playSound('win');
+                    nextLevel();
+                }, 1000);
+            });
+        }
+
+        function feedPanda() {
+            let panda = document.getElementById('hungry-panda');
+            let btn = document.getElementById('food-btn');
+            
+            btn.style.display = 'none'; // hide button
+            playSound('pop');
+            panda.innerHTML = "😋"; // Yummy face
+            speak("Yummy! Thank you.", () => {
+                setTimeout(nextLevel, 1000);
+            });
+        }
+
+        function finalCelebrate() {
+            playSound('win');
+            speak("You are the champion!");
+            
+            // Confetti effect
+            for(let i=0; i<50; i++) {
+                let div = document.createElement('div');
+                div.innerHTML = ['🌟', '🎉', '🎁', '🎈'][Math.floor(Math.random()*4)];
+                div.className = 'confetti';
+                div.style.left = Math.random() * 100 + 'vw';
+                div.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                document.body.appendChild(div);
+            }
+        }
+    </script>
+</body>
+</html>
