@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Super Silly Phonics Adventure! 😂</title>
+    <style>
+        body {
+            font-family: 'Fredoka One', cursive, sans-serif;
+            background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+            margin: 0;
+            padding: 10px;
+            color: #333;
+            overflow-x: hidden;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #0277bd;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .btn {
+            background: #ff8a65;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            transition: all 0.4s ease;
+            display: inline-block;
+        }
+        .btn:hover, .btn:active {
+            transform: translateY(-3px) scale(1.05);
+            background: #ff7043;
+        }
+        .nav {
+            text-align: center;
+            margin: 30px 0;
+            position: sticky;
+            top: 5px;
+            z-index: 100;
+            background: rgba(255,255,255,0.9);
+            padding: 12px;
+            border-radius: 50px;
+            flex-wrap: wrap;
+            display: flex;
+            justify-content: center;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background: #fff176;
+            border-radius: 18px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.6s ease;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .digraph {
+            font-size: 56px;
+            font-weight: bold;
+            color: #d500f9;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: wobble 2s infinite ease-in-out;
+        }
+        .word {
+            font-size: 34px;
+            color: #33691e;
+        }
+        .fun-text {
+            font-size: 24px;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        .emoji-big {
+            font-size: 90px;
+            display: block;
+            margin: 15px auto;
+            animation: bounceSlow 3s infinite ease-in-out;
+        }
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        @keyframes bounceSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+        .floating {
+            animation: float 4s infinite ease-in-out;
+        }
+        .game-area {
+            min-height: 400px;
+            text-align: center;
+        }
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .silly-btn {
+            background: #ab47bc;
+            font-size: 26px;
+            padding: 18px 36px;
+        }
+        .hidden {
+            display: none;
+        }
+        .match-card {
+            width: 130px;
+            height: 180px;
+            display: inline-block;
+            margin: 12px;
+            background: #80deea;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.6s ease;
+            perspective: 1000px;
+            touch-action: manipulation;
+        }
+        .match-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+        }
+        .match-front, .match-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+        }
+        .match-front {
+            background: #ff4081;
+        }
+        .match-back {
+            background: #4caf50;
+            transform: rotateY(180deg);
+        }
+        .flipped .match-inner {
+            transform: rotateY(180deg);
+        }
+        .matched {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        #memory-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            max-width: 100%;
+            margin: 30px auto;
+        }
+        .bucket {
+            min-height: 180px;
+            border: 4px dashed #999;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 300px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+        .words-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .challenge-word {
+            font-size: 48px;
+            padding: 20px;
+            background: #ffeb3b;
+            border-radius: 20px;
+            margin: 20px;
+            display: inline-block;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        .option-btn {
+            background: #4caf50;
+            font-size: 24px;
+            padding: 15px 30px;
+            margin: 15px;
+        }
+        @media (max-width: 600px) {
+            .digraph { font-size: 48px; }
+            .word { font-size: 28px; }
+            .emoji-big { font-size: 70px; }
+            .fun-text { font-size: 20px; }
+            .btn { font-size: 16px; padding: 12px 20px; }
+            .silly-btn { font-size: 22px; padding: 15px 30px; }
+            .match-card { width: 110px; height: 160px; margin: 8px; }
+            .match-front, .match-back { font-size: 30px; }
+            .challenge-word { font-size: 36px; }
+            .option-btn { font-size: 20px; padding: 12px 24px; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+    <div class="container">
+        <h1>😂 Super Silly Phonics Adventure! 🤪</h1>
+        <p style="text-align:center; font-size:22px;">Get ready for the funniest phonics lesson ever!</p>
+
+        <div class="nav">
+            <button class="btn" onclick="showSection('intro')">🚀 Start</button>
+            <button class="btn" onclick="showSection('rules')">📜 Rules</button>
+            <button class="btn" onclick="showSection('teams')">👯 Teams</button>
+            <button class="btn" onclick="showSection('games')">🎪 Games</button>
+            <button class="btn" onclick="showSection('challenge')">🏆 Final Challenge</button>
+        </div>
+
+        <!-- Intro -->
+        <div id="intro" class="section visible">
+            <h2>Welcome, Brave Explorer! 🧭</h2>
+            <div class="emoji-big floating">🤡</div>
+            <p class="fun-text">
+                Today we're meeting the silliest letter teams!<br>
+                Some look different but sound the same... sneaky! 😏<br>
+                Others look the same but sound different... total prank! 🤭<br><br>
+                Let's laugh and learn together! 🦸
+            </p>
+            <div style="text-align:center;">
+                <button class="btn silly-btn" onclick="showSection('rules')">Go Go Go! 🎉</button>
+            </div>
+        </div>
+
+        <!-- Rules -->
+        <div id="rules" class="section">
+            <h2>Secret Rules of Vowel Teams 😈</h2>
+            <div class="emoji-big floating">🕵️</div>
+            <p class="fun-text">
+                English loves tricks!<br>
+                "ai" and "ay" sound identical — twins! 👯<br>
+                "ar" and "or" sound totally different — rivals! 😤<br>
+                "oo" sometimes short, sometimes long — mood swings! 😵
+            </p>
+        </div>
+
+        <!-- Vowel Teams Show -->
+        <div id="teams" class="section">
+            <h2>Meet the Vowel Teams! 🎭</h2>
+
+            <h3>Sneaky Same Sound Teams</h3>
+            <div class="card-grid">
+                <div class="card"><div class="digraph">ai</div><div class="word">rain</div><div class="emoji-big">🌧️</div></div>
+                <div class="card"><div class="digraph">ay</div><div class="word">play</div><div class="emoji-big">🎈</div></div>
+                <div class="card"><div class="digraph">ow</div><div class="word">cow</div><div class="emoji-big">🐮</div></div>
+                <div class="card"><div class="digraph">ou</div><div class="word">house</div><div class="emoji-big">🏠</div></div>
+                <div class="card"><div class="digraph">oi</div><div class="word">coin</div><div class="emoji-big">🪙</div></div>
+                <div class="card"><div class="digraph">oy</div><div class="word">toy</div><div class="emoji-big">🧸</div></div>
+                <div class="card"><div class="digraph">oa</div><div class="word">boat</div><div class="emoji-big">🚤</div></div>
+                <div class="card"><div class="digraph">ow</div><div class="word">yellow</div><div class="emoji-big">🌻</div></div>
+            </div>
+
+            <h3>Different Sound Teams</h3>
+            <div class="card-grid">
+                <div class="card"><div class="digraph">ar</div><div class="word">car</div><div class="emoji-big">🚗</div></div>
+                <div class="card"><div class="digraph">or</div><div class="word">horse</div><div class="emoji-big">🐴</div></div>
+                <div class="card"><div class="digraph">oo</div><div class="word">book</div><div class="emoji-big">📖</div></div>
+                <div class="card"><div class="digraph">oo</div><div class="word">moon</div><div class="emoji-big">🌕</div></div>
+            </div>
+
+            <h3>Triple Same Sound!</h3>
+            <div class="card-grid">
+                <div class="card"><div class="digraph">ir</div><div class="word">bird</div><div class="emoji-big">🐦</div></div>
+                <div class="card"><div class="digraph">er</div><div class="word">her</div><div class="emoji-big">👩</div></div>
+                <div class="card"><div class="digraph">ur</div><div class="word">turtle</div><div class="emoji-big">🐢</div></div>
+            </div>
+        </div>
+
+        <!-- Games -->
+        <div id="games" class="section">
+            <h2>🎪 Crazy Games Time! 🎪</h2>
+            <button class="btn" onclick="startMemoryGame()">🃏 Memory Flip</button>
+            <button class="btn" onclick="startSortGame()">🗂️ Sort Teams</button>
+
+            <div id="memory-game" class="game-area hidden">
+                <h3>Find the matching pairs! 👯</h3>
+                <div id="memory-board"></div>
+                <p id="memory-result" style="font-size:28px; margin:30px;"></p>
+                <button class="btn" onclick="startMemoryGame()">🔄 Restart Game</button>
+            </div>
+
+            <div id="sort-game" class="game-area hidden">
+                <h3>Drag words to the correct team!</h3>
+                <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:30px;">
+                    <div style="text-align:center;">
+                        <div class="digraph" style="font-size:70px;">ai/ay</div>
+                        <div id="bucket-ai" class="bucket"></div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div class="digraph" style="font-size:70px;">ow/ou</div>
+                        <div id="bucket-ow" class="bucket"></div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div class="digraph" style="font-size:70px;">oi/oy</div>
+                        <div id="bucket-oi" class="bucket"></div>
+                    </div>
+                </div>
+                <div class="words-area" id="words-area"></div>
+                <p id="sort-result" style="font-size:26px; margin:30px;"></p>
+                <button class="btn" onclick="startSortGame()">🔄 Restart Sort Game</button>
+            </div>
+        </div>
+
+        <!-- Final Challenge -->
+        <div id="challenge" class="section">
+            <h2>🏆 Super Phonics Champion Challenge! 🏆</h2>
+            <div class="emoji-big floating">🌟</div>
+            <p class="fun-text">Choose the correct vowel team for the word!</p>
+            <div id="challenge-word" class="challenge-word"></div>
+            <div style="text-align:center; margin:30px;">
+                <button class="btn option-btn" id="opt1" onclick="checkChallenge(1)"></button>
+                <button class="btn option-btn" id="opt2" onclick="checkChallenge(2)"></button>
+                <button class="btn option-btn" id="opt3" onclick="checkChallenge(3)"></button>
+            </div>
+            <p id="challenge-feedback" class="fun-text" style="font-weight:bold; font-size:26px;"></p>
+            <p id="score" style="font-size:28px; text-align:center;">Score: 0</p>
+            <button class="btn" onclick="nextChallenge()">Next Word! 🚀</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+            const target = document.getElementById(id);
+            target.classList.add('visible');
+            target.scrollIntoView({ behavior: 'smooth' });
+            if (id === 'challenge') nextChallenge();
+        }
+
+        function launchConfetti() {
+            confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+        }
+
+        // Memory Game (unchanged)
+        const memoryData = [
+            {type: 'emoji', emoji: '🌧️', pair: 'ai/ay'}, {type: 'phonics', digraph: 'ai', word: 'rain', emoji: '🌧️'},
+            {type: 'emoji', emoji: '🎈', pair: 'ai/ay'}, {type: 'phonics', digraph: 'ay', word: 'play', emoji: '🎈'},
+            {type: 'emoji', emoji: '🐮', pair: 'ow/ou'}, {type: 'phonics', digraph: 'ow', word: 'cow', emoji: '🐮'},
+            {type: 'emoji', emoji: '🏠', pair: 'ow/ou'}, {type: 'phonics', digraph: 'ou', word: 'house', emoji: '🏠'},
+            {type: 'emoji', emoji: '🪙', pair: 'oi/oy'}, {type: 'phonics', digraph: 'oi', word: 'coin', emoji: '🪙'},
+            {type: 'emoji', emoji: '🧸', pair: 'oi/oy'}, {type: 'phonics', digraph: 'oy', word: 'toy', emoji: '🧸'}
+        ];
+        let memoryBoard = [];
+        let flippedCards = [];
+        let matches = 0;
+
+        function startMemoryGame() {
+            document.getElementById('memory-game').classList.remove('hidden');
+            document.getElementById('sort-game').classList.add('hidden');
+            memoryBoard = [...memoryData];
+            shuffle(memoryBoard);
+            const board = document.getElementById('memory-board');
+            board.innerHTML = '';
+            matches = 0;
+            document.getElementById('memory-result').textContent = '';
+
+            memoryBoard.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                let backContent = '';
+                if (item.type === 'emoji') {
+                    backContent = `<div style="font-size:90px;">${item.emoji}</div>`;
+                } else {
+                    backContent = `<div class="digraph">${item.digraph}</div><div style="font-size:32px;">${item.word}</div><div style="font-size:70px;">${item.emoji}</div>`;
+                }
+                card.innerHTML = `
+                    <div class="match-inner">
+                        <div class="match-front">🤔</div>
+                        <div class="match-back">${backContent}</div>
+                    </div>`;
+                card.onclick = () => flipMemoryCard(card, item);
+                board.appendChild(card);
+            });
+        }
+
+        function flipMemoryCard(card, item) {
+            if (card.classList.contains('flipped') || flippedCards.length === 2) return;
+            card.classList.add('flipped');
+            flippedCards.push({card, item});
+
+            if (flippedCards.length === 2) {
+                setTimeout(checkMemoryMatch, 1000);
+            }
+        }
+
+        function checkMemoryMatch() {
+            const [a, b] = flippedCards;
+            if (a.item.emoji === b.item.emoji && a.item.type !== b.item.type) {
+                a.card.classList.add('matched');
+                b.card.classList.add('matched');
+                matches += 2;
+                if (matches === memoryBoard.length) {
+                    document.getElementById('memory-result').textContent = '🎉 YOU WIN! PHONICS CHAMPION! 🎉';
+                    launchConfetti();
+                }
+            } else {
+                a.card.classList.remove('flipped');
+                b.card.classList.remove('flipped');
+            }
+            flippedCards = [];
+        }
+
+        // Sort Game (unchanged)
+        const sortWords = [
+            {word: 'rain 🌧️', team: 'ai'}, {word: 'play 🎈', team: 'ai'},
+            {word: 'train 🚂', team: 'ai'}, {word: 'day ☀️', team: 'ai'},
+            {word: 'cow 🐮', team: 'ow'}, {word: 'house 🏠', team: 'ow'},
+            {word: 'cloud ☁️', team: 'ow'}, {word: 'town 🏙️', team: 'ow'},
+            {word: 'coin 🪙', team: 'oi'}, {word: 'boy 👦', team: 'oi'},
+            {word: 'toy 🧸', team: 'oi'}, {word: 'joy 😂', team: 'oi'}
+        ];
+
+        function startSortGame() {
+            document.getElementById('sort-game').classList.remove('hidden');
+            document.getElementById('memory-game').classList.add('hidden');
+            ['bucket-ai', 'bucket-ow', 'bucket-oi'].forEach(id => document.getElementById(id).innerHTML = '');
+            const wordsArea = document.getElementById('words-area');
+            wordsArea.innerHTML = '';
+            shuffle(sortWords);
+            sortWords.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.draggable = true;
+                card.dataset.team = item.team;
+                card.innerHTML = `<div style="font-size:28px; padding:10px;">${item.word}</div>`;
+                card.addEventListener('dragstart', e => e.dataTransfer.setData('text', item.team));
+                wordsArea.appendChild(card);
+            });
+            document.getElementById('sort-result').textContent = '';
+        }
+
+        ['bucket-ai', 'bucket-ow', 'bucket-oi'].forEach(bucketId => {
+            const bucket = document.getElementById(bucketId);
+            const team = bucketId.split('-')[1];
+            bucket.addEventListener('dragover', e => e.preventDefault());
+            bucket.addEventListener('drop', e => {
+                e.preventDefault();
+                const data = e.dataTransfer.getData('text');
+                const dragged = document.querySelector(`[data-team="${data}"]:not(.in-bucket)`);
+                if (dragged && data === team) {
+                    dragged.classList.add('in-bucket');
+                    bucket.appendChild(dragged);
+                    launchConfetti();
+                }
+                checkSortComplete();
+            });
+        });
+
+        function checkSortComplete() {
+            const total = sortWords.length;
+            const correct = document.querySelectorAll('.in-bucket').length;
+            if (correct + document.querySelectorAll('.words-area .match-card').length === total) {
+                if (correct === total) {
+                    document.getElementById('sort-result').textContent = '🌟 AMAZING! Perfect score! 🌟';
+                    launchConfetti();
+                } else {
+                    document.getElementById('sort-result').textContent = `Good job! ${correct}/${total} correct! 😄`;
+                }
+            }
+        }
+
+        // New Final Challenge: Choose the correct vowel team
+        const challengeWords = [
+            {word: 'rain 🌧️', correct: 'ai', options: ['ai', 'ay', 'oi']},
+            {word: 'play 🎈', correct: 'ay', options: ['ai', 'ay', 'ow']},
+            {word: 'cow 🐮', correct: 'ow', options: ['ow', 'ou', 'oa']},
+            {word: 'house 🏠', correct: 'ou', options: ['ow', 'ou', 'oi']},
+            {word: 'coin 🪙', correct: 'oi', options: ['oi', 'oy', 'ow']},
+            {word: 'toy 🧸', correct: 'oy', options: ['oi', 'oy', 'ay']},
+            {word: 'boat 🚤', correct: 'oa', options: ['oa', 'ow', 'ou']},
+            {word: 'book 📖', correct: 'oo (short)', options: ['oo (short)', 'oo (long)', 'ou']},
+            {word: 'moon 🌕', correct: 'oo (long)', options: ['oo (short)', 'oo (long)', 'oa']},
+            {word: 'bird 🐦', correct: 'ir', options: ['ir', 'er', 'ur']}
+        ];
+        let currentChallenge = 0;
+        let score = 0;
+
+        function nextChallenge() {
+            currentChallenge = Math.floor(Math.random() * challengeWords.length);
+            const q = challengeWords[currentChallenge];
+            document.getElementById('challenge-word').textContent = q.word;
+            const opts = shuffle([...q.options]);
+            document.getElementById('opt1').textContent = opts[0];
+            document.getElementById('opt2').textContent = opts[1];
+            document.getElementById('opt3').textContent = opts[2];
+            document.getElementById('challenge-feedback').textContent = '';
+        }
+
+        function checkChallenge(choice) {
+            const q = challengeWords[currentChallenge];
+            const selected = document.getElementById('opt' + choice).textContent;
+            if (selected === q.correct) {
+                document.getElementById('challenge-feedback').textContent = '🎉 Correct! You are a phonics superstar! 🌟';
+                score++;
+                document.getElementById('score').textContent = 'Score: ' + score;
+                launchConfetti();
+            } else {
+                document.getElementById('challenge-feedback').textContent = `😂 Oops! The correct one is "${q.correct}". Try the next! 💪`;
+            }
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+</html>
