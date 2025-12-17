@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Super Happy English World ✨</title>
+    <style>
+        :root {
+            --pink: #ffb3c6;
+            --mint: #b5ead7;
+            --lemon: #ffffc9;
+            --sky: #c7ceea;
+            --peach: #ffddd2;
+            --lavender: #e0bbff;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--mint), var(--sky), var(--lemon));
+            min-height: 100vh;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            font-size: 3.5rem;
+            margin: 40px 0;
+            color: #ff6ec4;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .big-btn {
+            padding: 20px 50px;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            color: white;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(255,105,180,0.4);
+            cursor: pointer;
+            border: none;
+            margin: 20px;
+        }
+        .big-btn:hover { transform: scale(1.1); }
+        .section { display: none; padding: 40px; background: white; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); margin: 30px 0; }
+        .section.active { display: block; }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: linear-gradient(135deg, var(--pink), var(--peach));
+            padding: 30px;
+            border-radius: 30px;
+            text-align: center;
+            color: white;
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+        .card:hover { transform: translateY(-20px); }
+        .flashcards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .flashcard {
+            perspective: 1000px;
+            height: 200px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+        .flashcard-front { background: #ffd93d; color: #333; }
+        .flashcard-back { background: #6bc785; color: white; transform: rotateY(180deg); }
+        .quiz-question { font-size: 2.5rem; text-align: center; margin: 40px 0; }
+        .options button {
+            display: block;
+            width: 70%;
+            margin: 20px auto;
+            padding: 20px;
+            font-size: 1.8rem;
+            border-radius: 40px;
+            background: var(--lavender);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .correct { background: #6bc785 !important; }
+        .wrong { background: #ff6f61 !important; }
+        .balloon-area { position: relative; height: 600px; overflow: hidden; background: var(--sky); border-radius: 30px; }
+        .balloon {
+            position: absolute;
+            font-size: 4rem;
+            cursor: pointer;
+            animation: floatUp 10s linear forwards;
+        }
+        .balloon.answered {
+            pointer-events: none;
+            cursor: default;
+        }
+        @keyframes floatUp {
+            from { bottom: -100px; }
+            to { bottom: 120%; }
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        .memory-card {
+            perspective: 1000px;
+            height: 150px;
+            cursor: pointer;
+        }
+        .memory-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            border-radius: 20px;
+        }
+        .memory-card.flipped .memory-inner { transform: rotateY(180deg); }
+        .memory-card.matched .memory-inner { 
+            transform: rotateY(180deg); 
+            background: #6bc785 !important;
+        }
+        .memory-front, .memory-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .memory-front { background: #ffd93d; }
+        .memory-back { background: #6bc785; color: white; transform: rotateY(180deg); }
+        .dropzone {
+            padding: 30px;
+            border: 4px dashed #aaa;
+            margin: 20px auto;
+            border-radius: 30px;
+            font-size: 2rem;
+            text-align: center;
+            min-height: 100px;
+            width: 90%;
+            background: #f9f9f9;
+        }
+        .dropzone.correct { background: #e0ffe0; }
+        .story-slide {
+            display: none;
+            text-align: center;
+            font-size: 2.2rem;
+            padding: 50px;
+            background: var(--lemon);
+            border-radius: 30px;
+        }
+        .story-slide.active { display: block; }
+        .story-img { font-size: 10rem; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+        .score { font-size: 2rem; text-align: center; margin: 20px; }
+        .draggable-word {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 30px;
+            cursor: grab;
+            font-size: 1.6rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Super Happy English World ✨</h1>
+        <div style="text-align:center;">
+            <button class="big-btn" onclick="showSection('games')">Games</button>
+            <button class="big-btn" onclick="showSection('tasks')">Tasks</button>
+        </div>
+
+        <!-- GAMES MENU -->
+        <div id="games" class="section active">
+            <h2 style="text-align:center;">Choose a Game!</h2>
+            <div class="game-grid">
+                <div class="card" onclick="showSection('flashcards')">Irregular Verb Flashcards</div>
+                <div class="card" onclick="showSection('quiz')">Past Simple Quiz</div>
+                <div class="card" onclick="showSection('balloon')">Balloon Pop</div>
+                <div class="card" onclick="showSection('memory')">Memory Match</div>
+                <div class="card" onclick="showSection('dragdrop')">Comparative Drag & Drop</div>
+            </div>
+        </div>
+
+        <!-- TASKS MENU -->
+        <div id="tasks" class="section">
+            <h2 style="text-align:center;">Tasks</h2>
+            <div class="game-grid">
+                <div class="card" onclick="showSection('task2')">What didn't you do yesterday?</div>
+                <div class="card" onclick="showSection('task3')">Comparatives</div>
+                <div class="card" onclick="showSection('task4')">Superlatives</div>
+                <div class="card" onclick="showSection('task5')">Was/Were</div>
+                <div class="card" onclick="showSection('story')">Story</div>
+            </div>
+        </div>
+
+        <!-- Flashcards -->
+        <div id="flashcards" class="section">
+            <h2>Irregular Verb Flashcards (click to flip)</h2>
+            <div class="flashcards-grid">
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">see</div><div class="flashcard-back">saw</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">go</div><div class="flashcard-back">went</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">do</div><div class="flashcard-back">did</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">have</div><div class="flashcard-back">had</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">write</div><div class="flashcard-back">wrote</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">ride</div><div class="flashcard-back">rode</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">sleep</div><div class="flashcard-back">slept</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">send</div><div class="flashcard-back">sent</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">meet</div><div class="flashcard-back">met</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">play</div><div class="flashcard-back">played</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">visit</div><div class="flashcard-back">visited</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">live</div><div class="flashcard-back">lived</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">buy</div><div class="flashcard-back">bought</div></div></div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped')"><div class="flashcard-inner"><div class="flashcard-front">eat</div><div class="flashcard-back">ate</div></div></div>
+            </div>
+            <div style="text-align:center;"><button class="big-btn" onclick="showSection('games')">Back</button></div>
+        </div>
+
+        <!-- Past Simple Quiz -->
+        <div id="quiz" class="section">
+            <h2>Past Simple Quiz</h2>
+            <div class="score">Score: <span id="qscore">0</span>/10</div>
+            <div class="quiz-question" id="qquestion"></div>
+            <div class="options" id="qoptions"></div>
+            <div style="text-align:center; display:none;" id="qnext"><button class="big-btn" onclick="nextQuizQuestion()">Next →</button></div>
+            <div style="text-align:center;"><button class="big-btn" onclick="showSection('games')">Back</button></div>
+        </div>
+
+        <!-- Balloon Pop -->
+        <div id="balloon" class="section">
+            <h2>Balloon Pop – Past Simple</h2>
+            <div class="balloon-area" id="balloon-area"></div>
+            <div style="text-align:center; display:none;" id="bnext"><button class="big-btn" onclick="startBalloon()">New Round</button></div>
+            <div style="text-align:center;"><button class="big-btn" onclick="showSection('games')">Back</button></div>
+        </div>
+
+        <!-- Memory Match -->
+        <div id="memory" class="section">
+            <h2>Memory Match</h2>
+            <div class="memory-grid" id="memory-grid"></div>
+            <div style="text-align:center;"><button class="big-btn" onclick="startMemory()">Restart</button></div>
+            <div style="text-align:center;"><button class="big-btn" onclick="showSection('games')">Back</button></div>
+        </div>
+
+        <!-- Comparative Drag & Drop -->
+        <div id="dragdrop" class="section">
+            <h2>Comparative Drag & Drop</h2>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center;" id="drag-words"></div>
+            <div id="drop-sentences"></div>
+            <div class="score" id="drag-score">Correct: 0/6</div>
+            <div style="text-align:center;"><button class="big-btn" onclick="showSection('games')">Back</button></div>
+        </div>
+
+        <!-- Tasks -->
+        <div id="task2" class="section">
+            <h2>What didn't you do yesterday?</h2>
+            <p style="font-size:1.8rem;">Tick and write "I didn't ... yesterday."</p>
+            <div style="font-size:1.6rem;">
+                <label><input type="checkbox"> go to school<br><input type="text" placeholder="I didn't go to school yesterday." style="width:100%;padding:10px;margin:10px 0;"></label><br>
+                <label><input type="checkbox"> go to the cinema<br><input type="text" placeholder="Write here..." style="width:100%;padding:10px;margin:10px 0;"></label><br>
+                <label><input type="checkbox"> meet a friend<br><input type="text" placeholder="Write here..." style="width:100%;padding:10px;margin:10px 0;"></label><br>
+                <label><input type="checkbox"> send an e-mail<br><input type="text" placeholder="Write here..." style="width:100%;padding:10px;margin:10px 0;"></label><br>
+                <label><input type="checkbox"> see a UFO<br><input type="text" placeholder="Write here..." style="width:100%;padding:10px;margin:10px 0;"></label><br>
+                <label><input type="checkbox"> have fun<br><input type="text" placeholder="Write here..." style="width:100%;padding:10px;margin:10px 0;"></label>
+            </div>
+            <div style="text-align:center;"><button class="big-btn" onclick="showSection('tasks')">Back</button></div>
+        </div>
+
+        <div id="task3" class="section">
+            <h2>Comparatives Practice</h2>
+            <div class="quiz-question" id="comp-q"></div>
+            <div class="options" id="comp-opts"></div>
+            <div style="text-align:center; display:none;" id="comp-next"><button class="big-btn" onclick="nextComp()">Next →</button></div>
+            <div class="score">Score: <span id="comp-score">0</span>/6</div>
+            <div style="text-align:center;"><button class="big-btn" onclick="showSection('tasks')">Back</button></div>
+        </div>
+
+        <div id="task4" class="section">
+            <h2>Superlatives Practice</h2>
+            <div class="quiz-question" id="sup-q"></div>
+            <div class="options" id="sup-opts"></div>
+            <div style="text-align:center; display:none;" id="sup-next"><button class="big-btn" onclick="nextSup()">Next →</button></div>
+            <div class="score">Score: <span id="sup-score">0</span>/6</div>
+            <div style="text-align:center;"><button class="big-btn" onclick="showSection('tasks')">Back</button></div>
+        </div>
+
+        <!-- Was/Were Drag & Drop -->
+        <div id="task5" class="section">
+            <h2>Was/Were – Drag & Drop</h2>
+            <p style="font-size:1.8rem; line-height:2.2;">
+                Fay: Where (1) <span class="dropzone" data-answer="were"></span> you yesterday?<br><br>
+                Tom: I (2) <span class="dropzone" data-answer="was"></span> at home. I (3) <span class="dropzone" data-answer="wasn't"></span> at the cinema.<br><br>
+                Fay: (4) <span class="dropzone" data-answer="Were"></span> Jim and Andy with you?<br><br>
+                Tom: Jim (5) <span class="dropzone" data-answer="was"></span> but Andy (6) <span class="dropzone" data-answer="wasn't"></span>.<br><br>
+                He (7) <span class="dropzone" data-answer="was"></span> bored!
+            </p>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center;" id="was-words"></div>
+            <div class="score" id="was-score">Correct: 0/6</div>
+            <div style="text-align:center;"><button class="big-btn" onclick="showSection('tasks')">Back</button></div>
+        </div>
+
+        <!-- Story -->
+        <div id="story" class="section">
+            <h2>The Crazy Monkey's Birthday</h2>
+            <div class="story-slide active">
+                <div class="story-img">🐒🎂</div>
+                <p>Last weekend Max the monkey had a big birthday party in the jungle. He was very excited because he turned ten years old!</p>
+            </div>
+            <div class="story-slide">
+                <div class="story-img">🦁🐘🐿️🦜</div>
+                <p>He invited all his friends: Leo the lion, Ella the elephant, Sammy the squirrel, and Polly the parrot.</p>
+            </div>
+            <div class="story-slide">
+                <div class="story-img">🏃‍♂️💨</div>
+                <p>First they played races in the trees. Sammy the squirrel ran the fastest because he is small and very quick.</p>
+            </div>
+            <div class="story-slide">
+                <div class="story-img">🧗‍♂️</div>
+                <p>Then they had a climbing competition. Max climbed the highest because he lives in the trees every day.</p>
+            </div>
+            <div class="story-slide">
+                <div class="story-img">🎂🍰</div>
+                <p>Ella the elephant brought the biggest and most delicious cake. It had bananas, chocolate, and nuts.</p>
+            </div>
+            <div class="story-slide">
+                <div class="story-img">🎈🎉</div>
+                <p>They played music and danced. Polly the parrot sang the loudest songs!</p>
+            </div>
+            <div class="story-slide">
+                <div class="story-img">🍌💥</div>
+                <p>Suddenly Max slipped on a banana peel and fell right into the huge cake!</p>
+            </div>
+            <div class="story-slide">
+                <div class="story-img">😂🍰</div>
+                <p>Everyone laughed so hard. Max was covered in cream from head to toe.</p>
+            </div>
+            <div class="story-slide">
+                <div class="story-img">🛁</div>
+                <p>They all jumped into the river to clean up and continued the party.</p>
+            </div>
+            <div class="story-slide">
+                <div class="story-img">🌟🐒</div>
+                <p>It was the funniest, happiest, and most unforgettable birthday Max ever had!</p>
+            </div>
+            <div style="text-align:center;">
+                <button class="big-btn" onclick="prevStory()">← Back</button>
+                <button class="big-btn" onclick="nextStory()">Next →</button>
+                <button class="big-btn" onclick="showSection('tasks')">Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if (id === 'quiz') startQuiz();
+            if (id === 'balloon') startBalloon();
+            if (id === 'memory') startMemory();
+            if (id === 'dragdrop') startDragDrop();
+            if (id === 'task3') startComp();
+            if (id === 'task4') startSup();
+            if (id === 'task5') startWasWere();
+            if (id === 'story') { currentStory = 0; showStory(0); }
+        }
+
+        // Quiz
+        const quizData = [
+            {q: "Past of 'go'?", options: ["went", "goed", "goes"], correct: 0},
+            {q: "Past of 'see'?", options: ["saw", "seed", "seen"], correct: 0},
+            {q: "Past of 'do'?", options: ["did", "doed", "done"], correct: 0},
+            {q: "Past of 'have'?", options: ["had", "haved", "has"], correct: 0},
+            {q: "Past of 'write'?", options: ["wrote", "writed", "written"], correct: 0},
+            {q: "Past of 'ride'?", options: ["rode", "rided", "rides"], correct: 0},
+            {q: "Past of 'sleep'?", options: ["slept", "sleeped", "sleeps"], correct: 0},
+            {q: "Past of 'send'?", options: ["sent", "sended", "sends"], correct: 0},
+            {q: "Past of 'meet'?", options: ["met", "meeted", "meets"], correct: 0},
+            {q: "Past of 'play'?", options: ["played", "plaied", "plays"], correct: 0}
+        ];
+        let quizCurrent = 0, quizScore = 0;
+        function startQuiz() {
+            quizCurrent = 0; quizScore = 0;
+            document.getElementById('qscore').textContent = '0';
+            loadQuiz();
+        }
+        function loadQuiz() {
+            if (quizCurrent >= quizData.length) {
+                document.getElementById('qquestion').innerHTML = '<h2>Congratulations! You finished!</h2>';
+                document.getElementById('qoptions').innerHTML = '';
+                return;
+            }
+            const item = quizData[quizCurrent];
+            document.getElementById('qquestion').textContent = item.q;
+            const opts = document.getElementById('qoptions');
+            opts.innerHTML = '';
+            item.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.textContent = opt;
+                btn.onclick = () => {
+                    if (i === item.correct) {
+                        btn.classList.add('correct');
+                        quizScore++;
+                        document.getElementById('qscore').textContent = quizScore;
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                    document.getElementById('qnext').style.display = 'block';
+                };
+                opts.appendChild(btn);
+            });
+        }
+        function nextQuizQuestion() {
+            quizCurrent++;
+            document.getElementById('qnext').style.display = 'none';
+            loadQuiz();
+        }
+
+        // Balloon Pop – ИСПРАВЛЕНА ВЕРСИЯ
+        const balloonData = [
+            {inf: "go", past: "went", wrong: ["goed", "goes"]},
+            {inf: "see", past: "saw", wrong: ["seed", "seen"]},
+            {inf: "do", past: "did", wrong: ["doed", "done"]},
+            {inf: "have", past: "had", wrong: ["haved", "has"]},
+            {inf: "write", past: "wrote", wrong: ["writed", "written"]},
+            {inf: "ride", past: "rode", wrong: ["rided", "rid"]},
+            {inf: "sleep", past: "slept", wrong: ["sleeped", "sleeps"]},
+            {inf: "send", past: "sent", wrong: ["sended", "sends"]},
+            {inf: "meet", past: "met", wrong: ["meeted", "meets"]},
+            {inf: "buy", past: "bought", wrong: ["buyed", "buys"]}
+        ];
+        
+        function startBalloon() {
+            const area = document.getElementById('balloon-area');
+            area.innerHTML = '';
+            document.getElementById('bnext').style.display = 'none';
+
+            const v = balloonData[Math.floor(Math.random() * balloonData.length)];
+            area.innerHTML = `<h3 style="text-align:center; padding:50px 30px; color:white;">Past of "${v.inf}"?</h3>`;
+
+            const answers = [v.past, ...v.wrong];
+            answers.sort(() => 0.5 - Math.random());
+
+            let answered = false; // ФЛАГ: уже дан ответ в этом раунде
+
+            answers.forEach((a, i) => {
+                const b = document.createElement('div');
+                b.className = 'balloon';
+                b.textContent = '🎈 ' + a;
+                b.style.left = (10 + i * 25) + '%';
+                b.style.animationDelay = i * 1.5 + 's';
+
+                b.onclick = function() {
+                    // БЛОКИРУЕМ ПОВТОРНЫЕ КЛИКИ
+                    if (answered) return;
+                    
+                    answered = true;
+                    b.classList.add('answered'); // Отключаем pointer-events
+
+                    if (a === v.past) {
+                        b.textContent = '🎉 Correct!';
+                        b.style.color = 'gold';
+                    } else {
+                        b.textContent = '💥 Wrong!';
+                        b.style.color = 'red';
+                    }
+
+                    // КНОПКА ПОЯВЛЯЕТСЯ ВСЕГДА ПОСЛЕ ПЕРВОГО КЛИКА
+                    document.getElementById('bnext').style.display = 'block';
+                };
+
+                area.appendChild(b);
+            });
+        }
+
+        // Memory Match
+        const memoryPairs = [["go","went"],["see","saw"],["do","did"],["have","had"],["write","wrote"],["ride","rode"],["sleep","slept"],["buy","bought"]];
+        let flipped = [];
+        function startMemory() {
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            flipped = [];
+            let cards = [];
+            memoryPairs.forEach(p => { cards.push(p[0]); cards.push(p[1]); });
+            cards.sort(() => 0.5 - Math.random());
+            cards.forEach(val => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.innerHTML = `<div class="memory-inner"><div class="memory-front">?</div><div class="memory-back">${val}</div></div>`;
+                card.onclick = () => {
+                    if (flipped.length < 2 && !card.classList.contains('flipped') && !card.classList.contains('matched')) {
+                        card.classList.add('flipped');
+                        flipped.push({card, val});
+                        if (flipped.length === 2) {
+                            setTimeout(() => {
+                                if (flipped[0].val === flipped[1].val || 
+                                    (memoryPairs.some(p => p.includes(flipped[0].val) && p.includes(flipped[1].val)))) {
+                                    flipped.forEach(f => f.card.classList.add('matched'));
+                                } else {
+                                    flipped.forEach(f => f.card.classList.remove('flipped'));
+                                }
+                                flipped = [];
+                            }, 1000);
+                        }
+                    }
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        // Comparative Drag & Drop
+        function startDragDrop() {
+            document.getElementById('drag-score').textContent = 'Correct: 0/6';
+            const wordsContainer = document.getElementById('drag-words');
+            wordsContainer.innerHTML = '';
+            const sentencesContainer = document.getElementById('drop-sentences');
+            sentencesContainer.innerHTML = '';
+
+            const comparatives = ["lighter","heavier","more expensive","better","more difficult","hotter"];
+            comparatives.sort(() => 0.5 - Math.random());
+            comparatives.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'draggable-word card';
+                div.draggable = true;
+                div.textContent = item;
+                div.ondragstart = ev => ev.dataTransfer.setData("text", item);
+                wordsContainer.appendChild(div);
+            });
+
+            const data = [
+                {text: "The chair is _____ than the sofa.", answer: "lighter"},
+                {text: "Elephants are _____ than horses.", answer: "heavier"},
+                {text: "Helen's dress is _____ than Jill's dress.", answer: "more expensive"},
+                {text: "Mike is _____ at football than Paul.", answer: "better"},
+                {text: "Maths is _____ than History.", answer: "more difficult"},
+                {text: "It's _____ today than yesterday.", answer: "hotter"}
+            ];
+            let correct = 0;
+            data.forEach(s => {
+                const dz = document.createElement('div');
+                dz.className = 'dropzone';
+                dz.textContent = s.text;
+                dz.ondragover = ev => ev.preventDefault();
+                dz.ondrop = ev => {
+                    ev.preventDefault();
+                    const word = ev.dataTransfer.getData("text");
+                    if (word === s.answer && !dz.classList.contains('correct')) {
+                        dz.textContent = s.text.replace('_____', word);
+                        dz.classList.add('correct');
+                        correct++;
+                        document.getElementById('drag-score').textContent = 'Correct: ' + correct + '/6';
+                    }
+                };
+                sentencesContainer.appendChild(dz);
+            });
+        }
+
+        // Comparatives quiz
+        let compCurrent = 0, compScore = 0;
+        function startComp() {
+            compCurrent = 0; compScore = 0;
+            document.getElementById('comp-score').textContent = '0';
+            loadComp();
+        }
+        function loadComp() {
+            const data = [
+                {q: "The chair is _____ than the sofa.", correct: "lighter"},
+                {q: "Elephants are _____ than horses.", correct: "heavier"},
+                {q: "Helen's dress is _____ than Jill's.", correct: "more expensive"},
+                {q: "Mike is _____ at football than Paul.", correct: "better"},
+                {q: "Maths is _____ than History.", correct: "more difficult"},
+                {q: "It's _____ today than yesterday.", correct: "hotter"}
+            ];
+            if (compCurrent >= data.length) {
+                document.getElementById('comp-q').innerHTML = '<h2>Well done!</h2>';
+                document.getElementById('comp-opts').innerHTML = '';
+                return;
+            }
+            document.getElementById('comp-q').textContent = data[compCurrent].q;
+            const opts = document.getElementById('comp-opts');
+            opts.innerHTML = '';
+            const distractors = ["heavier","lighter","cheaper","worse","easier","colder"];
+            const all = [data[compCurrent].correct, distractors[compCurrent]];
+            all.sort(() => 0.5 - Math.random());
+            all.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.textContent = opt;
+                btn.onclick = () => {
+                    if (opt === data[compCurrent].correct) {
+                        btn.classList.add('correct');
+                        compScore++;
+                        document.getElementById('comp-score').textContent = compScore;
+                    } else btn.classList.add('wrong');
+                    document.getElementById('comp-next').style.display = 'block';
+                };
+                opts.appendChild(btn);
+            });
+        }
+        function nextComp() {
+            compCurrent++;
+            document.getElementById('comp-next').style.display = 'none';
+            loadComp();
+        }
+
+        // Superlatives
+        let supCurrent = 0, supScore = 0;
+        function startSup() {
+            supCurrent = 0; supScore = 0;
+            document.getElementById('sup-score').textContent = '0';
+            loadSup();
+        }
+        function loadSup() {
+            const data = [
+                {q: "Mr Dale's house is the _____ of the three.", correct: "most modern"},
+                {q: "The sofa is the _____ .", correct: "most comfortable"}
+            ];
+            if (supCurrent >= data.length) return;
+            document.getElementById('sup-q').textContent = data[supCurrent].q;
+            const opts = document.getElementById('sup-opts');
+            opts.innerHTML = '';
+            const all = [data[supCurrent].correct, "modern", "comfortable"];
+            all.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.textContent = opt;
+                btn.onclick = () => {
+                    if (opt === data[supCurrent].correct) {
+                        btn.classList.add('correct');
+                        supScore++;
+                        document.getElementById('sup-score').textContent = supScore;
+                    } else btn.classList.add('wrong');
+                    document.getElementById('sup-next').style.display = 'block';
+                };
+                opts.appendChild(btn);
+            });
+        }
+        function nextSup() {
+            supCurrent++;
+            document.getElementById('sup-next').style.display = 'none';
+            loadSup();
+        }
+
+        // Was/Were Drag & Drop
+        function startWasWere() {
+            document.getElementById('was-score').textContent = 'Correct: 0/6';
+            const wordsContainer = document.getElementById('was-words');
+            wordsContainer.innerHTML = '';
+
+            const answers = ["was", "was", "wasn't", "Were", "was", "wasn't"];
+            const shuffled = [...answers, "were", "weren't"];
+            shuffled.sort(() => 0.5 - Math.random());
+
+            shuffled.forEach(word => {
+                const div = document.createElement('div');
+                div.className = 'draggable-word card';
+                div.draggable = true;
+                div.textContent = word;
+                div.ondragstart = ev => ev.dataTransfer.setData("text", word);
+                wordsContainer.appendChild(div);
+            });
+
+            let correctCount = 0;
+            document.querySelectorAll('#task5 .dropzone').forEach(dz => {
+                dz.textContent = '_____';
+                dz.ondragover = ev => ev.preventDefault();
+                dz.ondrop = ev => {
+                    ev.preventDefault();
+                    const word = ev.dataTransfer.getData("text");
+                    if (word.toLowerCase() === dz.dataset.answer.toLowerCase() && dz.textContent === '_____') {
+                        dz.textContent = word;
+                        dz.classList.add('correct');
+                        correctCount++;
+                        document.getElementById('was-score').textContent = 'Correct: ' + correctCount + '/6';
+                    }
+                };
+            });
+        }
+
+        // Story
+        let currentStory = 0;
+        function showStory(n) {
+            document.querySelectorAll('.story-slide').forEach((s, i) => s.classList.toggle('active', i === n));
+        }
+        function nextStory() {
+            currentStory = (currentStory + 1) % document.querySelectorAll('.story-slide').length;
+            showStory(currentStory);
+        }
+        function prevStory() {
+            currentStory = (currentStory - 1 + document.querySelectorAll('.story-slide').length) % document.querySelectorAll('.story-slide').length;
+            showStory(currentStory);
+        }
+    </script>
+</body>
+</html>
