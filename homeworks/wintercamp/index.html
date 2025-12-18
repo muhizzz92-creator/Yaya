@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kevin's Winter English Intensive Camp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #EEF2FF;
+            --secondary: #0EA5E9;
+            --accent: #F43F5E;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; transition: all 0.2s ease; }
+
+        body {
+            font-family: 'Nunito', 'Noto Sans SC', sans-serif;
+            background: #F0F9FF;
+            background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* --- Header Section --- */
+        header {
+            background: linear-gradient(120deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 60px 20px 80px;
+            text-align: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeIn 1s ease-out 0.3s backwards;
+        }
+
+        /* Language Toggle */
+        .lang-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            backdrop-filter: blur(4px);
+            z-index: 100;
+        }
+        .lang-toggle:hover { background: white; color: var(--primary); }
+
+        /* --- Container --- */
+        .container {
+            max-width: 900px;
+            margin: -50px auto 40px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- Intro Card --- */
+        .intro-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            margin-bottom: 30px;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .philosophy-tags span {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin: 5px;
+            border: 1px solid #E0E7FF;
+        }
+
+        /* --- Module Accordion --- */
+        .module {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            border-left: 6px solid var(--primary);
+        }
+
+        .module:hover { transform: translateY(-3px); }
+
+        .module-header {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+        }
+
+        .module-header:hover { background: #FAFAFA; }
+
+        .module-icon { font-size: 2.5rem; margin-right: 20px; }
+        
+        .module-info h2 { margin: 0; font-size: 1.4rem; color: var(--text-main); }
+        .module-info span { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; }
+        
+        .arrow { font-size: 1.2rem; color: #CBD5E1; transition: transform 0.3s ease; }
+        .module.active .arrow { transform: rotate(180deg); color: var(--primary); }
+
+        /* --- Module Content --- */
+        .module-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            background: #F8FAFC;
+        }
+
+        .module.active .module-content {
+            max-height: 2500px; /* Arbitrary large number */
+            transition: max-height 0.8s ease-in;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        /* Why & How Section */
+        .pedagogy-box {
+            background: #EFF6FF;
+            padding: 20px 25px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .pedagogy-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        .pedagogy-text { font-size: 1rem; color: #334155; font-style: italic; }
+
+        /* Day Layout */
+        .day-row {
+            padding: 25px;
+            border-bottom: 1px solid #E2E8F0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .day-row:last-child { border-bottom: none; }
+
+        @media (min-width: 768px) {
+            .day-row { grid-template-columns: 1fr 1fr; }
+            .day-header { grid-column: span 2; }
+        }
+
+        .day-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .day-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
+        .day-name { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+        .day-objective { font-size: 0.9rem; color: var(--text-muted); margin-left: auto; }
+
+        /* Lists */
+        h4 { margin: 0 0 10px 0; color: #94A3B8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        ul { margin: 0; padding-left: 0; list-style: none; }
+        li { margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: flex-start; }
+        li::before { content: "•"; color: var(--secondary); font-weight: bold; margin-right: 8px; }
+
+        /* --- Footer --- */
+        footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.9rem; }
+
+        /* --- Language Classes --- */
+        .zh { display: none; }
+        body.chinese-mode .en { display: none; }
+        body.chinese-mode .zh { display: block; }
+
+        /* --- Animations --- */
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes fall { 0% { top: -10%; transform: translateX(0px) rotate(0deg); } 100% { top: 100%; transform: translateX(20px) rotate(360deg); } }
+
+        .snowflake {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.5em;
+            animation: fall linear infinite;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="lang-toggle" onclick="toggleLanguage()">🇬🇧 EN / 🇨🇳 中文</button>
+        
+        <!-- Snowflakes -->
+        <div class="snowflake" style="left: 10%; animation-duration: 10s; animation-delay: 0s;">❄️</div>
+        <div class="snowflake" style="left: 30%; animation-duration: 12s; animation-delay: 2s;">❄️</div>
+        <div class="snowflake" style="left: 70%; animation-duration: 8s; animation-delay: 4s;">❄️</div>
+        <div class="snowflake" style="left: 90%; animation-duration: 15s; animation-delay: 1s;">❄️</div>
+
+        <h1 class="en">Winter English Intensive Camp</h1>
+        <h1 class="zh">沉浸式英语冬令营</h1>
+        
+        <p class="en">20-Day Immersive Curriculum for Young Learners</p>
+        <p class="zh">专为少儿设计的20天全英文沉浸课程</p>
+    </header>
+
+    <div class="container">
+
+        <!-- Intro -->
+        <div class="intro-card">
+            <h2 class="en">Kevin's Teaching Philosophy</h2>
+            <h2 class="zh">Kevin 老师的教学理念</h2>
+            <p class="en">Designed for Kindergarten & Primary beginners. We focus on speaking confidence through Role-Play and Gamification. No boring lectures—just active fun!</p>
+            <p class="zh">专为幼儿园及小学初学者设计。通过角色扮演和游戏化教学建立口语自信。拒绝枯燥的讲座，只有快乐的互动！</p>
+            
+            <div class="philosophy-tags">
+                <span class="en">🗣️ Speaking First</span>
+                <span class="zh">🗣️ 口语优先</span>
+                <span class="en">🎭 Role-Play</span>
+                <span class="zh">🎭 角色扮演</span>
+                <span class="en">🎮 Gamification</span>
+                <span class="zh">🎮 游戏化教学</span>
+                <span class="en">⚡ High Energy</span>
+                <span class="zh">⚡ 高频互动</span>
+            </div>
+        </div>
+
+        <!-- MODULE 1 -->
+        <div class="module" onclick="toggleModule(this)">
+            <div class="module-header">
+                <div style="display:flex; align-items:center;">
+                    <div class="module-icon">🛍️</div>
+                    <div class="module-info">
+                        <h2 class="en">Module 1: The Smart Shopper</h2>
+                        <h2 class="zh">第一单元：精明的买家</h2>
+                        <span class="en">Days 1-3 • Shopping & Numbers</span>
+                        <span class="zh">第1-3天 • 购物与数字</span>
+                    </div>
+                </div>
+                <div class="arrow">▼</div>
+            </div>
+            <div class="module-content">
+                <div class="pedagogy-box">
+                    <div class="pedagogy-title en">Why & How</div>
+                    <div class="pedagogy-title zh">课程目标与意义</div>
+                    <div class="pedagogy-text en">
+                        Shopping is a real-life skill. By using toys and "Camp Money", we make math and vocabulary practical. This module builds confidence by teaching students how to express their wants politely and interact socially.
+                    </div>
+                    <div class="pedagogy-text zh">
+                        购物是一项生活技能。通过使用玩具和“代币”，我们将数学和词汇变得实用化。本单元教导学生如何礼貌地表达需求并进行社交互动，从而建立自信。
+                    </div>
+                </div>
+                
+                <!-- Day 1 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 1</span>
+                        <span class="day-name en">My Wishlist</span>
+                        <span class="day-name zh">我的愿望清单</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🤖 Robot, 🎎 Doll, 🚗 Car</li>
+                            <li>⚽ Ball, 🧸 Teddy Bear</li>
+                            <li>"I want a robot." (我想要一个机器人)</li>
+                            <li>"I don't want a doll." (我不想要洋娃娃)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Flashcard Jump:</strong> Jump to the correct toy!</li>
+                            <li><strong>Pass the Ball:</strong> Music stops, say what you want.</li>
+                            <li><strong>Happy/Sad Face:</strong> Expressing "Want" vs "Don't Want".</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 2 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 2</span>
+                        <span class="day-name en">Money & Numbers</span>
+                        <span class="day-name zh">钱和数字</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🔢 Numbers 1-20</li>
+                            <li>💵 Dollar, 🏷️ Cheap / 💎 Expensive</li>
+                            <li>"How much is it?" (多少钱?)</li>
+                            <li>"It is 5 dollars." (5块钱)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Number Ping-Pong:</strong> Fast counting game.</li>
+                            <li><strong>Price Guess:</strong> Higher or Lower?</li>
+                            <li><strong>Shopkeeper Math:</strong> Adding prices together.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 3 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 3</span>
+                        <span class="day-name en">The Grand Shop</span>
+                        <span class="day-name zh">购物日 (角色扮演)</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Simulation</h4><h4 class="zh">模拟场景</h4>
+                        <ul>
+                            <li><strong>Roles:</strong> Sellers 🏪 & Buyers 🛒</li>
+                            <li><strong>Prop:</strong> Using real "Camp Dollars" 💵</li>
+                            <li><strong>Rule:</strong> No English = No Shopping!</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Key Dialogue</h4><h4 class="zh">核心对话</h4>
+                        <ul>
+                            <li>A: "Hello! Can I have a robot?"</li>
+                            <li>B: "Yes. How much is it?"</li>
+                            <li>A: "It is 10 dollars."</li>
+                            <li>B: "Here you are. Thank you!"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 2 -->
+        <div class="module" onclick="toggleModule(this)" style="border-left-color: var(--secondary);">
+            <div class="module-header">
+                <div style="display:flex; align-items:center;">
+                    <div class="module-icon">✈️</div>
+                    <div class="module-info">
+                        <h2 class="en">Module 2: The World Traveler</h2>
+                        <h2 class="zh">第二单元：世界旅行家</h2>
+                        <span class="en">Days 4-6 • Transport & Countries</span>
+                        <span class="zh">第4-6天 • 交通与国家</span>
+                    </div>
+                </div>
+                <div class="arrow">▼</div>
+            </div>
+            <div class="module-content">
+                <div class="pedagogy-box">
+                    <div class="pedagogy-title en">Why & How</div>
+                    <div class="pedagogy-title zh">课程目标与意义</div>
+                    <div class="pedagogy-text en">
+                        Exploring the world opens young minds. We learn about transportation and geography to expand their horizons. We practice the "future tense" naturally by talking about travel plans ("I am going to...").
+                    </div>
+                    <div class="pedagogy-text zh">
+                        探索世界能打开孩子们的视野。我们通过学习交通和地理知识来拓展眼界。我们通过谈论旅行计划（“我要去...”）自然地练习“将来时态”。
+                    </div>
+                </div>
+
+                <!-- Day 4 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 4</span>
+                        <span class="day-name en">Transport</span>
+                        <span class="day-name zh">交通工具</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>✈️ Plane, 🚌 Bus, 🚂 Train</li>
+                            <li>🚗 Car, 🚲 Bike</li>
+                            <li>"How do you go to school? I go by bus."</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Sound Guess:</strong> Listen to the engine sounds! 🔊</li>
+                            <li><strong>Four Corners:</strong> Run to the "Airport" or "Station".</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 5 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 5</span>
+                        <span class="day-name en">Countries & Plans</span>
+                        <span class="day-name zh">国家与计划</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🇨🇳 China, 🇬🇧 UK, 🇺🇸 USA, 🇯🇵 Japan</li>
+                            <li>"Where are you going?"</li>
+                            <li>"I am going to China." (我要去中国)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Google Earth Flying:</strong> Pretend to fly around the world.</li>
+                            <li><strong>Suitcase Packing:</strong> 🧳 Pack your hat and sunglasses!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 6 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 6</span>
+                        <span class="day-name en">The Airport</span>
+                        <span class="day-name zh">机场模拟</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Simulation</h4><h4 class="zh">模拟场景</h4>
+                        <ul>
+                            <li><strong>Props:</strong> Passports 🛂, Tickets 🎟️, Suitcases 🧳</li>
+                            <li><strong>Goal:</strong> Pass the border control officer.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Key Dialogue</h4><h4 class="zh">核心对话</h4>
+                        <ul>
+                            <li>Officer: "Where are you going?"</li>
+                            <li>Traveler: "I am going to the UK."</li>
+                            <li>Officer: "Here is your passport. Have a nice trip!"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 3 -->
+        <div class="module" onclick="toggleModule(this)" style="border-left-color: #F59E0B;">
+            <div class="module-header">
+                <div style="display:flex; align-items:center;">
+                    <div class="module-icon">🍔</div>
+                    <div class="module-info">
+                        <h2 class="en">Module 3: The Master Chef</h2>
+                        <h2 class="zh">第三单元：顶尖大厨</h2>
+                        <span class="en">Days 7-9 • Food & Restaurants</span>
+                        <span class="zh">第7-9天 • 食物与餐厅</span>
+                    </div>
+                </div>
+                <div class="arrow">▼</div>
+            </div>
+            <div class="module-content">
+                <div class="pedagogy-box">
+                    <div class="pedagogy-title en">Why & How</div>
+                    <div class="pedagogy-title zh">课程目标与意义</div>
+                    <div class="pedagogy-text en">
+                        This module teaches children how to express preferences (likes/dislikes) and introduces formal politeness. By simulating a restaurant, students learn manners, how to order respectfully ("I would like..."), and social etiquette.
+                    </div>
+                    <div class="pedagogy-text zh">
+                        本单元教孩子们如何表达喜好（喜欢/不喜欢）并引入礼貌用语。通过模拟餐厅，学生们学习餐桌礼仪、如何礼貌点餐（“我想要...”）以及社交规范。
+                    </div>
+                </div>
+
+                <!-- Day 7 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 7</span>
+                        <span class="day-name en">Tastes: Yummy vs Yucky</span>
+                        <span class="day-name zh">口味：好吃与难吃</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🍕 Pizza, 🍦 Ice Cream</li>
+                            <li>🥦 Broccoli, 🍗 Chicken</li>
+                            <li>😋 Yummy (好吃) / 🤢 Yucky (难吃)</li>
+                            <li>"Do you like pizza? Yes, I do."</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Food Sorting:</strong> Put food in Happy Hoop 😊 or Sad Hoop ☹️.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 8 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 8</span>
+                        <span class="day-name en">The Menu</span>
+                        <span class="day-name zh">菜单设计</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>📜 Menu, 🧃 Juice, 🍔 Hamburger</li>
+                            <li>🙏 Please (请)</li>
+                            <li>"What would you like?"</li>
+                            <li>"I would like a hamburger, please."</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Project</h4><h4 class="zh">项目任务</h4>
+                        <ul>
+                            <li><strong>Make a Menu:</strong> 🖍️ Draw food and write prices.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 9 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 9</span>
+                        <span class="day-name en">The Restaurant</span>
+                        <span class="day-name zh">餐厅模拟</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Simulation</h4><h4 class="zh">模拟场景</h4>
+                        <ul>
+                            <li><strong>Roles:</strong> Waiters 🤵 & Customers 😋</li>
+                            <li><strong>Props:</strong> Plastic food 🍽️, plates, and money.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Key Dialogue</h4><h4 class="zh">核心对话</h4>
+                        <ul>
+                            <li>Waiter: "May I help you?"</li>
+                            <li>Customer: "I would like pizza."</li>
+                            <li>Waiter: "That is 10 dollars."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 4 -->
+        <div class="module" onclick="toggleModule(this)" style="border-left-color: #10B981;">
+            <div class="module-header">
+                <div style="display:flex; align-items:center;">
+                    <div class="module-icon">🦁</div>
+                    <div class="module-info">
+                        <h2 class="en">Module 4: The Animal Keeper</h2>
+                        <h2 class="zh">第四单元：动物饲养员</h2>
+                        <span class="en">Days 10-12 • Animals & Abilities</span>
+                        <span class="zh">第10-12天 • 动物与能力</span>
+                    </div>
+                </div>
+                <div class="arrow">▼</div>
+            </div>
+            <div class="module-content">
+                <div class="pedagogy-box">
+                    <div class="pedagogy-title en">Why & How</div>
+                    <div class="pedagogy-title zh">课程目标与意义</div>
+                    <div class="pedagogy-text en">
+                        Animals fascinate children! We move beyond naming animals to describing them ("It is big") and discussing abilities ("It can fly"). This introduces the modal verb "CAN" in a highly engaging, movement-based context.
+                    </div>
+                    <div class="pedagogy-text zh">
+                        孩子们热爱动物！我们不仅教命名，还教描述（“它很大”）和能力（“它会飞”）。这在生动有趣的运动语境中引入了情态动词“CAN”。
+                    </div>
+                </div>
+
+                <!-- Day 10 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 10</span>
+                        <span class="day-name en">Wild Animals</span>
+                        <span class="day-name zh">野生动物</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🦁 Lion, 🐘 Elephant, 🐵 Monkey</li>
+                            <li>🐅 Tiger, Big 🐘 / Small 🐁</li>
+                            <li>"It is a lion. It is big."</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Slow Reveal:</strong> 🔍 Guess the animal from a tail or ear.</li>
+                            <li><strong>Animal Yoga:</strong> 🧘 Stomp like an Elephant!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 11 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 11</span>
+                        <span class="day-name en">Abilities (CAN)</span>
+                        <span class="day-name zh">能力 (CAN)</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🏃 Run, 🦘 Jump, 🏊 Swim</li>
+                            <li>🦅 Fly, 🧗 Climb</li>
+                            <li>"Can a tiger fly? No, it cannot."</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Action Charades:</strong> 🎭 Act out an action, others guess.</li>
+                            <li><strong>True or False:</strong> ❌ "An elephant can fly?" - False!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 12 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 12</span>
+                        <span class="day-name en">Design a Zoo</span>
+                        <span class="day-name zh">设计动物园</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Project</h4><h4 class="zh">项目任务</h4>
+                        <ul>
+                            <li><strong>Create:</strong> ✂️ Use paper, glue, and animal cutouts.</li>
+                            <li><strong>Present:</strong> 🗣️ "Welcome to my Zoo. This is a tiger."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 5 -->
+        <div class="module" onclick="toggleModule(this)" style="border-left-color: #8B5CF6;">
+            <div class="module-header">
+                <div style="display:flex; align-items:center;">
+                    <div class="module-icon">🏠</div>
+                    <div class="module-info">
+                        <h2 class="en">Module 5: The Architect</h2>
+                        <h2 class="zh">第五单元：小小建筑师</h2>
+                        <span class="en">Days 13-15 • Rooms & Prepositions</span>
+                        <span class="zh">第13-15天 • 房间与方位</span>
+                    </div>
+                </div>
+                <div class="arrow">▼</div>
+            </div>
+            <div class="module-content">
+                <div class="pedagogy-box">
+                    <div class="pedagogy-title en">Why & How</div>
+                    <div class="pedagogy-title zh">课程目标与意义</div>
+                    <div class="pedagogy-text en">
+                        Understanding space is crucial. We teach students to name rooms and use prepositions (in, on, under) to describe location. This module combines creativity with logic as they design their own "Dream Room."
+                    </div>
+                    <div class="pedagogy-text zh">
+                        空间认知至关重要。我们教学生命名房间并使用介词（in, on, under）描述位置。本单元结合创造力与逻辑，让孩子们设计自己的“梦想房间”。
+                    </div>
+                </div>
+
+                <!-- Day 13 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 13</span>
+                        <span class="day-name en">Rooms</span>
+                        <span class="day-name zh">房间</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🛏️ Bedroom, 🍳 Kitchen</li>
+                            <li>🛁 Bathroom, 🛋️ Living Room</li>
+                            <li>"Where is mom? She is in the kitchen."</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Flashcard Hunt:</strong> 🏃 Run to the correct room card!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 14 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 14</span>
+                        <span class="day-name en">Furniture & Prepositions</span>
+                        <span class="day-name zh">家具与方位</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🛏️ Bed, 🪵 Table, 📦 Box</li>
+                            <li>⬇️ In / On / Under</li>
+                            <li>"Put the cat ON the bed."</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Hand TPR:</strong> ✊🤚 Use fist (cat) and palm (table).</li>
+                            <li><strong>Real Life:</strong> 🧸 Put toys in/on boxes.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 15 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 15</span>
+                        <span class="day-name en">Dream Room</span>
+                        <span class="day-name zh">梦想房间设计</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Project</h4><h4 class="zh">项目任务</h4>
+                        <ul>
+                            <li><strong>Shop:</strong> 🛒 Buy furniture pictures with Camp Dollars.</li>
+                            <li><strong>Design:</strong> 📐 Paste them to create a room.</li>
+                            <li><strong>Present:</strong> 🗣️ "The lamp is on the table."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE 6 -->
+        <div class="module" onclick="toggleModule(this)" style="border-left-color: #EC4899;">
+            <div class="module-header">
+                <div style="display:flex; align-items:center;">
+                    <div class="module-icon">🚑</div>
+                    <div class="module-info">
+                        <h2 class="en">Module 6: The Doctor</h2>
+                        <h2 class="zh">第六单元：小小医生</h2>
+                        <span class="en">Days 16-18 • Body & Health</span>
+                        <span class="zh">第16-18天 • 身体与健康</span>
+                    </div>
+                </div>
+                <div class="arrow">▼</div>
+            </div>
+            <div class="module-content">
+                <div class="pedagogy-box">
+                    <div class="pedagogy-title en">Why & How</div>
+                    <div class="pedagogy-title zh">课程目标与意义</div>
+                    <div class="pedagogy-text en">
+                        Health awareness empowers children. This module teaches them to describe their bodies and express pain ("I have a headache"). The hospital role-play builds empathy and essential vocabulary.
+                    </div>
+                    <div class="pedagogy-text zh">
+                        健康意识赋予孩子力量。本单元教他们描述身体并表达疼痛（“我头痛”）。医院角色扮演培养同理心和重要词汇。
+                    </div>
+                </div>
+
+                <!-- Day 16 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 16</span>
+                        <span class="day-name en">Body Parts</span>
+                        <span class="day-name zh">身体部位</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🙂 Head, 💪 Arm, 🦵 Leg</li>
+                            <li>👀 Eye, 👂 Ear, 👃 Nose</li>
+                            <li>"This is my head. Touch your nose."</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Simon Says:</strong> 🗣️ "Simon says touch your leg!"</li>
+                            <li><strong>Monster Maker:</strong> 👾 Draw a monster with 6 eyes.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 17 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 17</span>
+                        <span class="day-name en">Illness & Feelings</span>
+                        <span class="day-name zh">生病与感受</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Vocab & Phrases</h4><h4 class="zh">词汇与句型</h4>
+                        <ul>
+                            <li>🤕 Headache, 🤧 Cold</li>
+                            <li>🤒 Sick, 🩺 Doctor</li>
+                            <li>"What's wrong? I have a headache."</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Activities</h4><h4 class="zh">互动游戏</h4>
+                        <ul>
+                            <li><strong>Mime the Sickness:</strong> 🎭 Act sick, others guess what is wrong.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 18 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 18</span>
+                        <span class="day-name en">The Hospital</span>
+                        <span class="day-name zh">医院模拟</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Simulation</h4><h4 class="zh">模拟场景</h4>
+                        <ul>
+                            <li><strong>Roles:</strong> Doctors 👨‍⚕️ & Patients 🤒</li>
+                            <li><strong>Props:</strong> White coat 🥼, Bandages (stickers) 🩹, Candy medicine 🍬</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="en">Key Dialogue</h4><h4 class="zh">核心对话</h4>
+                        <ul>
+                            <li>Doctor: "What's wrong?"</li>
+                            <li>Patient: "I have a cold."</li>
+                            <li>Doctor: "Here is medicine."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FINAL MODULE -->
+        <div class="module" onclick="toggleModule(this)" style="border-left-color: #F43F5E;">
+            <div class="module-header">
+                <div style="display:flex; align-items:center;">
+                    <div class="module-icon">🎓</div>
+                    <div class="module-info">
+                        <h2 class="en">Final Stage: Graduation</h2>
+                        <h2 class="zh">最终阶段：毕业典礼</h2>
+                        <span class="en">Days 19-20 • Review & Party</span>
+                        <span class="zh">第19-20天 • 复习与派对</span>
+                    </div>
+                </div>
+                <div class="arrow">▼</div>
+            </div>
+            <div class="module-content">
+                <div class="pedagogy-box">
+                    <div class="pedagogy-title en">Why & How</div>
+                    <div class="pedagogy-title zh">课程目标与意义</div>
+                    <div class="pedagogy-text en">
+                        Celebration is key to motivation. The final "Quest" ensures retention of all topics, while the Graduation Party provides a sense of accomplishment, leaving them with a positive memory of English learning.
+                    </div>
+                    <div class="pedagogy-text zh">
+                        庆祝是激励的关键。最终的“闯关”游戏确保知识留存，而毕业派对给予孩子们成就感，为英语学习留下美好的回忆。
+                    </div>
+                </div>
+
+                <!-- Day 19 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 19</span>
+                        <span class="day-name en">The Great Quest</span>
+                        <span class="day-name zh">英语大闯关</span>
+                    </div>
+                    <div>
+                        <h4 class="en">Review Stations</h4><h4 class="zh">复习站点</h4>
+                        <ul>
+                            <li><strong>Station 1:</strong> 🍎 Shop (Buy a fruit).</li>
+                            <li><strong>Station 2:</strong> 🐯 Zoo (Name an animal).</li>
+                            <li><strong>Station 3:</strong> ✈️ Transport (Act like a plane).</li>
+                            <li><strong>Station 4:</strong> 🏥 Hospital (Say "I have a headache").</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Day 20 -->
+                <div class="day-row">
+                    <div class="day-header">
+                        <span class="day-badge">Day 20</span>
+                        <span class="day-name en">Graduation Party</span>
+                        <span class="day-name zh">结业派对</span>
+                    </div>
+                    <div>
+                        <h4 class="en">The Ceremony</h4><h4 class="zh">典礼流程</h4>
+                        <ol>
+                            <li>🎵 <strong>Final Song:</strong> Perform a learned song.</li>
+                            <li>📜 <strong>Certificates:</strong> Awards for all students.</li>
+                            <li>🎁 <strong>Prize Shop:</strong> Spend saved Camp Dollars on real prizes.</li>
+                            <li>📸 <strong>Photo:</strong> Group photo to remember the fun!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p class="en">Designed for Success • Kevin's Winter Camp 2025</p>
+        <p class="zh">专为成功设计 • Kevin 2025 冬令营</p>
+    </footer>
+
+    <script>
+        function toggleModule(element) {
+            element.classList.toggle('active');
+            
+            // Auto scroll to view
+            if(element.classList.contains('active')) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 300);
+            }
+        }
+
+        function toggleLanguage() {
+            document.body.classList.toggle('chinese-mode');
+        }
+    </script>
+</body>
+</html>
