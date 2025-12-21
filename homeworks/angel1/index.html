@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angle's Christmas Quiz for Mom!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #D42426;
+            --green: #146B3A;
+            --gold: #FFD700;
+            --cream: #FFF5E1;
+            --dark: #2C3E50;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--green);
+            background-image: 
+                radial-gradient(white 15%, transparent 16%),
+                radial-gradient(white 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: var(--dark);
+        }
+
+        /* Snow Animation */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            animation: fall linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(105vh); }
+        }
+
+        /* Container Card */
+        .card {
+            background: var(--cream);
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            border: 5px solid var(--red);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .decoration {
+            font-size: 3rem;
+            position: absolute;
+            top: -30px;
+        }
+        .dec-left { left: -20px; transform: rotate(-20deg); }
+        .dec-right { right: -20px; transform: rotate(20deg); }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--red);
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px var(--gold);
+        }
+
+        .progress {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* Question Box */
+        .question-box {
+            font-size: 1.3rem;
+            margin: 20px 0;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Input Styling */
+        input[type="text"] {
+            width: 80%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 3px solid #ddd;
+            border-radius: 50px;
+            outline: none;
+            transition: 0.3s;
+            text-align: center;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 10px rgba(20, 107, 58, 0.2);
+        }
+
+        /* Button Styling */
+        button {
+            margin-top: 20px;
+            background-color: var(--red);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #a0181a;
+            transition: 0.1s;
+        }
+
+        button:active {
+            transform: translateY(5px);
+            box-shadow: none;
+        }
+
+        /* Language Toggle */
+        .lang-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--gold);
+            color: var(--red);
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            border: 2px solid var(--red);
+            box-shadow: none;
+        }
+
+        /* Feedback Message */
+        .feedback {
+            margin-top: 15px;
+            height: 25px;
+            font-weight: bold;
+        }
+        .correct { color: var(--green); }
+        .wrong { color: var(--red); }
+
+        /* Animations */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .shake-anim {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .pop-anim {
+            animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* End Screen */
+        .hidden { display: none; }
+        .result-img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Falling Snow Container -->
+    <div id="snow-container"></div>
+
+    <div class="card" id="quiz-card">
+        <div class="decoration dec-left">🎄</div>
+        <div class="decoration dec-right">🎅</div>
+        
+        <button class="lang-toggle" onclick="toggleLanguage()">Switch to Chinese / 切换中文</button>
+
+        <h1 id="title-text">Angle's Super Silly Quiz!</h1>
+        <div class="progress" id="progress-text">Question 1 / 10</div>
+
+        <div id="quiz-content">
+            <div class="question-box pop-anim" id="question-text">
+                What's my favourite colour?
+            </div>
+
+            <input type="text" id="answer-input" placeholder="Type answer here..." autocomplete="off">
+            <br>
+            <button onclick="checkAnswer()" id="submit-btn">Submit Answer</button>
+            
+            <div class="feedback" id="feedback-msg"></div>
+        </div>
+
+        <!-- Completion Screen (Hidden by default) -->
+        <div id="end-screen" class="hidden">
+            <div style="font-size: 4rem;">🎁</div>
+            <h2 id="end-title">Merry Christmas Mom!</h2>
+            <p id="end-msg">You know me so well!</p>
+            <button onclick="location.reload()" id="restart-btn">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        // Answers array includes English and Chinese variations + common typos/synonyms
+        const questions = [
+            {
+                en: "Question 1: What is my favourite colour?",
+                cn: "问题 1：我最喜欢的颜色是什么？",
+                validAnswers: ["purple", "紫色", "purpl"]
+            },
+            {
+                en: "Question 2: How old am I?",
+                cn: "问题 2：我今年几岁？",
+                validAnswers: ["13", "thirteen", "十三", "13 years old"]
+            },
+            {
+                en: "Question 3: What is my favourite vegetable?",
+                cn: "问题 3：我最喜欢的蔬菜是什么？",
+                validAnswers: ["broccoli", "西兰花", "花椰菜", "brocoli"]
+            },
+            {
+                en: "Question 4: What is my favourite fruit?",
+                cn: "问题 4：我最喜欢的水果是什么？",
+                validAnswers: ["blueberry", "blueberries", "蓝莓"]
+            },
+            {
+                en: "Question 5: What is my dream job?",
+                cn: "问题 5：我梦想的工作是什么？",
+                validAnswers: ["psychologist", "心理医生", "doctor of psychology", "psychology doctor"]
+            },
+            {
+                en: "Question 6: Who is my favourite singer?",
+                cn: "问题 6：我最喜欢的歌手是谁？",
+                validAnswers: ["jj", "jj lin", "lin jun jie", "林俊杰", "jjlin"]
+            },
+            {
+                en: "Question 7: The country I want to travel to the most?",
+                cn: "问题 7：我最想去哪个国家旅游？",
+                validAnswers: ["singapore", "新加坡"]
+            },
+            {
+                en: "Question 8: What is my favourite novel?",
+                cn: "问题 8：我最喜欢的小说是什么？",
+                validAnswers: ["cat warriors", "warriors", "warrior cats", "猫武士"]
+            },
+            {
+                en: "Question 9: What do I do the most when I am bored?",
+                cn: "问题 9：我无聊的时候最喜欢做什么？",
+                validAnswers: ["listen to music", "music", "listening to music", "听音乐", "听歌"]
+            },
+            {
+                en: "Question 10: What is my favourite Chinese traditional festival?",
+                cn: "问题 10：我最喜欢的中国传统节日是什么？",
+                validAnswers: ["dragon boat", "dragon boat festival", "端午", "端午节"]
+            }
+        ];
+
+        // UI Strings
+        const uiText = {
+            en: {
+                title: "Angle's Super Silly Quiz!",
+                placeholder: "Type answer here...",
+                submit: "Submit Answer",
+                progress: "Question",
+                correct: ["YAY! Correct!", "Good job Mom!", "You got it!", "Bingo!"],
+                wrong: ["Nope! Try again!", "Mom, really?", "Wrong! Hint: Ask Angle.", "Silly Mom, try again!"],
+                endTitle: "Merry Christmas Mom! ❤️",
+                endMsg: "You passed the test! You are the best mom ever!",
+                restart: "Play Again"
+            },
+            cn: {
+                title: "安琪的超级无厘头测试！",
+                placeholder: "在这里输入答案...",
+                submit: "提交答案",
+                progress: "问题",
+                correct: ["耶！答对了！", "妈妈好棒！", "太厉害了！", "Bingo！"],
+                wrong: ["不对哦！再试一次！", "妈妈，认真的吗？", "错啦！提示：问问安琪。", "笨笨妈妈，再试一次！"],
+                endTitle: "圣诞快乐，妈妈！❤️",
+                endMsg: "你通过了测试！你是世界上最好的妈妈！",
+                restart: "再玩一次"
+            }
+        };
+
+        // --- STATE ---
+        let currentLang = 'en'; // 'en' or 'cn'
+        let currentQIndex = 0;
+        let isTransitioning = false;
+
+        // --- ELEMENTS ---
+        const titleEl = document.getElementById('title-text');
+        const progressEl = document.getElementById('progress-text');
+        const questionEl = document.getElementById('question-text');
+        const inputEl = document.getElementById('answer-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const feedbackEl = document.getElementById('feedback-msg');
+        const card = document.getElementById('quiz-card');
+        const endScreen = document.getElementById('end-screen');
+        const quizContent = document.getElementById('quiz-content');
+        const endTitle = document.getElementById('end-title');
+        const endMsg = document.getElementById('end-msg');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // --- INITIALIZATION ---
+        createSnow();
+        updateUI();
+
+        // --- FUNCTIONS ---
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'cn' : 'en';
+            updateUI();
+        }
+
+        function updateUI() {
+            // Update static texts
+            titleEl.innerText = uiText[currentLang].title;
+            inputEl.placeholder = uiText[currentLang].placeholder;
+            submitBtn.innerText = uiText[currentLang].submit;
+            endTitle.innerText = uiText[currentLang].endTitle;
+            endMsg.innerText = uiText[currentLang].endMsg;
+            restartBtn.innerText = uiText[currentLang].restart;
+
+            // Update current question text
+            if(currentQIndex < questions.length) {
+                progressEl.innerText = `${uiText[currentLang].progress} ${currentQIndex + 1} / 10`;
+                questionEl.innerText = questions[currentQIndex][currentLang];
+            }
+        }
+
+        function checkAnswer() {
+            if (isTransitioning) return;
+
+            const userAns = inputEl.value.trim().toLowerCase();
+            const validAnswers = questions[currentQIndex].validAnswers;
+
+            if (validAnswers.includes(userAns)) {
+                // CORRECT
+                handleCorrect();
+            } else {
+                // WRONG
+                handleWrong();
+            }
+        }
+
+        function handleCorrect() {
+            isTransitioning = true;
+            feedbackEl.className = "feedback correct";
+            const msgs = uiText[currentLang].correct;
+            feedbackEl.innerText = msgs[Math.floor(Math.random() * msgs.length)];
+            
+            // Celebration effect
+            const originalEmoji = questionEl.innerHTML;
+            questionEl.innerHTML = "🌟 Correct! 🌟";
+
+            setTimeout(() => {
+                currentQIndex++;
+                inputEl.value = "";
+                feedbackEl.innerText = "";
+                
+                if (currentQIndex < questions.length) {
+                    // Next Question
+                    isTransitioning = false;
+                    updateUI();
+                    // Trigger pop animation
+                    questionEl.classList.remove('pop-anim');
+                    void questionEl.offsetWidth; // trigger reflow
+                    questionEl.classList.add('pop-anim');
+                    inputEl.focus();
+                } else {
+                    // Finish
+                    showEndScreen();
+                }
+            }, 1500);
+        }
+
+        function handleWrong() {
+            card.classList.add('shake-anim');
+            feedbackEl.className = "feedback wrong";
+            const msgs = uiText[currentLang].wrong;
+            feedbackEl.innerText = msgs[Math.floor(Math.random() * msgs.length)];
+            
+            setTimeout(() => {
+                card.classList.remove('shake-anim');
+            }, 500);
+        }
+
+        function showEndScreen() {
+            quizContent.style.display = 'none';
+            progressEl.style.display = 'none';
+            endScreen.classList.remove('hidden');
+            endScreen.classList.add('pop-anim');
+        }
+
+        // Allow "Enter" key to submit
+        inputEl.addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                checkAnswer();
+            }
+        });
+
+        // --- SNOW GENERATION ---
+        function createSnow() {
+            const snowContainer = document.getElementById('snow-container');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const flake = document.createElement('div');
+                flake.className = 'snowflake';
+                flake.innerHTML = '❄';
+                flake.style.left = Math.random() * 100 + 'vw';
+                flake.style.opacity = Math.random();
+                flake.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                
+                // Randomize animation duration and delay
+                const duration = Math.random() * 3 + 2; // 2 to 5 seconds
+                const delay = Math.random() * 5;
+                
+                flake.style.animationDuration = duration + 's';
+                flake.style.animationDelay = delay + 's';
+                
+                snowContainer.appendChild(flake);
+            }
+        }
+    </script>
+</body>
+</html>
