@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaya English Homework</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div id="sky-container" class="parallax-background"><div class="stars-deep"></div></div>
+
+    <header class="dashboard-header">
+        <div class="header-logo"><a href="/dashboard.html"><img src="/img/logo.png" alt="Yaya English Logo"><span>Student Dashboard</span></a></div>
+        <div class="header-info">
+            <h2 id="homework-title-header"></h2>
+            <p id="student-name-header"></p>
+        </div>
+        <div class="header-actions">
+            <span id="progress-text"></span>
+            <div class="header-coins">
+                <div class="coin-counter-group"><div class="gold-coin-icon"></div><span id="gold-coin-counter">0</span></div>
+                <div class="coin-counter-group"><div class="silver-coin-icon"></div><span id="silver-coin-counter">0</span></div>
+            </div>
+        </div>
+    </header>
+    
+    <button class="chatbot-toggler" id="chatbot-toggler"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20,2H4C2.9,2,2,2.9,2,4v18l4-4h14c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2z M13,17h-2v-2h2V17z M13,13h-2V7h2V13z"/></svg></button>
+    <div class="chatbot-container" id="chatbot-container"><div class="chatbot-header">AI Assistant</div><div class="chatbot-body"></div><div class="chatbot-input"><input type="text" placeholder="Ask a question..."></div></div>
+
+    <main class="homework-container">
+        <div class="slider-viewport"><div class="questions-slider"></div></div>
+        <div id="transition-loader"><div class="loader-ring"><div></div><div></div><div></div><div></div></div></div>
+    </main>
+
+    <nav class="homework-nav">
+        <button id="prev-btn" class="nav-btn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+        <button id="next-btn" class="nav-btn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+    </nav>
+
+    <div class="modal-overlay" id="submit-modal">
+        <div class="modal-box">
+            <h3 id="modal-title">Finish Homework</h3>
+            <p id="modal-text"></p>
+            <div class="modal-actions">
+                <button class="modal-btn confirm" id="confirm-submit-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        function runHomework(homeworkData) {
+            const slider = document.querySelector('.questions-slider');
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const progressText = document.getElementById('progress-text');
+            const submitModal = document.getElementById('submit-modal');
+            const confirmSubmitBtn = document.getElementById('confirm-submit-btn');
+            const chatbotToggler = document.getElementById('chatbot-toggler');
+            const chatbotContainer = document.getElementById('chatbot-container');
+            const chatBody = document.querySelector('.chatbot-body');
+            const chatInput = document.querySelector('.chatbot-input input');
+            const goldCounter = document.getElementById('gold-coin-counter');
+            const silverCounter = document.getElementById('silver-coin-counter');
+            const transitionLoader = document.getElementById('transition-loader');
+            
+            let currentStep = 0;
+            let questionMap = [];
+            let studentAnswers = {};
+            let goldCoins = 125;
+            let silverCoins = 4;
+
+            const templates = {
+                mcq: (q, q_index) => `<div class="answer-options-mcq ${Object.values(q.options).some(v => typeof v === 'object' && v.media_url) ? 'has-images' : ''}" data-question-index="${q_index}">${Object.entries(q.options).map(([key, value]) => `
+                    <div class="option-container" data-answer="${key}">
+                        <span class="option-letter">${key}</span>
+                        ${typeof value === 'string' ? `<span class="option-text">${value}</span>` : ''}
+                        ${value.media_url ? (value.media_url.endsWith('.mp3') ? `<div class="custom-audio-player"><button class="play-pause-btn"><svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg><svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button><audio src="${value.media_url}"></audio></div>` : `<div class="option-media"><img src="${value.media_url}" alt="Option ${key}"></div>`) : ''}
+                    </div>`).join('')}</div>`,
+                media: (q, isIllustration) => {
+                    const url = isIllustration ? q.illustration_url : q.media_url;
+                    if (!url) return '';
+                    if (url.endsWith('.mp3')) return `<div class="custom-audio-player"><button class="play-pause-btn"><svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg><svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button><p>Listen to the audio</p><audio src="${url}"></audio></div>`;
+                    return `<div class="media-container"><img src="${url}" alt="Question media"></div>`;
+                }
+            };
+
+            function initializeApp() {
+                document.getElementById('homework-title-header').textContent = homeworkData.title;
+                document.getElementById('student-name-header').textContent = `Student: ${homeworkData.student_name}`;
+                buildQuestionMap();
+                buildSliderDOM();
+                setupInteractivity();
+                updateView();
+                animateCounters(true);
+            }
+
+            function buildQuestionMap() {
+                let step = 0;
+                homeworkData.questions.forEach((q, mainIndex) => {
+                    if (q.type === 'context_group') { q.sub_questions.forEach((sq, subIndex) => questionMap.push({ step: step++, mainIndex, subIndex }));
+                    } else { questionMap.push({ step: step++, mainIndex, subIndex: -1 }); }
+                });
+            }
+
+            function buildSliderDOM() {
+                slider.innerHTML = '';
+                homeworkData.questions.forEach((q, index) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'question-wrapper';
+                    if (q.type === 'context_group') {
+                        wrapper.innerHTML = `<div class="context-card"><h3 class="widget-title">${q.title}</h3>${q.illustration_url ? templates.media(q, true) : ''}${q.prompt ? `<p class="question-prompt">${q.prompt}</p>` : ''}${templates.media(q, false)}${q.content ? `<div class="content-block">${q.content}</div>` : ''}</div><div class="sub-question-container">${q.sub_questions.map((sq, sq_index) => `<div class="question-card sub-question" data-sub-index="${sq_index}"><p class="sub-question-prompt">${sq.prompt}</p>${templates.mcq(sq, `${index}-${sq_index}`)}<div class="question-actions"><button class="action-btn" id="skip-btn-${index}-${sq_index}">Skip</button><button class="action-btn" id="confirm-btn-${index}-${sq_index}" disabled>Confirm</button></div></div>`).join('')}</div>`;
+                    } else {
+                        wrapper.innerHTML = `<div class="question-card"><h3 class="widget-title">${q.title}</h3>${templates.media(q, false)}${q.illustration_url ? templates.media(q, true) : ''}<p class="question-prompt">${q.prompt}</p>${templates.mcq(q, index)}<div class="question-actions"><button class="action-btn" id="skip-btn-${index}">Skip</button><button class="action-btn" id="confirm-btn-${index}" disabled>Confirm</button></div></div>`;
+                    }
+                    slider.appendChild(wrapper);
+                });
+            }
+            
+            function updateView() {
+                const stepInfo = questionMap[currentStep];
+                slider.style.transform = `translateX(${-stepInfo.mainIndex * 100}%)`;
+                
+                document.querySelectorAll('.sub-question').forEach(sq => sq.style.display = 'none');
+                if (stepInfo.subIndex !== -1) {
+                    const mainWrapper = slider.children[stepInfo.mainIndex];
+                    const subContainer = mainWrapper.querySelector('.sub-question-container');
+                    if (subContainer) subContainer.children[stepInfo.subIndex].style.display = 'block';
+                }
+                
+                progressText.textContent = `Question ${currentStep + 1} of ${questionMap.length}`;
+                prevBtn.disabled = currentStep === 0;
+                nextBtn.disabled = studentAnswers[currentStep] === undefined;
+            }
+            
+            function handleAnswer(step, selectedOption, wasSkipped = false) {
+                transitionLoader.classList.add('visible');
+
+                const stepInfo = questionMap[step];
+                const question = stepInfo.subIndex === -1 ? homeworkData.questions[stepInfo.mainIndex] : homeworkData.questions[stepInfo.mainIndex].sub_questions[stepInfo.subIndex];
+                const isCorrect = wasSkipped ? false : question.correct === selectedOption.dataset.answer;
+                studentAnswers[step] = { answer: wasSkipped ? 'skipped' : selectedOption.dataset.answer, isCorrect };
+                
+                const card = getActiveCard(step);
+                const optionsContainer = card.querySelector('.answer-options-mcq');
+                optionsContainer.classList.add('answered');
+
+                if (!wasSkipped) selectedOption.classList.add(isCorrect ? 'correct' : 'incorrect');
+                if (!isCorrect) {
+                    const correctOption = optionsContainer.querySelector(`[data-answer='${question.correct}']`);
+                    if(correctOption) correctOption.classList.add('correct');
+                }
+                
+                card.querySelector('.action-btn[id^="confirm-btn-"]').disabled = true;
+                card.querySelector('.action-btn[id^="skip-btn-"]').disabled = true;
+                nextBtn.disabled = false;
+                
+                addSilverCoin();
+
+                setTimeout(() => {
+                    transitionLoader.classList.remove('visible');
+                    if (currentStep < questionMap.length - 1) { currentStep++; updateView(); } 
+                    else { showFinalScore(); }
+                }, 1500);
+            }
+            
+            function getButtonId(step) {
+                const stepInfo = questionMap[step];
+                return stepInfo.subIndex === -1 ? stepInfo.mainIndex : `${stepInfo.mainIndex}-${stepInfo.subIndex}`;
+            }
+
+            function getActiveCard(step) {
+                const stepInfo = questionMap[step];
+                const mainWrapper = slider.children[stepInfo.mainIndex];
+                return stepInfo.subIndex === -1 ? mainWrapper.querySelector('.question-card') : mainWrapper.querySelectorAll('.sub-question')[stepInfo.subIndex];
+            }
+            
+            function addSilverCoin() {
+                silverCoins++;
+                if (silverCoins >= 10) { silverCoins -= 10; goldCoins++; }
+                animateCounters(false);
+            }
+
+            function showFinalScore() {
+                const correctAnswers = Object.values(studentAnswers).filter(a => a.isCorrect).length;
+                const totalQuestions = questionMap.length;
+                const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+                
+                document.getElementById('modal-title').textContent = "Homework Completed!";
+                document.getElementById('modal-text').innerHTML = `You answered <b style="color: var(--success-color)">${correctAnswers}</b> out of <b>${totalQuestions}</b> questions correctly.<br><br>Your score is:<div class="final-score">${percentage}%</div>`;
+                submitModal.classList.add('visible');
+            }
+
+            function setupInteractivity() {
+                nextBtn.addEventListener('click', () => { if (currentStep < questionMap.length - 1) { currentStep++; updateView(); } else { showFinalScore(); } });
+                prevBtn.addEventListener('click', () => { if (currentStep > 0) { currentStep--; updateView(); } });
+                
+                chatbotToggler.addEventListener('click', () => { chatbotContainer.classList.toggle('visible'); if (chatbotContainer.classList.contains('visible')) { chatInput.focus(); if (chatBody.children.length === 0) handleChatSend("Hello!", true); } });
+                chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleChatSend(); });
+                confirmSubmitBtn.addEventListener('click', () => submitModal.classList.remove('visible'));
+
+                slider.addEventListener('click', e => {
+                    const card = getActiveCard(currentStep);
+                    const buttonId = getButtonId(currentStep);
+                    const option = e.target.closest('.option-container'); 
+                    if (option && !option.parentElement.classList.contains('answered')) { 
+                        option.parentElement.querySelectorAll('.option-container').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        card.querySelector(`#confirm-btn-${buttonId}`).disabled = false;
+                    }
+                    const confirmBtn = e.target.closest(`#confirm-btn-${buttonId}`);
+                    if (confirmBtn) {
+                        const selectedOption = card.querySelector('.option-container.selected');
+                        if (selectedOption) handleAnswer(currentStep, selectedOption);
+                    }
+                    const skipBtn = e.target.closest(`#skip-btn-${buttonId}`);
+                    if (skipBtn) {
+                        handleAnswer(currentStep, null, true);
+                    }
+                    const playBtn = e.target.closest('.play-pause-btn'); 
+                    if (playBtn) { 
+                        const audio = playBtn.closest('.custom-audio-player, .option-container').querySelector('audio'); 
+                        if (audio) { 
+                            if (audio.paused) { document.querySelectorAll('audio').forEach(a => { if (a !== audio) a.pause(); }); audio.play(); } else { audio.pause(); }
+                            document.querySelectorAll('.play-pause-btn').forEach(btn => { if(btn !== playBtn) btn.classList.remove('playing'); });
+                            playBtn.classList.toggle('playing', !audio.paused);
+                            audio.onended = audio.onpause = () => playBtn.classList.remove('playing');
+                        }
+                    }
+                });
+            }
+            
+            function handleChatSend(initialMessage) {
+                const userMessage = initialMessage || chatInput.value.trim();
+                if(userMessage === '') return;
+                addChatMessage(userMessage, initialMessage ? 'ai' : 'user');
+                if(!initialMessage) chatInput.value = '';
+                showTypingIndicator();
+                setTimeout(() => { removeTypingIndicator(); addChatMessage("I'm a demo assistant. I will have more functions soon!", 'ai'); }, 1500);
+            }
+            function addChatMessage(text, type) { const bubble = document.createElement('div'); bubble.className = `chat-bubble ${type}`; bubble.textContent = text; chatBody.appendChild(bubble); chatBody.scrollTop = chatBody.scrollHeight; }
+            function showTypingIndicator() { const ind = document.createElement('div'); ind.className = 'typing-indicator'; ind.innerHTML = '<span></span><span></span><span></span>'; chatBody.appendChild(ind); chatBody.scrollTop = chatBody.scrollHeight; }
+            function removeTypingIndicator() { const ind = chatBody.querySelector('.typing-indicator'); if (ind) ind.remove(); }
+            
+            function animateCounters(isInitial) {
+                const animate = (counter, target) => {
+                    const start = isInitial ? 0 : parseInt(counter.textContent);
+                    if (start === target) return;
+                    const duration = isInitial ? 1000 : 500;
+                    let startTime = null;
+                    const step = (timestamp) => {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / duration, 1);
+                        counter.innerText = Math.floor(progress * (target - start) + start);
+                        if (progress < 1) requestAnimationFrame(step);
+                    };
+                    requestAnimationFrame(step);
+                };
+                animate(goldCounter, goldCoins);
+                animate(silverCounter, silverCoins);
+            }
+            
+            initializeApp();
+            const starsDeep = document.querySelector('.stars-deep'); if(starsDeep && starsDeep.children.length === 0) for (let i = 0; i < 400; i++) { const star = document.createElement('div'); star.className = 'star'; star.style.width = star.style.height = `${Math.random()*1.5}px`; star.style.top = `${Math.random()*100}%`; star.style.left = `${Math.random()*100}%`; starsDeep.appendChild(star); }
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test2</title>
+    <link rel="stylesheet" href="../../public/css/main.css">
+    <style>
+        body { background-color: #090A0F; color: #e0d9cc; font-family: sans-serif; }
+        .homework-container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    </style>
+</head>
+<body>
+    <div class="homework-container">
+        <!-- ========================================== -->
+<!-- БЛОК 1: ВСТУПЛЕНИЕ (Одиночный голос + 3D Арт) -->
+<!-- ========================================== -->
+<div class="card">
+    <h3 class="widget-title">Part 1: The Journey Begins</h3>
+    
+    <!-- GEN_IMG: A magical glowing portal swirling in a dark forest, 3d render style, blender, cinematic lighting, purple and blue colors -->
+    <img src="PLACEHOLDER_PORTAL" class="lesson-img" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
+    
+    <p class="question-prompt">Listen to the introduction. Where does the portal lead?</p>
+    
+    <!-- GEN_AUDIO: [NARRATOR]: Welcome, traveler. You have found the secret portal. It leads to worlds you have never seen before. Are you brave enough to step inside? -->
+    <audio controls src="PLACEHOLDER_AUDIO_1" style="width: 100%; margin-bottom: 15px;"></audio>
+    
+    <div class="options-grid" style="display: grid; gap: 10px;">
+        <button class="btn-option" onclick="checkAnswer(this)">To the supermarket</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">To unknown worlds</button>
+        <button class="btn-option" onclick="checkAnswer(this)">To school</button>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- БЛОК 2: ДИАЛОГ (Склейка 3 голосов + Мультяшный стиль) -->
+<!-- ========================================== -->
+<div class="card" style="margin-top: 20px;">
+    <h3 class="widget-title">Part 2: The Dinosaur Era</h3>
+    
+    <!-- GEN_IMG: A funny green T-Rex wearing sunglasses and holding a surfboard, cartoon style, vector art, flat design, bright colors -->
+    <img src="PLACEHOLDER_DINO" class="lesson-img" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
+    
+    <p class="question-prompt">Listen to the conversation. Is the dinosaur scary?</p>
+    
+    <!-- GEN_AUDIO: [TEEN_BOY]: Whoa! Look at that dinosaur! [TEEN_GIRL]: He looks... cool? Is he wearing sunglasses? [YOUNG_MAN]: Yes, he is going to the beach. He is not scary at all! -->
+    <audio controls src="PLACEHOLDER_AUDIO_2" style="width: 100%; margin-bottom: 15px;"></audio>
+    
+    <div class="options-grid" style="display: grid; gap: 10px;">
+        <button class="btn-option" onclick="checkAnswer(this)">Yes, very scary</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">No, he is cool</button>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- БЛОК 3: БУДУЩЕЕ (Киберпанк + Эффекты) -->
+<!-- ========================================== -->
+<div class="card" style="margin-top: 20px;">
+    <h3 class="widget-title">Part 3: Cyber City 2077</h3>
+    
+    <!-- GEN_IMG: A futuristic city street at night with neon lights and flying cars, cyberpunk style, highly detailed, pink and cyan colors -->
+    <img src="PLACEHOLDER_CITY" class="lesson-img" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
+    
+    <p class="question-prompt">What transport do they use in the future?</p>
+    
+    <!-- GEN_AUDIO: [PROFESSIONAL_WOMAN]: Traffic is terrible today. My flying car is out of energy. [OLD_MAN]: Back in my day, cars had wheels and drove on the ground! -->
+    <audio controls src="PLACEHOLDER_AUDIO_3" style="width: 100%; margin-bottom: 15px;"></audio>
+    
+    <div class="options-grid" style="display: grid; gap: 10px;">
+        <button class="btn-option" onclick="checkAnswer(this)">Bicycles</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Flying Cars</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Horses</button>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- БЛОК 4: АКВАРЕЛЬ (Спокойный диалог) -->
+<!-- ========================================== -->
+<div class="card" style="margin-top: 20px;">
+    <h3 class="widget-title">Part 4: The Quiet Garden</h3>
+    
+    <!-- GEN_IMG: A beautiful japanese garden with cherry blossoms and a small bridge, watercolor painting style, soft artistic strokes -->
+    <img src="PLACEHOLDER_GARDEN" class="lesson-img" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
+    
+    <p class="question-prompt">How does the girl feel?</p>
+    
+    <!-- GEN_AUDIO: [YOUNG_WOMAN]: It is so peaceful here. The flowers smell amazing. [OLD_WOMAN]: Yes dear. Nature helps us relax and feel happy. -->
+    <audio controls src="PLACEHOLDER_AUDIO_4" style="width: 100%; margin-bottom: 15px;"></audio>
+    
+    <div class="options-grid" style="display: grid; gap: 10px;">
+        <button class="btn-option" onclick="checkAnswer(this)">Angry</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Sad</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Relaxed and Happy</button>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- БЛОК 5: ГРАММАТИКА (Без аудио, только картинка) -->
+<!-- ========================================== -->
+<div class="card" style="margin-top: 20px;">
+    <h3 class="widget-title">Part 5: Grammar Check</h3>
+    
+    <!-- GEN_IMG: A cat sleeping on a pile of books, cozy atmosphere, warm lighting, realistic style -->
+    <img src="PLACEHOLDER_CAT" class="lesson-img" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
+    
+    <p class="question-prompt">Choose the correct sentence:</p>
+    
+    <div class="options-grid" style="display: grid; gap: 10px;">
+        <button class="btn-option" onclick="checkAnswer(this)">The cat are sleeping.</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">The cat is sleeping.</button>
+        <button class="btn-option" onclick="checkAnswer(this)">The cat sleep.</button>
+    </div>
+</div>
+    </div>
+    <script src="../../public/js/homework_logic.js"></script>
+</body>
+</html>
+            

@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test12</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">test12</h1>
+        <!-- ВСТРОЕННЫЕ СТИЛИ (NEON GLASSMORPHISM) -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+    :root {
+        --bg-color: #050505;
+        --card-bg: rgba(30, 30, 40, 0.6);
+        --accent: #00f2ea;
+        --accent-secondary: #ff0050;
+        --text: #ffffff;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(0, 242, 234, 0.1) 0%, transparent 20%),
+            radial-gradient(circle at 90% 80%, rgba(255, 0, 80, 0.1) 0%, transparent 20%);
+        color: var(--text);
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 40px 20px;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    /* КАРТОЧКА ЗАДАНИЯ */
+    .card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 30px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        transition: transform 0.3s ease;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent);
+    }
+
+    /* ЗАГОЛОВОК */
+    h2 {
+        font-size: 2rem;
+        margin-top: 0;
+        background: linear-gradient(90deg, #fff, var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+
+    /* ИЗОБРАЖЕНИЕ */
+    .lesson-img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 16px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    /* АУДИО ПЛЕЕР */
+    audio {
+        width: 100%;
+        height: 45px;
+        margin-bottom: 25px;
+        border-radius: 10px;
+        filter: invert(1) hue-rotate(180deg); /* Делаем плеер темным */
+    }
+
+    /* ВОПРОС */
+    .question {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+
+    /* КНОПКИ ОТВЕТОВ */
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 18px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: var(--accent);
+    }
+
+    /* АНИМАЦИЯ ПРАВИЛЬНОГО ОТВЕТА */
+    .btn.correct {
+        background: linear-gradient(90deg, #00b09b, #96c93d) !important;
+        border-color: #96c93d !important;
+        color: #000 !important;
+        box-shadow: 0 0 20px rgba(150, 201, 61, 0.4);
+    }
+
+    /* АНИМАЦИЯ ОШИБКИ */
+    .btn.wrong {
+        background: linear-gradient(90deg, #ff416c, #ff4b2b) !important;
+        border-color: #ff416c !important;
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    @media (max-width: 600px) {
+        .options { grid-template-columns: 1fr; }
+        .lesson-img { height: 250px; }
+    }
+</style>
+
+<div class="container">
+
+    <!-- ========================================== -->
+    <!-- БЛОК 1: ФЭНТЕЗИ (Магия и Лес) -->
+    <!-- ========================================== -->
+    <div class="card">
+        <h2>1. The Mystic Forest 🌲</h2>
+        
+        <!-- GEN_IMG: A magical forest with giant glowing mushrooms, fireflies, purple and blue fog, fantasy art style, detailed, 8k -->
+        <img src="PLACEHOLDER" class="lesson-img">
+        
+        <p class="question">Listen to the guide. What shouldn't you touch?</p>
+        
+        <!-- GEN_AUDIO: [NARRATOR]: Welcome to the Mystic Forest. It is beautiful, but dangerous. [OLD_WOMAN]: (Whispering) Be careful, traveler. Do not touch the glowing mushrooms. They are full of magic sleep dust. -->
+        <audio controls src="PLACEHOLDER"></audio>
+        
+        <div class="options">
+            <button class="btn" onclick="check(this)">The Trees</button>
+            <button class="btn" onclick="check(this)" data-correct="true">The Mushrooms</button>
+            <button class="btn" onclick="check(this)">The Fireflies</button>
+            <button class="btn" onclick="check(this)">The Grass</button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- БЛОК 2: КИБЕРПАНК (Город будущего) -->
+    <!-- ========================================== -->
+    <div class="card">
+        <h2>2. Cyber City 2077 🤖</h2>
+        
+        <!-- GEN_IMG: A futuristic cyberpunk city street at night, neon signs, rain, flying cars, pink and cyan lighting, anime style -->
+        <img src="PLACEHOLDER" class="lesson-img">
+        
+        <p class="question">What does the robot want to buy?</p>
+        
+        <!-- GEN_AUDIO: [TEEN_BOY]: Look at that robot! [YOUNG_MAN]: (Robot voice) Hello. I need new batteries. My energy is low. [TEEN_BOY]: The shop is over there, Mr. Robot! -->
+        <audio controls src="PLACEHOLDER"></audio>
+        
+        <div class="options">
+            <button class="btn" onclick="check(this)">Oil</button>
+            <button class="btn" onclick="check(this)">Computer Chips</button>
+            <button class="btn" onclick="check(this)" data-correct="true">Batteries</button>
+            <button class="btn" onclick="check(this)">Pizza</button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- БЛОК 3: КОСМОС (Реализм) -->
+    <!-- ========================================== -->
+    <div class="card">
+        <h2>3. Mars Mission 🚀</h2>
+        
+        <!-- GEN_IMG: An astronaut standing on the red surface of Mars, looking at Earth in the sky, realistic cinematic style, high detail -->
+        <img src="PLACEHOLDER" class="lesson-img">
+        
+        <p class="question">How does the astronaut feel?</p>
+        
+        <!-- GEN_AUDIO: [NARRATOR]: Mission Control, this is Captain Alex. [PROFESSIONAL_MAN]: I have landed. The view is incredible. I feel so small, but very happy to be here. -->
+        <audio controls src="PLACEHOLDER"></audio>
+        
+        <div class="options">
+            <button class="btn" onclick="check(this)">Scared</button>
+            <button class="btn" onclick="check(this)" data-correct="true">Happy</button>
+            <button class="btn" onclick="check(this)">Sad</button>
+            <button class="btn" onclick="check(this)">Angry</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- СКРИПТ ЛОГИКИ -->
+<script>
+    function check(btn) {
+        const container = btn.parentElement;
+        if (container.dataset.answered) return; // Блокируем повторный клик
+        container.dataset.answered = "true";
+
+        const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            btn.innerHTML += " ✅";
+        } else {
+            btn.classList.add('wrong');
+            btn.innerHTML += " ❌";
+            
+            // Показать правильный ответ
+            const buttons = container.querySelectorAll('.btn');
+            buttons.forEach(b => {
+                if (b.getAttribute('data-correct') === 'true') {
+                    b.classList.add('correct');
+                }
+            });
+        }
+    }
+</script>
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

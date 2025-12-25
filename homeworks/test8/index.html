@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test8 - Yaya English</title>
+    <link rel="stylesheet" href="../../public/css/main.css">
+</head>
+<body>
+    <!-- ФОН (Звезды и Облака) -->
+    <div id="sky-container" class="parallax-background"><div class="stars-deep"></div></div>
+    <div id="footer-clouds" style="opacity: 0.5;">
+        <!-- Картинки облаков должны лежать в public/img/ -->
+        <img src="../../public/img/fog_1.png" class="cloud-img layer1" alt="">
+        <img src="../../public/img/fog_2.png" class="cloud-img layer2" alt="">
+    </div>
+
+    <!-- ШАПКА -->
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="../../dashboard.html">
+                <img src="../../public/img/logo.png" alt="Yaya English Logo">
+                <span>Student Dashboard</span>
+            </a>
+        </div>
+        <div class="header-info">
+            <h2 id="homework-title-header">test8</h2>
+        </div>
+        <div class="header-actions">
+            <div class="header-coins">
+                <div class="coin-counter-group"><div class="gold-coin-icon"></div><span>125</span></div>
+                <div class="coin-counter-group"><div class="silver-coin-icon"></div><span>4</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="homework-container">
+        <div class="card">
+<h3 class="widget-title">The Magic Forest: Discovery</h3>
+<img src="img_1766531810_5056.png" class="lesson-img">
+<p class="question-prompt">You see a mysterious light in the forest. What is it?</p>
+<div class="options-grid">
+<button class="btn-option" onclick="checkAnswer(this)">A Streetlamp</button>
+<button class="btn-option" onclick="checkAnswer(this)" data-correct="true">A Firefly</button>
+<button class="btn-option" onclick="checkAnswer(this)">A Flashlight</button>
+</div>
+</div>
+
+<div class="card">
+<h3 class="widget-title">Listening: The Talking Tree</h3>
+<img src="img_1766531821_1686.png" class="lesson-img">
+
+codeCode
+
+<audio controls src="audio_1766531842_8025.mp3"></audio>
+
+<p class="question-prompt">What is the boy looking for?</p>
+<div class="options-grid">
+    <button class="btn-option" onclick="checkAnswer(this)">The Old Tree</button>
+    <button class="btn-option" onclick="checkAnswer(this)">A Lost Dog</button>
+    <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">The Magic Castle</button>
+</div>
+</div>
+
+<div class="card">
+<h3 class="widget-title">Grammar: Prepositions</h3>
+<img src="img_1766531830_155.png" class="lesson-img">
+<p class="question-prompt">Where is the little dragon?</p>
+<div class="options-grid">
+<button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Behind the rock</button>
+<button class="btn-option" onclick="checkAnswer(this)">On the rock</button>
+<button class="btn-option" onclick="checkAnswer(this)">Under the rock</button>
+</div>
+</div>
+
+<div class="card">
+<h3 class="widget-title">Speaking Challenge</h3>
+<p class="question-prompt">To open the gate, you must say the magic password!</p>
+<!-- GEN_IMG: A majestic golden gate closed with a magical glowing seal, fantasy style -->
+<img src="PLACEHOLDER" class="lesson-img">
+<div style="text-align: center; margin-bottom: 15px; font-weight: bold; color: #e6c384;">
+"Open, Magic Gate!"
+</div>
+<button class="record-btn">🎤 Record the Password</button>
+</div>
+    </main>
+
+    <!-- СКРИПТЫ -->
+    <script src="../../public/js/homework_logic.js"></script>
+    <script>
+        // Простой скрипт для генерации звезд, если их нет в CSS
+        document.addEventListener('DOMContentLoaded', () => {
+            const starsDeep = document.querySelector('.stars-deep');
+            if(starsDeep && starsDeep.children.length === 0) {
+                for (let i = 0; i < 200; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.position = 'absolute';
+                    star.style.background = 'white';
+                    star.style.borderRadius = '50%';
+                    star.style.width = star.style.height = `${Math.random()*2}px`;
+                    star.style.top = `${Math.random()*100}%`;
+                    star.style.left = `${Math.random()*100}%`;
+                    star.style.opacity = Math.random();
+                    starsDeep.appendChild(star);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+            

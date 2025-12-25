@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Lesson 1</title>
+    <!-- Подключение стилей из корня сайта -->
+    <link rel="stylesheet" href="../../public/css/main.css">
+    <style>
+        body { padding: 20px; background-color: #090A0F; color: #e0d9cc; }
+        .homework-container { max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="homework-container">
+        <div class="card">
+    <h3 class="widget-title">Dinosaur Era</h3>
+    
+    <!-- GEN_IMG: A giant T-Rex roaring in a prehistoric jungle, cartoon style, vector art, vibrant green and orange colors -->
+    <img src="PLACEHOLDER" class="lesson-img" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
+    
+    <p class="question-prompt">Listen to the guide. What is the T-Rex doing?</p>
+    
+    <!-- GEN_AUDIO: [NARRATOR]: We are traveling back in time. Look! [TEEN_BOY]: Wow! Is that a T-Rex? [SCIENTIST]: Yes. It is looking for food. Be quiet! -->
+    <audio controls src="PLACEHOLDER" style="width: 100%; margin-bottom: 15px;"></audio>
+    
+    <div class="options-grid" style="display: grid; gap: 10px;">
+        <button class="btn-option" onclick="checkAnswer(this)">Sleeping</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Hunting for food</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Playing football</button>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 20px;">
+    <h3 class="widget-title">Vocabulary Check</h3>
+    <p class="question-prompt">Which dinosaur has three horns?</p>
+    
+    <!-- GEN_IMG: A cute Triceratops dinosaur, cartoon style, vector art, blue background -->
+    <img src="PLACEHOLDER" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    
+    <div class="options-grid" style="display: grid; gap: 10px; margin-top: 15px;">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Triceratops</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Stegosaurus</button>
+    </div>
+</div>
+    </div>
+
+    <!-- Подключение логики -->
+    <script src="../../public/js/homework_logic.js"></script>
+</body>
+</html>
+            

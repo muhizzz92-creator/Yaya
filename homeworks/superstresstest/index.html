@@ -1,0 +1,431 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPER_STRESS_TEST - Yaya English</title>
+    <link rel="stylesheet" href="../../public/css/main.css">
+</head>
+<body>
+    <!-- ФОН (Звезды и Облака) -->
+    <div id="sky-container" class="parallax-background"><div class="stars-deep"></div></div>
+    <div id="footer-clouds" style="opacity: 0.5;">
+        <!-- Картинки облаков должны лежать в public/img/ -->
+        <img src="../../public/img/fog_1.png" class="cloud-img layer1" alt="">
+        <img src="../../public/img/fog_2.png" class="cloud-img layer2" alt="">
+    </div>
+
+    <!-- ШАПКА -->
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="../../dashboard.html">
+                <img src="../../public/img/logo.png" alt="Yaya English Logo">
+                <span>Student Dashboard</span>
+            </a>
+        </div>
+        <div class="header-info">
+            <h2 id="homework-title-header">SUPER_STRESS_TEST</h2>
+        </div>
+        <div class="header-actions">
+            <div class="header-coins">
+                <div class="coin-counter-group"><div class="gold-coin-icon"></div><span>125</span></div>
+                <div class="coin-counter-group"><div class="silver-coin-icon"></div><span>4</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="homework-container">
+        <!-- ================================================================================== -->
+<!-- РАЗДЕЛ 1: ВИЗУАЛЬНЫЙ ШТУРМ (Проверка стилей генерации) -->
+<!-- ================================================================================== -->
+
+<div class="card">
+    <h3 class="widget-title">1. 🎨 Style: Cyberpunk</h3>
+    <img src="img_1766530527_6447.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">What is he holding?</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">A Katana</button>
+        <button class="btn-option" onclick="checkAnswer(this)">A Banana</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">2. 🎨 Style: Watercolor</h3>
+    <img src="img_1766530542_799.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">The fox is...</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">Running</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Sleeping</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">3. 🎨 Style: Pixel Art</h3>
+    <img src="img_1766530551_6329.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">What style is this?</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Pixel Art</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Realism</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">4. 🎨 Style: 3D Render (Pixar)</h3>
+    <img src="img_1766530559_9184.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">Is the monster scary?</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">Yes!</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">No, it's cute</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">5. 🎨 Style: Pencil Sketch</h3>
+    <img src="img_1766530568_8734.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">This picture is drawn with...</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">A Pencil</button>
+        <button class="btn-option" onclick="checkAnswer(this)">A Computer</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">6. 🎨 Style: Anime</h3>
+    <img src="img_1766530577_9165.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">Where is she?</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">In a library</button>
+        <button class="btn-option" onclick="checkAnswer(this)">In a park</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">7. 🎨 Style: Low Poly</h3>
+    <img src="img_1766530585_6536.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">The deer is made of...</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Shapes</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Fur</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">8. 🎨 Style: Oil Painting</h3>
+    <img src="img_1766530594_5295.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">The weather is...</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Stormy</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Sunny</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">9. 🎨 Style: Macro Photography</h3>
+    <img src="img_1766530602_5049.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">What is on the leaf?</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Water</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Fire</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">10. 🎨 Style: Pop Art</h3>
+    <img src="img_1766530611_7606.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">This style is called...</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Pop Art</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Renaissance</button>
+    </div>
+</div>
+
+<!-- ================================================================================== -->
+<!-- РАЗДЕЛ 2: АУДИО ДИАЛОГИ (Проверка склейки и ролей) -->
+<!-- ================================================================================== -->
+
+<div class="card">
+    <h3 class="widget-title">11. 🗣️ Simple Greeting</h3>
+    <p class="question-prompt">Listen to the meeting.</p>
+    <audio controls src="audio_1766530786_8740.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">12. 🗣️ Family Argument</h3>
+    <p class="question-prompt">Who wants to play games?</p>
+    <audio controls src="audio_1766530789_3311.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">13. 🗣️ Grandparents</h3>
+    <p class="question-prompt">What are they talking about?</p>
+    <audio controls src="audio_1766530792_6151.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">14. 🗣️ School Lesson</h3>
+    <p class="question-prompt">Listen to the teacher.</p>
+    <audio controls src="audio_1766530796_3913.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">15. 🗣️ The News</h3>
+    <p class="question-prompt">What happened in the city?</p>
+    <audio controls src="audio_1766530799_7232.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">16. 🗣️ Space Mission</h3>
+    <p class="question-prompt">Where are they going?</p>
+    <audio controls src="audio_1766530802_514.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">17. 🗣️ Shopping</h3>
+    <p class="question-prompt">How much is the shirt?</p>
+    <audio controls src="audio_1766530806_4952.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">18. 🗣️ Lost Dog</h3>
+    <p class="question-prompt">Is the dog happy?</p>
+    <audio controls src="audio_1766530809_4126.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">19. 🗣️ Restaurant</h3>
+    <p class="question-prompt">What does he order?</p>
+    <audio controls src="audio_1766530813_7596.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">20. 🗣️ The End</h3>
+    <p class="question-prompt">Final message.</p>
+    <audio controls src="audio_1766530816_4269.mp3" style="width: 100%;"></audio>
+</div>
+
+<!-- ================================================================================== -->
+<!-- РАЗДЕЛ 3: СМЕШАННЫЙ ТЕСТ (Картинка + Звук + Вопрос) -->
+<!-- ================================================================================== -->
+
+<div class="card">
+    <h3 class="widget-title">21. 🦁 Animals</h3>
+    <img src="img_1766530619_5847.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530818_6678.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Lion</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Tiger</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">22. 🚗 Transport</h3>
+    <img src="img_1766530628_8408.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530821_8271.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Car</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Bus</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">23. 🍎 Food</h3>
+    <img src="img_1766530637_3299.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530823_5332.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Apples</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Bananas</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">24. 🎸 Music</h3>
+    <img src="img_1766530646_3458.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530826_3101.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Guitar</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Piano</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">25. 🏠 Home</h3>
+    <img src="img_1766530654_2637.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530828_2077.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Living Room</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Kitchen</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">26. 🌧️ Weather</h3>
+    <img src="img_1766530663_7422.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530831_7837.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Rainy</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Sunny</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">27. ⚽ Sports</h3>
+    <img src="img_1766530672_1752.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530834_9492.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Soccer</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Tennis</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">28. 🚀 Space</h3>
+    <img src="img_1766530681_8633.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530836_9252.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Astronaut</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Diver</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">29. 📚 School</h3>
+    <img src="img_1766530689_3628.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530839_4729.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Books</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Toys</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">30. 🎄 Holidays</h3>
+    <img src="img_1766530699_3929.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530841_7500.mp3" style="width: 100%;"></audio>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Christmas</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Halloween</button>
+    </div>
+</div>
+
+<!-- ================================================================================== -->
+<!-- РАЗДЕЛ 4: БЫСТРЫЙ БЛИЦ (Только картинки) -->
+<!-- ================================================================================== -->
+
+<div class="card">
+    <h3 class="widget-title">31. Color: Red</h3>
+    <img src="img_1766530709_9750.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+</div>
+
+<div class="card">
+    <h3 class="widget-title">32. Color: Blue</h3>
+    <img src="img_1766530717_302.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+</div>
+
+<div class="card">
+    <h3 class="widget-title">33. Color: Green</h3>
+    <img src="img_1766530726_1759.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+</div>
+
+<div class="card">
+    <h3 class="widget-title">34. Color: Yellow</h3>
+    <img src="img_1766530734_8467.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+</div>
+
+<div class="card">
+    <h3 class="widget-title">35. Color: Purple</h3>
+    <img src="img_1766530743_3228.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+</div>
+
+<!-- ================================================================================== -->
+<!-- РАЗДЕЛ 5: БЫСТРЫЙ БЛИЦ (Только аудио) -->
+<!-- ================================================================================== -->
+
+<div class="card">
+    <h3 class="widget-title">36. Phrase: Good Morning</h3>
+    <audio controls src="audio_1766530844_1842.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">37. Phrase: Thank You</h3>
+    <audio controls src="audio_1766530846_2706.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">38. Phrase: Sorry</h3>
+    <audio controls src="audio_1766530849_7822.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">39. Phrase: Goodbye</h3>
+    <audio controls src="audio_1766530851_9095.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">40. Phrase: Please</h3>
+    <audio controls src="audio_1766530854_1040.mp3" style="width: 100%;"></audio>
+</div>
+
+<!-- ================================================================================== -->
+<!-- ФИНАЛ -->
+<!-- ================================================================================== -->
+
+<div class="card">
+    <h3 class="widget-title">41. Final Boss: The Dragon</h3>
+    <img src="img_1766530751_334.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <p class="question-prompt">The dragon is...</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">Sleeping</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Flying</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">42. Final Boss: The Robot</h3>
+    <img src="img_1766530760_4884.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+    <audio controls src="audio_1766530856_6836.mp3" style="width: 100%;"></audio>
+</div>
+
+<div class="card">
+    <h3 class="widget-title">43. Final Boss: The Ocean</h3>
+    <img src="img_1766530768_4154.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+</div>
+
+<div class="card">
+    <h3 class="widget-title">44. Final Boss: The Mountain</h3>
+    <img src="img_1766530778_7913.png" class="lesson-img" style="width: 100%; border-radius: 10px;">
+</div>
+
+<div class="card">
+    <h3 class="widget-title">45. CONGRATULATIONS!</h3>
+    <p class="question-prompt">You have passed the Super Stress Test!</p>
+    <audio controls src="audio_1766530859_5006.mp3" style="width: 100%;"></audio>
+</div>
+    </main>
+
+    <!-- СКРИПТЫ -->
+    <script src="../../public/js/homework_logic.js"></script>
+    <script>
+        // Простой скрипт для генерации звезд, если их нет в CSS
+        document.addEventListener('DOMContentLoaded', () => {
+            const starsDeep = document.querySelector('.stars-deep');
+            if(starsDeep && starsDeep.children.length === 0) {
+                for (let i = 0; i < 200; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.position = 'absolute';
+                    star.style.background = 'white';
+                    star.style.borderRadius = '50%';
+                    star.style.width = star.style.height = `${Math.random()*2}px`;
+                    star.style.top = `${Math.random()*100}%`;
+                    star.style.left = `${Math.random()*100}%`;
+                    star.style.opacity = Math.random();
+                    starsDeep.appendChild(star);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+            

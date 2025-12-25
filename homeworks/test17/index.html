@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test17</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">test17</h1>
+        <!-- ======================================================= -->
+<!-- СТИЛИ (ULTIMATE DARK THEME) -->
+<!-- ======================================================= -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+    :root {
+        --bg-color: #0f0c29;
+        --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        --card-bg: rgba(255, 255, 255, 0.08);
+        --card-border: 1px solid rgba(255, 255, 255, 0.1);
+        --primary: #7a52f0;
+        --secondary: #00d2ff;
+        --success: #00b09b;
+        --error: #ff416c;
+        --text: #ffffff;
+    }
+
+    body {
+        background: var(--bg-gradient);
+        color: var(--text);
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ФОНОВЫЕ ШАРЫ (ДЕКОР) */
+    .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: -1;
+        opacity: 0.6;
+    }
+    .orb-1 { width: 300px; height: 300px; background: var(--primary); top: -50px; left: -50px; }
+    .orb-2 { width: 400px; height: 400px; background: var(--secondary); bottom: -100px; right: -100px; }
+
+    /* ПРОГРЕСС БАР */
+    .progress-wrapper {
+        position: absolute;
+        top: 40px;
+        width: 300px;
+        height: 6px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--secondary), var(--primary));
+        width: 0%;
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* СЛАЙДЕР */
+    .slider-container {
+        width: 100%;
+        max-width: 500px;
+        height: 85vh;
+        position: relative;
+    }
+
+    .slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .slide.active {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        pointer-events: all;
+        z-index: 10;
+    }
+
+    .slide.passed {
+        opacity: 0;
+        transform: translateX(-100px) scale(0.9);
+    }
+
+    /* КАРТОЧКА */
+    .card {
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: var(--card-border);
+        border-radius: 30px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* КОНТЕНТ */
+    .tag {
+        align-self: flex-start;
+        background: rgba(255,255,255,0.1);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: var(--secondary);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    h2 { margin: 0 0 15px 0; font-size: 1.6rem; line-height: 1.2; }
+
+    .lesson-img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 16px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    audio {
+        width: 100%;
+        height: 40px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        opacity: 0.9;
+    }
+
+    /* ВАРИАНТЫ ОТВЕТОВ */
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: auto; /* Прижать к низу */
+    }
+
+    .btn {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 16px;
+        border-radius: 14px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn:hover {
+        background: rgba(255,255,255,0.15);
+        border-color: var(--primary);
+    }
+
+    .btn.correct {
+        background: var(--success) !important;
+        border-color: var(--success) !important;
+    }
+
+    .btn.wrong {
+        background: var(--error) !important;
+        border-color: var(--error) !important;
+        opacity: 0.5;
+    }
+
+    /* СЕТКА КАРТИНОК */
+    .img-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: auto;
+    }
+    .img-option {
+        position: relative;
+        border-radius: 14px;
+        overflow: hidden;
+        aspect-ratio: 1;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: transform 0.2s;
+    }
+    .img-option:hover { transform: scale(1.02); border-color: var(--primary); }
+    .img-option img { width: 100%; height: 100%; object-fit: cover; }
+    .img-option.correct { border-color: var(--success); }
+    .img-option.wrong { border-color: var(--error); opacity: 0.4; }
+
+    /* НАВИГАЦИЯ */
+    .nav-bar {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 500px;
+    }
+    .nav-btn {
+        background: transparent;
+        border: none;
+        color: rgba(255,255,255,0.5);
+        cursor: pointer;
+        font-weight: 600;
+    }
+    .nav-btn:hover { color: white; }
+
+</style>
+
+<!-- ДЕКОР -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- ПРОГРЕСС -->
+<div class="progress-wrapper">
+    <div class="progress-fill" id="progressBar"></div>
+</div>
+
+<!-- СЛАЙДЕР -->
+<div class="slider-container">
+
+    <!-- 1. КИБЕРПАНК (Вступление) -->
+    <div class="slide active">
+        <div class="card">
+            <div class="tag">LEVEL 1 • LISTENING</div>
+            <h2>Neo-Tokyo Night 🌃</h2>
+            
+            <img src="img_1766615086_35189.jpg" class="lesson-img">
+            
+            <p>Listen to the robot. What does he need?</p>
+            
+            <!-- GEN_AUDIO: [YOUNG_MAN]: (Robot voice) System failure. Battery low. I need energy cells immediately. Please help. -->
+            <audio controls src="PLACEHOLDER"></audio>
+            
+            <div class="options">
+                <button class="btn" onclick="check(this)">Oil</button>
+                <button class="btn" onclick="check(this)" data-correct="true">Energy Cells</button>
+                <button class="btn" onclick="check(this)">Water</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. УЮТНОЕ КАФЕ (Диалог) -->
+    <div class="slide">
+        <div class="card">
+            <div class="tag">LEVEL 2 • DIALOGUE</div>
+            <h2>Coffee Break ☕</h2>
+            
+            <!-- GEN_IMG: A cozy coffee shop interior, rain outside window, warm lighting, lo-fi art style, detailed -->
+            <img src="PLACEHOLDER" class="lesson-img">
+            
+            <p>What does she order?</p>
+            
+            <!-- GEN_AUDIO: [YOUNG_MAN]: Welcome! What can I get for you? [YOUNG_WOMAN]: Hi! Can I have a cappuccino and a croissant, please? [YOUNG_MAN]: Sure! Anything else? [YOUNG_WOMAN]: No, that's all. Thank you. -->
+            <audio controls src="PLACEHOLDER"></audio>
+            
+            <div class="options">
+                <button class="btn" onclick="check(this)">Tea and Cake</button>
+                <button class="btn" onclick="check(this)" data-correct="true">Cappuccino and Croissant</button>
+                <button class="btn" onclick="check(this)">Pizza</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. ВЫБОР КАРТИНКИ (Животные) -->
+    <div class="slide">
+        <div class="card">
+            <div class="tag">LEVEL 3 • VOCABULARY</div>
+            <h2>Find the Fox 🦊</h2>
+            <p>Tap on the picture of a <b>Fox</b>.</p>
+            
+            <div class="img-grid">
+                <div class="img-option" onclick="checkImg(this)">
+                    <!-- GEN_IMG: cute cartoon wolf face, sticker style, vector art, blue background -->
+                    <img src="PLACEHOLDER">
+                </div>
+                <div class="img-option" onclick="checkImg(this)" data-correct="true">
+                    <!-- GEN_IMG: cute cartoon orange fox face, sticker style, vector art, green background -->
+                    <img src="PLACEHOLDER">
+                </div>
+                <div class="img-option" onclick="checkImg(this)">
+                    <!-- GEN_IMG: cute cartoon bear face, sticker style, vector art, yellow background -->
+                    <img src="PLACEHOLDER">
+                </div>
+                <div class="img-option" onclick="checkImg(this)">
+                    <!-- GEN_IMG: cute cartoon lion face, sticker style, vector art, red background -->
+                    <img src="PLACEHOLDER">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. КОСМОС (Грамматика) -->
+    <div class="slide">
+        <div class="card">
+            <div class="tag">LEVEL 4 • GRAMMAR</div>
+            <h2>Space Mission 🚀</h2>
+            
+            <!-- GEN_IMG: An astronaut floating in space near a rocket, planet earth in background, realistic style, cinematic lighting -->
+            <img src="PLACEHOLDER" class="lesson-img">
+            
+            <p style="font-size: 1.2rem; text-align: center; margin: 20px 0;">
+                The astronaut <span style="color: var(--secondary); border-bottom: 2px solid var(--secondary);">_______</span> in space.
+            </p>
+            
+            <div class="options">
+                <button class="btn" onclick="check(this)">fly</button>
+                <button class="btn" onclick="check(this)" data-correct="true">flies</button>
+                <button class="btn" onclick="check(this)">flying</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. ФИНАЛ -->
+    <div class="slide">
+        <div class="card" style="text-align: center; justify-content: center;">
+            <h2>🎉 Victory!</h2>
+            
+            <!-- GEN_IMG: Golden trophy cup, confetti, celebration background, 3d render, bright colors -->
+            <img src="PLACEHOLDER" class="lesson-img" style="height: 300px;">
+            
+            <p>You have completed the Ultimate Test!</p>
+            
+            <!-- GEN_AUDIO: [NARRATOR]: Excellent work! You have passed all the levels. See you next time! -->
+            <audio controls src="PLACEHOLDER"></audio>
+            
+            <button class="btn" onclick="location.reload()" style="background: var(--success); text-align: center; justify-content: center;">Restart</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- НАВИГАЦИЯ -->
+<div class="nav-bar">
+    <button class="nav-btn" onclick="prevSlide()">Back</button>
+    <button class="nav-btn" onclick="nextSlide()">Next</button>
+</div>
+
+<!-- СКРИПТЫ -->
+<script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const bar = document.getElementById('progressBar');
+
+    function update() {
+        slides.forEach((s, i) => {
+            s.classList.remove('active', 'passed');
+            if (i === current) s.classList.add('active');
+            if (i < current) s.classList.add('passed');
+        });
+        bar.style.width = ((current + 1) / slides.length) * 100 + '%';
+    }
+
+    function nextSlide() {
+        if (current < slides.length - 1) {
+            current++;
+            update();
+        }
+    }
+
+    function prevSlide() {
+        if (current > 0) {
+            current--;
+            update();
+        }
+    }
+
+    function check(btn) {
+        const parent = btn.parentElement;
+        if (parent.dataset.done) return;
+        parent.dataset.done = "true";
+
+        if (btn.dataset.correct) {
+            btn.classList.add('correct');
+            setTimeout(nextSlide, 1500);
+        } else {
+            btn.classList.add('wrong');
+            parent.querySelectorAll('.btn').forEach(b => {
+                if (b.dataset.correct) b.classList.add('correct');
+            });
+        }
+    }
+
+    function checkImg(div) {
+        const parent = div.parentElement;
+        if (parent.dataset.done) return;
+        parent.dataset.done = "true";
+
+        if (div.dataset.correct) {
+            div.classList.add('correct');
+            setTimeout(nextSlide, 1500);
+        } else {
+            div.classList.add('wrong');
+        }
+    }
+
+    update();
+</script>
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

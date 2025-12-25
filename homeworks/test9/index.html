@@ -1,0 +1,223 @@
+<!-- 1. КЛАССИКА: Картинка + Аудио + Кнопки -->
+<div class="card">
+    <h3 class="widget-title">1. The Classic Format 🎸</h3>
+    <!-- GEN_IMG: A rock star playing an electric guitar on stage, spotlights, cyberpunk style, vibrant colors -->
+    <img src="PLACEHOLDER" class="lesson-img" style="width: 100%; border-radius: 15px;">
+    
+    <p class="question-prompt">Listen. What instrument is this?</p>
+    <!-- GEN_AUDIO: [TEEN_BOY]: Listen to this solo! It sounds amazing! [SOUND_EFFECT]: (Guitar solo sounds) -->
+    <audio controls src="PLACEHOLDER" style="width: 100%; margin-bottom: 15px;"></audio>
+    
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">Drums</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Electric Guitar</button>
+    </div>
+</div>
+
+<!-- 2. ЧИСТОЕ АУДИРОВАНИЕ: Без картинки, фокус на звук -->
+<div class="card">
+    <h3 class="widget-title">2. Blind Listening 👂</h3>
+    <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 50%; width: 100px; height: 100px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 40px;">🎧</span>
+    </div>
+    <p class="question-prompt" style="text-align: center;">Close your eyes and listen.</p>
+    
+    <!-- GEN_AUDIO: [OLD_MAN]: The wind is howling, and the rain is beating against the window. It is a stormy night. -->
+    <audio controls src="PLACEHOLDER" style="width: 100%; margin-top: 20px;"></audio>
+    
+    <div class="options-grid" style="margin-top: 20px;">
+        <button class="btn-option" onclick="checkAnswer(this)">Sunny Day</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Stormy Night</button>
+    </div>
+</div>
+
+<!-- 3. ВИЗУАЛЬНЫЙ СЛОВАРЬ: Только картинка -->
+<div class="card">
+    <h3 class="widget-title">3. Visual Vocabulary 👁️</h3>
+    <img src="img_1766605275_3795.png" class="lesson-img" style="width: 100%; border-radius: 15px;">
+    
+    <p class="question-prompt">What food is this?</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Pizza</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Burger</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Pasta</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Salad</button>
+    </div>
+</div>
+
+<!-- 4. ДИАЛОГ: Длинная беседа (Склейка) -->
+<div class="card">
+    <h3 class="widget-title">4. Long Conversation 🗣️</h3>
+    <img src="img_1766605285_8565.png" class="lesson-img" style="width: 100%; border-radius: 15px;">
+    
+    <!-- GEN_AUDIO: [YOUNG_WOMAN]: So, how was your trip to Paris? [YOUNG_MAN]: It was incredible! The food was great. [YOUNG_WOMAN]: Did you see the Eiffel Tower? [YOUNG_MAN]: Yes, we went to the top. The view was beautiful. -->
+    <audio controls src="PLACEHOLDER" style="width: 100%; margin: 15px 0;"></audio>
+    
+    <p class="question-prompt">Where did the man go?</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">London</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Paris</button>
+    </div>
+</div>
+
+<!-- 5. TRUE / FALSE: Бинарный выбор -->
+<div class="card">
+    <h3 class="widget-title">5. True or False ✅❌</h3>
+    <img src="img_1766605293_6867.png" class="lesson-img" style="width: 100%; border-radius: 15px;">
+    
+    <p class="question-prompt">Statement: Humans have walked on Mars.</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">True</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">False</button>
+    </div>
+</div>
+
+<!-- 6. ЧТЕНИЕ: Текст + Вопрос -->
+<div class="card">
+    <h3 class="widget-title">6. Reading Time 📖</h3>
+    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border-left: 4px solid #e6c384; margin-bottom: 20px;">
+        <p style="margin: 0; font-style: italic; color: #ccc;">
+            "The Chameleon is a very special lizard. It can change the color of its skin. 
+            It does this to hide from enemies or to show how it feels. 
+            Chameleons also have very long tongues to catch insects."
+        </p>
+    </div>
+    <!-- GEN_IMG: A colorful chameleon on a branch, vector art, vibrant green and blue colors -->
+    <img src="PLACEHOLDER" class="lesson-img" style="width: 150px; float: right; margin-left: 10px; border-radius: 10px;">
+    
+    <p class="question-prompt">Why do chameleons change color?</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">To fly</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">To hide</button>
+    </div>
+    <div style="clear: both;"></div>
+</div>
+
+<!-- 7. СЕТКА КАРТИНОК: 4 Изображения (Сложный тест инъектора) -->
+<div class="card">
+    <h3 class="widget-title">7. Pick the Image 🖼️</h3>
+    <p class="question-prompt">Which one is the <b>Tiger</b>?</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <!-- Option A -->
+        <div onclick="checkAnswer(this)" style="cursor: pointer; border: 2px solid transparent; border-radius: 10px; overflow: hidden;">
+            <img src="img_1766605303_895.png" style="width: 100%; display: block;">
+        </div>
+        <!-- Option B -->
+        <div onclick="checkAnswer(this)" data-correct="true" style="cursor: pointer; border: 2px solid transparent; border-radius: 10px; overflow: hidden;">
+            <img src="img_1766605313_8825.png" style="width: 100%; display: block;">
+        </div>
+        <!-- Option C -->
+        <div onclick="checkAnswer(this)" style="cursor: pointer; border: 2px solid transparent; border-radius: 10px; overflow: hidden;">
+            <img src="img_1766605321_6551.png" style="width: 100%; display: block;">
+        </div>
+        <!-- Option D -->
+        <div onclick="checkAnswer(this)" style="cursor: pointer; border: 2px solid transparent; border-radius: 10px; overflow: hidden;">
+            <!-- GEN_IMG: A cute wolf face, cartoon style -->
+            <img src="PLACEHOLDER" style="width: 100%; display: block;">
+        </div>
+    </div>
+</div>
+
+<!-- 8. ЭМОЦИИ: Определение тона -->
+<div class="card">
+    <h3 class="widget-title">8. Emotion Check 🎭</h3>
+    <p class="question-prompt">How does the speaker feel?</p>
+    <!-- GEN_AUDIO: [TEEN_GIRL]: (Crying voice) Oh no! I lost my favorite doll! I am so sad. -->
+    <audio controls src="PLACEHOLDER" style="width: 100%; margin-bottom: 15px;"></audio>
+    
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">Happy</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Sad</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Angry</button>
+    </div>
+</div>
+
+<!-- 9. ЗАПОЛНИ ПРОПУСК: Грамматика -->
+<div class="card">
+    <h3 class="widget-title">9. Grammar Gap ✍️</h3>
+    <img src="img_1766605330_3654.png" class="lesson-img" style="width: 100%; border-radius: 15px;">
+    
+    <div style="font-size: 1.5em; text-align: center; margin: 20px 0;">
+        He <span style="border-bottom: 2px solid #e6c384; color: #e6c384;">_______</span> very fast.
+    </div>
+    
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">run</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">runs</button>
+        <button class="btn-option" onclick="checkAnswer(this)">running</button>
+    </div>
+</div>
+
+<!-- 10. МАТЕМАТИКА: Числа -->
+<div class="card">
+    <h3 class="widget-title">10. Math in English 🔢</h3>
+    <img src="img_1766605338_9562.png" class="lesson-img" style="width: 100%; border-radius: 15px;">
+    
+    <p class="question-prompt">Three apples plus two apples equals...</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">Four</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Five</button>
+        <button class="btn-option" onclick="checkAnswer(this)">Six</button>
+    </div>
+</div>
+
+<!-- 11. ГОЛОСОВОЙ ВВОД (Имитация) -->
+<div class="card">
+    <h3 class="widget-title">11. Speaking Task 🎤</h3>
+    <p class="question-prompt">Read this sentence aloud:</p>
+    <div style="background: #2a2d44; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.2em; margin-bottom: 20px;">
+        "The quick brown fox jumps over the lazy dog."
+    </div>
+    <button class="record-btn" style="width: 100%; padding: 20px; background: #e57373; border: none; border-radius: 15px; color: white; font-size: 1.2em; cursor: pointer;">
+        🎤 Start Recording
+    </button>
+</div>
+
+<!-- 12. ЛОГИКА: Что дальше? -->
+<div class="card">
+    <h3 class="widget-title">12. Logic: What's Next? 🧠</h3>
+    <p class="question-prompt">Morning -> Afternoon -> ...</p>
+    <img src="img_1766605346_3154.png" class="lesson-img" style="width: 100%; border-radius: 15px;">
+    
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">Breakfast</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Evening</button>
+    </div>
+</div>
+
+<!-- 13. ИДИОМА: Абстракция -->
+<div class="card">
+    <h3 class="widget-title">13. Idioms 🧩</h3>
+    <!-- GEN_IMG: It is raining cats and dogs, literal interpretation, funny cartoon style -->
+    <img src="PLACEHOLDER" class="lesson-img" style="width: 100%; border-radius: 15px;">
+    
+    <p class="question-prompt">"It's raining cats and dogs" means...</p>
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">Animals are falling</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">It's raining heavily</button>
+    </div>
+</div>
+
+<!-- 14. ЗВУКИ: Угадай звук -->
+<div class="card">
+    <h3 class="widget-title">14. Mystery Sound 🔊</h3>
+    <p class="question-prompt">What animal makes this sound?</p>
+    <!-- GEN_AUDIO: [NARRATOR]: Listen. [SOUND_EFFECT]: (Elephant trumpet sound) -->
+    <audio controls src="PLACEHOLDER" style="width: 100%; margin-bottom: 15px;"></audio>
+    
+    <div class="options-grid">
+        <button class="btn-option" onclick="checkAnswer(this)">Mouse</button>
+        <button class="btn-option" onclick="checkAnswer(this)" data-correct="true">Elephant</button>
+    </div>
+</div>
+
+<!-- 15. ФИНАЛ: Поздравление -->
+<div class="card">
+    <h3 class="widget-title">15. Great Job! 🏆</h3>
+    <img src="img_1766605356_1939.png" class="lesson-img" style="width: 100%; border-radius: 15px;">
+    
+    <p class="question-prompt">You have completed the Mega Stress Test!</p>
+    <!-- GEN_AUDIO: [NARRATOR]: Congratulations! You are a superstar! Keep up the good work. -->
+    <audio controls src="PLACEHOLDER" style="width: 100%;"></audio>
+</div>

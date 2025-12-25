@@ -1,0 +1,236 @@
+<!-- ======================================================= -->
+<!-- СТИЛИ (Вшиты прямо в урок) -->
+<!-- ======================================================= -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+    :root {
+        --bg-deep: #0f0c29;
+        --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --card-border: 1px solid rgba(255, 255, 255, 0.1);
+        --accent: #00d2ff;
+        --accent-hover: #3a7bd5;
+        --text-main: #ffffff;
+        --text-secondary: #b2b2b2;
+        --success: #00b09b;
+        --error: #ff416c;
+    }
+
+    body {
+        font-family: 'Nunito', sans-serif;
+        background: var(--bg-gradient);
+        color: var(--text-main);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Красивый контейнер урока */
+    .lesson-wrapper {
+        width: 100%;
+        max-width: 700px;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    /* Карточка задания */
+    .task-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: var(--card-border);
+        border-radius: 24px;
+        padding: 30px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        transition: transform 0.3s ease;
+    }
+
+    .task-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent);
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        margin-top: 0;
+        background: -webkit-linear-gradient(45deg, #00d2ff, #928dab);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+
+    /* Стили для картинок */
+    .generated-img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 16px;
+        margin-bottom: 20px;
+        border: 2px solid rgba(255,255,255,0.05);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Стили для аудио плеера */
+    audio {
+        width: 100%;
+        height: 40px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+    }
+
+    /* Сетка ответов */
+    .answers-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    /* Кнопки ответов */
+    .btn-answer {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+    }
+
+    .btn-answer:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.02);
+    }
+
+    /* Состояния кнопок */
+    .btn-answer.correct {
+        background: var(--success) !important;
+        border-color: var(--success) !important;
+        box-shadow: 0 0 15px var(--success);
+    }
+
+    .btn-answer.wrong {
+        background: var(--error) !important;
+        border-color: var(--error) !important;
+        opacity: 0.5;
+        animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+    }
+
+    /* Адаптив для мобилок */
+    @media (max-width: 600px) {
+        .answers-grid { grid-template-columns: 1fr; }
+        .generated-img { height: 200px; }
+    }
+</style>
+
+<!-- ======================================================= -->
+<!-- КОНТЕНТ УРОКА -->
+<!-- ======================================================= -->
+
+<div class="lesson-wrapper">
+
+    <!-- ЗАДАНИЕ 1: КОСМОС (Картинка + Аудио) -->
+    <div class="task-card">
+        <h2>1. Space Explorer 🚀</h2>
+        
+        <!-- GEN_IMG: A futuristic astronaut standing on a purple alien planet, looking at a giant ringed planet in the sky, cinematic lighting, highly detailed, 8k, digital art style -->
+        <img src="PLACEHOLDER" class="generated-img">
+
+        <p style="font-size: 1.2rem; margin-bottom: 15px;">Listen to the astronaut. What does he see?</p>
+
+        <!-- GEN_AUDIO: [NARRATOR]: Captain's log. Day 45. [YOUNG_MAN]: I have landed on the purple planet. The sky is amazing! I can see a giant ringed planet above me. It is beautiful. -->
+        <audio controls src="PLACEHOLDER"></audio>
+
+        <div class="answers-grid">
+            <button class="btn-answer" onclick="check(this)">A Black Hole</button>
+            <button class="btn-answer" onclick="check(this)" data-correct="true">A Ringed Planet</button>
+            <button class="btn-answer" onclick="check(this)">A Flying Car</button>
+            <button class="btn-answer" onclick="check(this)">An Alien City</button>
+        </div>
+    </div>
+
+    <!-- ЗАДАНИЕ 2: ДИАЛОГ (Склейка голосов) -->
+    <div class="task-card">
+        <h2>2. The Magic Forest 🌲</h2>
+        
+        <!-- GEN_IMG: A magical forest with glowing blue mushrooms and fireflies, fantasy style, mysterious atmosphere, dark background -->
+        <img src="PLACEHOLDER" class="generated-img">
+
+        <p style="font-size: 1.2rem; margin-bottom: 15px;">Who lives in the forest?</p>
+
+        <!-- GEN_AUDIO: [TEEN_GIRL]: Look at those glowing mushrooms! [TEEN_BOY]: Be careful! Don't touch them. [OLD_WOMAN]: (Witch voice) Welcome to my forest, children. Do not be afraid. -->
+        <audio controls src="PLACEHOLDER"></audio>
+
+        <div class="answers-grid">
+            <button class="btn-answer" onclick="check(this)">A Dragon</button>
+            <button class="btn-answer" onclick="check(this)">A Bear</button>
+            <button class="btn-answer" onclick="check(this)" data-correct="true">A Witch</button>
+            <button class="btn-answer" onclick="check(this)">A Robot</button>
+        </div>
+    </div>
+
+    <!-- ЗАДАНИЕ 3: КИБЕРПАНК (Стиль) -->
+    <div class="task-card">
+        <h2>3. Future City 🌃</h2>
+        
+        <!-- GEN_IMG: A cyberpunk street food vendor serving noodles in the rain, neon signs, japanese characters, steam, detailed, 4k -->
+        <img src="PLACEHOLDER" class="generated-img">
+
+        <p style="font-size: 1.2rem; margin-bottom: 15px;">What is the vendor selling?</p>
+
+        <div class="answers-grid">
+            <button class="btn-answer" onclick="check(this)">Pizza</button>
+            <button class="btn-answer" onclick="check(this)" data-correct="true">Noodles</button>
+            <button class="btn-answer" onclick="check(this)">Burgers</button>
+            <button class="btn-answer" onclick="check(this)">Ice Cream</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ======================================================= -->
+<!-- СКРИПТ (Вшит прямо в урок) -->
+<!-- ======================================================= -->
+<script>
+    function check(btn) {
+        // Находим родителя (сетку кнопок)
+        const container = btn.parentElement;
+        
+        // Если уже ответили - выходим
+        if (container.dataset.answered === "true") return;
+        container.dataset.answered = "true";
+
+        const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            btn.innerHTML += " ✅";
+        } else {
+            btn.classList.add('wrong');
+            btn.innerHTML += " ❌";
+            
+            // Подсветить правильный ответ
+            const allBtns = container.querySelectorAll('.btn-answer');
+            allBtns.forEach(b => {
+                if (b.getAttribute('data-correct') === 'true') {
+                    b.classList.add('correct');
+                }
+            });
+        }
+    }
+</script>

@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test 11</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">test 11</h1>
+        import asyncio
+import edge_tts
+import os
+import time
+
+# --- КРАСОТА И ЦВЕТА (ANSI CODES) ---
+class Style:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+
+def print_block(role, voice, text, icon):
+    print(f"{Style.CYAN}╔{'═'*60}╗{Style.RESET}")
+    print(f"{Style.CYAN}║ {icon}  {Style.BOLD}{role:<15}{Style.RESET} {Style.BLUE}({voice}){Style.RESET}")
+    print(f"{Style.CYAN}╠{'─'*60}╢{Style.RESET}")
+    print(f"{Style.CYAN}║ {Style.YELLOW}💬 Текст:{Style.RESET} {text}")
+    print(f"{Style.CYAN}╚{'═'*60}╝{Style.RESET}")
+
+async def generate_audio(text, voice, filename, role, icon):
+    print_block(role, voice, text, icon)
+    print(f"   {Style.BOLD}⏳ Генерация...{Style.RESET}", end="", flush=True)
+    
+    start_time = time.time()
+    
+    try:
+        communicate = edge_tts.Communicate(text, voice)
+        await communicate.save(filename)
+        
+        elapsed = time.time() - start_time
+        file_size = os.path.getsize(filename) / 1024 # KB
+        
+        print(f"\r   {Style.GREEN}✅ УСПЕХ!{Style.RESET}  💾 Файл: {Style.BOLD}{filename}{Style.RESET} ({file_size:.1f} KB)  ⏱️ {elapsed:.2f}s\n")
+        return True
+    except Exception as e:
+        print(f"\r   {Style.RED}❌ ОШИБКА:{Style.RESET} {e}\n")
+        return False
+
+async def main():
+    print(f"\n{Style.HEADER}{Style.BOLD}✨ ЗАПУСК ТЕСТА АУДИО-СИСТЕМЫ (EDGE TTS) ✨{Style.RESET}\n")
+
+    # СЦЕНАРИЙ ТЕСТА
+    scenarios = [
+        {
+            "role": "NARRATOR",
+            "voice": "en-US-GuyNeural",
+            "icon": "🎙️",
+            "text": "Welcome to the Teacher Helper audio test. System is online.",
+            "file": "test_1_narrator.mp3"
+        },
+        {
+            "role": "TEACHER (Jenny)",
+            "voice": "en-US-JennyNeural",
+            "icon": "👩‍🏫",
+            "text": "Hello students! Today we are going to learn something amazing.",
+            "file": "test_2_teacher.mp3"
+        },
+        {
+            "role": "KID (Ana)",
+            "voice": "en-US-AnaNeural",
+            "icon": "👧",
+            "text": "Wow! I love learning English! Can we play a game?",
+            "file": "test_3_kid.mp3"
+        },
+        {
+            "role": "BRITISH (Ryan)",
+            "voice": "en-UK-RyanNeural",
+            "icon": "🎩",
+            "text": "Indeed. The quality of this neural network is quite impressive, isn't it?",
+            "file": "test_4_british.mp3"
+        }
+    ]
+
+    success_count = 0
+    
+    for item in scenarios:
+        if await generate_audio(item["text"], item["voice"], item["file"], item["role"], item["icon"]):
+            success_count += 1
+        time.sleep(0.5) # Небольшая пауза для красоты вывода
+
+    print(f"{Style.HEADER}{'='*62}{Style.RESET}")
+    if success_count == len(scenarios):
+        print(f"{Style.GREEN}{Style.BOLD}🎉 ИТОГ: ВСЕ ТЕСТЫ ПРОЙДЕНЫ ({success_count}/{len(scenarios)}){Style.RESET}")
+        print(f"{Style.GREEN}   Аудио-движок полностью готов к работе!{Style.RESET}")
+    else:
+        print(f"{Style.RED}{Style.BOLD}⚠️ ИТОГ: ЕСТЬ ОШИБКИ ({len(scenarios) - success_count} failed){Style.RESET}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            
