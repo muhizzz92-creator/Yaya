@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Card for Mom & Dad - Derek</title>
+    <!-- Подключаем красивые шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mountains+of+Christmas:wght@700&family=Nunito:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. Основные настройки и Фон --- */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #1a2a6c, #b21f1f, #fdbb2d); /* Красивый ночной градиент */
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            perspective: 1500px; /* Для 3D эффекта книги */
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 2. Снег (на весь экран) --- */
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Чтобы можно было кликать сквозь снег */
+            z-index: 1;
+        }
+
+        /* --- 3. 3D Книга --- */
+        .book {
+            position: relative;
+            width: 350px;
+            height: 500px;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+            z-index: 10;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .book.open {
+            transform: translateX(50%) rotateY(-10px);
+        }
+
+        /* Страницы */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px 20px 20px 10px;
+            background: white;
+            transform-origin: left;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+            backface-visibility: hidden; /* Скрываем заднюю часть */
+            overflow: hidden;
+            border: 2px solid #dcdcdc;
+        }
+
+        /* ОБЛОЖКА (Передняя) */
+        .cover {
+            background: linear-gradient(135deg, #c0392b, #8e44ad);
+            color: white;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 4px solid #f1c40f;
+            cursor: pointer;
+        }
+
+        /* Текстура обложки */
+        .cover::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H22v-2h-2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            z-index: -1;
+        }
+
+        .book.open .cover {
+            transform: rotateY(-180deg);
+        }
+
+        /* Внутренняя часть книги */
+        .content-page {
+            background: #fffcf5; /* Цвет бумаги */
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* --- 4. Типографика и Элементы --- */
+        .school-logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: #f1c40f;
+            text-shadow: 2px 2px 0px #2c3e50;
+            margin-top: 20px;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+
+        .duck-logo {
+            font-size: 3rem;
+            margin-bottom: -10px;
+        }
+
+        h1 {
+            font-family: 'Mountains of Christmas', cursive;
+            font-size: 3rem;
+            margin: 10px 0;
+            line-height: 1;
+        }
+
+        .click-hint {
+            margin-top: auto;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            animation: bounce 2s infinite;
+        }
+
+        /* Контент внутри */
+        .scene-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            text-align: center;
+        }
+
+        .scene-emoji {
+            font-size: 6rem;
+            display: block;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
+            transition: transform 0.5s;
+        }
+
+        .scene-title {
+            color: #c0392b;
+            font-family: 'Mountains of Christmas', cursive;
+            font-size: 2.2rem;
+            margin: 0;
+        }
+
+        .scene-text {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            min-height: 60px;
+        }
+
+        /* Прогресс бар */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #27ae60;
+            transition: width 0.3s;
+        }
+
+        /* Кнопки управления */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: bold;
+            transition: transform 0.2s;
+            outline: none;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-replay { background: #f39c12; }
+
+        /* --- Анимации --- */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-pop {
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        /* Эффект дождя из золота */
+        .gold-rain-anim {
+            animation: shake 0.5s infinite;
+        }
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        /* Финальное приближение */
+        .zoom-effect {
+            animation: massiveZoom 8s forwards;
+        }
+        @keyframes massiveZoom {
+            0% { transform: scale(1); }
+            100% { transform: scale(2); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Канвас для снега -->
+    <canvas id="snow-canvas"></canvas>
+
+    <!-- Книга -->
+    <div class="book" id="book">
+        
+        <!-- Обложка -->
+        <div class="page cover" onclick="startExperience()">
+            <div class="duck-logo">🦆</div>
+            <div class="school-logo">YaYa English</div>
+            <div style="margin-top: 40px;">
+                <h1 style="font-size: 2rem; color: #f1c40f;">For Mom & Dad</h1>
+                <h1 style="color: white;">Merry<br>Christmas!</h1>
+            </div>
+            <div class="click-hint">👇 Tap to Open</div>
+        </div>
+
+        <!-- Внутренняя страница (Контент) -->
+        <div class="page content-page">
+            <div style="width:100%; display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                <span style="font-weight:bold; color: #7f8c8d;">From Derek</span>
+                <span style="font-size: 1.5rem;">🦆</span>
+            </div>
+
+            <div class="scene-container" id="scene-container">
+                <!-- Контент меняется через JS -->
+                <div class="scene-emoji">🎄</div>
+                <h2 class="scene-title">Welcome!</h2>
+                <p class="scene-text">Loading magic...</p>
+            </div>
+
+            <div style="width: 100%">
+                <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+                <div class="controls">
+                    <button class="btn btn-replay" onclick="replayCurrent()">↺ Replay</button>
+                    <!-- <button class="btn" onclick="togglePause()">⏯ Pause</button> -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. Настройка Снега ---
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        const flakes = [];
+        for(let i = 0; i < 100; i++) {
+            flakes.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * 3 + 1,
+                d: Math.random() * 100
+            });
+        }
+
+        function drawSnow() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            ctx.beginPath();
+            for(let i = 0; i < 100; i++) {
+                let f = flakes[i];
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+            }
+            ctx.fill();
+            updateSnow();
+            requestAnimationFrame(drawSnow);
+        }
+
+        function updateSnow() {
+            for(let i = 0; i < 100; i++) {
+                let f = flakes[i];
+                f.y += Math.pow(f.d, 0.5) * 0.5; // Скорость падения
+                
+                // Если снежинка упала вниз
+                if(f.y > height) {
+                    flakes[i] = {x: Math.random() * width, y: 0, r: f.r, d: f.d};
+                }
+            }
+        }
+        drawSnow();
+        
+        window.onresize = function() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+
+        // --- 2. Логика Сценария ---
+        
+        // Массив данных. Файлы названы ТОЧНО как на скрине.
+        const scenes = [
+            {
+                file: "1_hello.mp3",
+                emoji: "🎅",
+                title: "Merry Christmas!",
+                text: "Hello Mom & Dad! I'm your son Derek.",
+                bg: "#fffcf5"
+            },
+            {
+                file: "2_forever.mp3",
+                emoji: "💖",
+                title: "My Wish",
+                text: "I wish you from my heart to live forever...",
+                bg: "#ffe6e6" // Розоватый
+            },
+            {
+                file: "3_gold.mp3",
+                emoji: "💰",
+                title: "Rain of Gold!",
+                text: "To buy the things you like the most!",
+                special: "gold",
+                bg: "#fffbe6" // Желтоватый
+            },
+            {
+                file: "4_friends.mp3",
+                emoji: "🥳",
+                title: "Happiness",
+                text: "Good friends and happiness to share.",
+                bg: "#e8f8f5" // Голубоватый
+            },
+            {
+                file: "5_secret.mp3",
+                emoji: "🤫",
+                title: "Come closer...",
+                text: "I have a secret...",
+                bg: "#2c3e50", // Темный для секрета
+                special: "zoom",
+                textColor: "white"
+            }
+        ];
+
+        let currentStep = 0;
+        let audioPlayer = new Audio();
+        let isPlaying = false;
+        let bookOpen = false;
+
+        // Элементы DOM
+        const book = document.getElementById('book');
+        const container = document.getElementById('scene-container');
+        const progressFill = document.getElementById('progress');
+
+        // Функция запуска (клик по обложке)
+        function startExperience() {
+            if (bookOpen) return;
+            bookOpen = true;
+            book.classList.add('open');
+            
+            // Небольшая задержка перед началом аудио, чтобы книга открылась
+            setTimeout(() => {
+                playScene(0);
+            }, 800);
+        }
+
+        function playScene(index) {
+            if (index >= scenes.length) {
+                // Конец всего
+                showFinalScreen();
+                return;
+            }
+
+            currentStep = index;
+            const data = scenes[index];
+
+            // 1. Обновляем визуал (Эмодзи, Текст, Фон)
+            const emojiHtml = `<div class="scene-emoji animate-pop ${data.special === 'gold' ? 'gold-rain-anim' : ''}" id="emoji-el">${data.emoji}</div>`;
+            const titleHtml = `<h2 class="scene-title" style="color: ${data.textColor || '#c0392b'}">${data.title}</h2>`;
+            const textHtml = `<p class="scene-text" style="color: ${data.textColor || '#34495e'}">${data.text}</p>`;
+
+            container.innerHTML = emojiHtml + titleHtml + textHtml;
+            document.querySelector('.content-page').style.backgroundColor = data.bg;
+
+            // Спецэффект для последнего слайда (Come closer)
+            if (data.special === 'zoom') {
+                 document.getElementById('emoji-el').style.transition = "transform 10s ease";
+                 setTimeout(() => {
+                     document.getElementById('emoji-el').style.transform = "scale(1.5)";
+                 }, 500);
+            }
+
+            // 2. Запускаем аудио
+            audioPlayer.src = data.file;
+            audioPlayer.play().catch(e => console.log("Audio play error:", e));
+            isPlaying = true;
+
+            // 3. Следим за прогрессом
+            updateProgress(index);
+
+            // 4. Когда аудио закончится -> следующий слайд
+            audioPlayer.onended = () => {
+                // Если это последний слайд (Секрет), делаем взрыв сердец
+                if (index === scenes.length - 1) {
+                    showFinalScreen();
+                } else {
+                    // Пауза 1 секунда между фразами
+                    setTimeout(() => {
+                        playScene(index + 1);
+                    }, 1000);
+                }
+            };
+        }
+
+        function replayCurrent() {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            playScene(currentStep);
+        }
+
+        function updateProgress(index) {
+            const pct = ((index + 1) / scenes.length) * 100;
+            progressFill.style.width = pct + '%';
+        }
+
+        function showFinalScreen() {
+            container.innerHTML = `
+                <div class="scene-emoji animate-pop">❤️</div>
+                <h2 class="scene-title">I LOVE YOU!</h2>
+                <p class="scene-text">Merry Christmas, Mom & Dad!</p>
+            `;
+            // Фейерверк из эмодзи (простой CSS)
+            createHearts();
+        }
+
+        function createHearts() {
+            const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#e84393'];
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'absolute';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = '100%';
+                heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                heart.style.transition = 'all 2s ease-out';
+                heart.style.opacity = '1';
+                document.querySelector('.content-page').appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.style.top = '0%';
+                    heart.style.opacity = '0';
+                }, 100);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 2000);
+            }, 300);
+        }
+
+    </script>
+</body>
+</html>
