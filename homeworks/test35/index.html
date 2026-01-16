@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test35</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">Test35</h1>
+        import os
+import re
+import subprocess
+import json
+import hashlib
+from pydub import AudioSegment
+from .log_manager import LogManager, AgentType
+from database.manager import DatabaseManager
+
+class AudioStoryGenerator:
+    def __init__(self, ai_module, log_manager):
+        self.ai_module = ai_module
+        self.log_manager = log_manager
+        self.db_manager = DatabaseManager()
+
+    def process_all_audio(self, html_content, output_dir, task_id):
+        output_dir = os.path.abspath(output_dir)
+        
+        regex_pattern = r'<!--\s*.*?(GEN_AUDIO(?:_STITCH)?):\s*(.*?)\s*-->.*?<audio\s+[^>]*src=["\'](PLACEHOLDER[^"\']*)["\']'
+        matches = list(re.finditer(regex_pattern, html_content, re.IGNORECASE | re.DOTALL))
+        
+        if not matches:
+            return html_content
+
+        self.log_manager.log(AgentType.LOGAN, f"🔎 Найдено {len(matches)} аудио-сцен. Подготовка...", "INFO", task_id)
+
+        all_tasks = []
+        replacements = [] 
+
+        for match in matches:
+            script = match.group(2).strip()
+            placeholder = match.group(3)
+            full_match_text = match.group(0)
+            
+            segments = self._parse_script(script)
+            segment_files = []
+            
+            for seg in segments:
+                text_hash = hashlib.md5(seg['text'].encode('utf-8')).hexdigest()[:10]
+                filename = os.path.join(output_dir, f"raw_{text_hash}.wav")
+                
+                all_tasks.append({
+                    "text": seg['text'],
+                    "filename": filename
+                })
+                segment_files.append(filename)
+            
+            final_filename = f"audio_{hashlib.md5(script.encode()).hexdigest()[:8]}.mp3"
+            final_path = os.path.join(output_dir, final_filename)
+            
+            replacements.append({
+                "segments": segment_files,
+                "final_path": final_path,
+                "final_name": final_filename,
+                "placeholder": placeholder,
+                "full_match_text": full_match_text
+            })
+
+        if not all_tasks:
+            return html_content
+
+        # --- ЗАПУСК ---
+        self._run_smart_generation(all_tasks, output_dir, task_id)
+
+        # --- СКЛЕЙКА ---
+        count_success = 0
+        for rep in replacements:
+            if self._stitch_files(rep['segments'], rep['final_path']):
+                clean_block = re.sub(r'<!--\s*GEN_AUDIO.*?-->', '', rep['full_match_text'], flags=re.DOTALL|re.IGNORECASE)
+                clean_block = clean_block.replace(rep['placeholder'], rep['final_name'])
+                html_content = html_content.replace(rep['full_match_text'], clean_block)
+                count_success += 1
+
+        self.log_manager.log(AgentType.LOGAN, f"✅ Аудио пайплайн завершен. Готово сцен: {count_success}", "SUCCESS", task_id)
+
+        # Чистка
+        for task in all_tasks:
+            try: os.remove(task['filename'])
+            except: pass
+
+        return html_content
+
+    def _parse_script(self, text):
+        segments = []
+        pattern = re.compile(r"\[([A-Z_]+)\]:\s*(.+)")
+        lines = [line.strip() for line in text.split('\n') if line.strip()]
+        for line in lines:
+            match = pattern.match(line)
+            if match:
+                segments.append({"character": match.group(1).strip(), "text": match.group(2).strip()})
+            else:
+                if not segments: segments.append({"character": "DEFAULT", "text": line})
+                else: segments[-1]["text"] += " " + line
+        return segments
+
+    def _run_smart_generation(self, tasks, work_dir, task_id):
+        # 1. ПУТИ
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+        venv_python = os.path.join(project_root, "venv_audio", "Scripts", "python.exe")
+        
+        # Резервный поиск
+        if not os.path.exists(venv_python):
+             venv_python = r"E:\dev\Teacher\MyGenApp\venv_audio\Scripts\python.exe"
+        
+        worker_script = os.path.join(project_root, "core", "local_gen", "audio_wrapper.py")
+
+        if not os.path.exists(venv_python) or not os.path.exists(worker_script):
+            self.log_manager.log(AgentType.LOGAN, "❌ Ошибка путей (Python или Worker не найдены)", "ERROR", task_id)
+            return
+
+        # 2. JSON
+        batch_file = os.path.join(work_dir, f"batch_{task_id}.json")
+        with open(batch_file, 'w', encoding='utf-8') as f:
+            json.dump(tasks, f, ensure_ascii=False)
+
+        try:
+            cmd = [venv_python, worker_script, "--batch", batch_file]
+            
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            
+            self.log_manager.log(AgentType.LOGAN, "🎙️ Запуск Chatterbox (timeout=5 мин)...", "INFO", task_id)
+            
+            # --- УМНЫЙ ЗАПУСК С ЧТЕНИЕМ ЛОГОВ ---
+            process = subprocess.Popen(
+                cmd, 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.STDOUT, 
+                startupinfo=startupinfo,
+                text=True, 
+                encoding='utf-8', 
+                errors='replace'
+            )
+
+            # Читаем вывод в реальном времени
+            while True:
+                # Таймаут на чтение строки (чтобы не зависнуть навечно)
+                # Если процесс молчит - мы продолжаем ждать, но Windows сама буферизует
+                line = process.stdout.readline()
+                if not line and process.poll() is not None:
+                    break
+                
+                if line:
+                    line = line.strip()
+                    # Парсим наши теги
+                    if "[STATUS]" in line:
+                        self.log_manager.log(AgentType.LOGAN, f"🔈 {line.replace('[STATUS]', '').strip()}", "INFO", task_id)
+                    elif "[CRITICAL]" in line:
+                        self.log_manager.log(AgentType.LOGAN, f"❌ {line}", "ERROR", task_id)
+                    elif "[WARNING]" in line:
+                        self.log_manager.log(AgentType.LOGAN, f"⚠️ {line}", "WARNING", task_id)
+                    elif "[FILE_CREATED]" in line:
+                        # Пример: [FILE_CREATED] путь|2.5s|20000b
+                        parts = line.split("|")
+                        fname = os.path.basename(parts[0].replace("[FILE_CREATED] ", "").strip())
+                        self.log_manager.log(AgentType.LOGAN, f"   💾 Файл готов: {fname}", "SUCCESS", task_id)
+                    elif "[ERROR]" in line:
+                        self.log_manager.log(AgentType.LOGAN, f"   ❌ Ошибка фразы: {line}", "ERROR", task_id)
+                    
+                    # Дублируем в консоль для тебя
+                    print(f"AUDIO_WORKER: {line}")
+
+            # Ждем завершения с таймаутом (на всякий случай)
+            # Если завис более чем на 5 минут всего процесса
+            # process.wait(timeout=300) 
+
+        except subprocess.TimeoutExpired:
+            process.kill()
+            self.log_manager.log(AgentType.LOGAN, "❌ ТАЙМАУТ: Аудио-движок завис и был остановлен.", "ERROR", task_id)
+        except Exception as e:
+            self.log_manager.log(AgentType.LOGAN, f"❌ Сбой процесса: {e}", "ERROR", task_id)
+        finally:
+            if os.path.exists(batch_file): os.remove(batch_file)
+
+    def _stitch_files(self, files, output_path):
+        combined = AudioSegment.empty()
+        pause = AudioSegment.silent(duration=500)
+        count = 0
+        for f in files:
+            if os.path.exists(f) and os.path.getsize(f) > 100:
+                try:
+                    combined += AudioSegment.from_wav(f) + pause
+                    count += 1
+                except: pass
+        
+        if count > 0:
+            combined.export(output_path, format="mp3")
+            return True
+        return False
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

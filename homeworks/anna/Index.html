@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anna's Magic World 🦄</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Varela+Round&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --pink: #FFB7B2;
+        --purple: #E0BBE4;
+        --blue: #B5EAD7;
+        --yellow: #FFDAC1;
+        --white: #ffffff;
+        --text: #635070;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Varela Round', sans-serif;
+        background-color: #FF9AA2;
+        background-image: radial-gradient(circle, #FFB7B2 10%, transparent 10%), radial-gradient(circle, #FFB7B2 10%, transparent 10%);
+        background-size: 30px 30px;
+        background-position: 0 0, 15px 15px;
+        overflow: hidden;
+        user-select: none;
+        text-align: center;
+        color: var(--text);
+    }
+
+    /* --- ANIMATIONS --- */
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    @keyframes wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+    @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes rain { 0% { transform: translateY(-100vh); opacity:0; } 50% { opacity:1;} 100% { transform: translateY(100vh); opacity: 0; } }
+
+    /* --- LAYOUT --- */
+    .screen {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0; left: 0;
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(5px);
+    }
+    .active { display: flex; }
+
+    h1 {
+        font-family: 'Fredoka One', cursive;
+        font-size: 3.5rem;
+        color: #FF6F91;
+        text-shadow: 3px 3px 0px #FFF;
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    /* --- BUTTONS --- */
+    .big-btn {
+        background: white;
+        border: 5px solid #FF9AA2;
+        padding: 15px 40px;
+        margin: 15px;
+        border-radius: 50px;
+        font-size: 1.8rem;
+        font-family: 'Fredoka One';
+        color: #FF6F91;
+        cursor: pointer;
+        box-shadow: 0 8px 0 #FFDAC1;
+        transition: transform 0.1s;
+        width: 350px;
+        animation: pop 0.5s;
+    }
+    .big-btn:hover { transform: scale(1.05); background: #FFF5F5; }
+    .big-btn:active { transform: translateY(5px); box-shadow: 0 3px 0 #FFDAC1; }
+
+    .home-btn {
+        position: absolute; top: 20px; left: 20px;
+        background: #C7CEEA; border: none; padding: 10px 20px;
+        border-radius: 20px; cursor: pointer; font-size: 1.5rem;
+        box-shadow: 0 5px 0 #9E9E9E; z-index: 100;
+    }
+
+    /* --- GAME 1: WEATHER MAGIC --- */
+    .weather-scene {
+        width: 100%; height: 100%; position: absolute; z-index: -1;
+        transition: background 1s;
+    }
+    .weather-icon {
+        font-size: 10rem;
+        animation: float 4s infinite;
+        transition: transform 0.5s;
+    }
+    .rain-drop {
+        position: absolute; width: 5px; height: 30px; background: #3498DB;
+        border-radius: 5px; animation: rain 1s linear infinite;
+    }
+    .snow-flake {
+        position: absolute; font-size: 2rem; color: white;
+        animation: rain 3s linear infinite;
+    }
+
+    /* --- GAME 2: FEED THE BUNNY --- */
+    .bunny {
+        font-size: 8rem;
+        cursor: pointer;
+        animation: wiggle 2s infinite;
+        margin-bottom: 20px;
+    }
+    .food-container {
+        display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+    }
+    .food-item {
+        background: #FFDAC1;
+        padding: 20px;
+        border-radius: 20px;
+        font-size: 2rem;
+        font-family: 'Fredoka One';
+        color: #FF9AA2;
+        border: 4px solid white;
+        cursor: pointer;
+        box-shadow: 0 5px 0 rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+    .food-item:hover { transform: scale(1.1) rotate(5deg); }
+
+    /* --- GAME 3: TIDY UP --- */
+    .room-container {
+        display: flex; gap: 50px; margin-top: 30px;
+    }
+    .room-target {
+        width: 250px; height: 300px;
+        border-radius: 30px;
+        border: 8px solid white;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        font-size: 5rem;
+        background: #E2F0CB;
+        cursor: pointer;
+        box-shadow: 0 10px 0 rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+    .room-target:hover { transform: scale(1.05); }
+    .room-label { font-size: 1.5rem; margin-top: 10px; font-family: 'Fredoka One'; }
+    
+    .floating-item {
+        font-size: 6rem;
+        animation: float 2s infinite;
+        margin-bottom: 20px;
+    }
+
+    /* --- FEEDBACK --- */
+    #feedback {
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+        font-size: 5rem; font-family: 'Fredoka One'; color: #B5EAD7;
+        text-shadow: 5px 5px 0 #FF9AA2; pointer-events: none; z-index: 999;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .show-feedback { transform: translate(-50%, -50%) scale(1) !important; }
+
+</style>
+</head>
+<body>
+
+<div id="feedback">Super!</div>
+
+<div id="app">
+
+    <!-- MENU -->
+    <div id="menu" class="screen active">
+        <h1>Anna's World 🎀</h1>
+        <button class="big-btn" onclick="startGame('weather')">1. Magic Weather ☀️</button>
+        <button class="big-btn" onclick="startGame('bunny')">2. Hungry Bunny 🐰</button>
+        <button class="big-btn" onclick="startGame('house')">3. Tidy the House 🏠</button>
+    </div>
+
+    <!-- GAME 1: WEATHER -->
+    <div id="game-weather" class="screen" style="background:transparent;">
+        <div id="weather-bg" class="weather-scene" style="background:#87CEEB;"></div>
+        <button class="home-btn" onclick="goHome()">🏠</button>
+        
+        <div id="weather-display" class="weather-icon">☀️</div>
+        <h1 id="weather-text" style="color:white; margin-top:0;">Sunny</h1>
+
+        <div style="position:absolute; bottom: 50px; display:flex; gap:20px;">
+            <button class="big-btn" style="width:auto; background:#FFD700; color:white;" onclick="setWeather('sunny')">Sunny ☀️</button>
+            <button class="big-btn" style="width:auto; background:#3498DB; color:white;" onclick="setWeather('rainy')">Rainy 🌧️</button>
+            <button class="big-btn" style="width:auto; background:#ECF0F1; color:#BDC3C7;" onclick="setWeather('snowy')">Snowy ❄️</button>
+        </div>
+        <div id="particles"></div>
+    </div>
+
+    <!-- GAME 2: BUNNY PHONICS -->
+    <div id="game-bunny" class="screen">
+        <button class="home-btn" onclick="goHome()">🏠</button>
+        <h1>Feed the Bunny!</h1>
+        <div class="bunny">🐰</div>
+        <div style="font-size:2rem; margin-bottom:20px; color:#FF6F91;">I want <span id="target-sound" style="font-weight:bold; font-size:3rem;">-at</span> words!</div>
+        
+        <div class="food-container" id="bunny-food">
+            <!-- Food injected here -->
+        </div>
+    </div>
+
+    <!-- GAME 3: HOUSE SORTING -->
+    <div id="game-house" class="screen">
+        <button class="home-btn" onclick="goHome()">🏠</button>
+        <h1>Where does it go?</h1>
+        
+        <div class="floating-item" id="house-item">🛏️</div>
+        <div style="font-size:2rem; color:#888; margin-bottom:10px;" id="item-name">Bed</div>
+
+        <div class="room-container">
+            <div class="room-target" onclick="checkRoom('bedroom')" style="background:#FFDAC1;">
+                🛏️
+                <div class="room-label">Bedroom</div>
+            </div>
+            <div class="room-target" onclick="checkRoom('bathroom')" style="background:#B5EAD7;">
+                🛁
+                <div class="room-label">Bathroom</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- GENERAL ---
+    function goHome() {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('menu').classList.add('active');
+        stopParticles();
+    }
+
+    function startGame(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('game-' + id).classList.add('active');
+        if(id === 'bunny') initBunny();
+        if(id === 'house') initHouse();
+    }
+
+    function showFeedback(text) {
+        const fb = document.getElementById('feedback');
+        fb.innerText = text;
+        fb.classList.add('show-feedback');
+        setTimeout(() => fb.classList.remove('show-feedback'), 1000);
+    }
+
+    // --- GAME 1: WEATHER ---
+    let particleInterval;
+
+    function setWeather(type) {
+        const bg = document.getElementById('weather-bg');
+        const icon = document.getElementById('weather-display');
+        const text = document.getElementById('weather-text');
+        
+        stopParticles();
+        icon.style.animation = "float 4s infinite"; // reset animation
+
+        if(type === 'sunny') {
+            bg.style.background = "#87CEEB";
+            icon.innerText = "☀️";
+            icon.style.animation = "spin 10s linear infinite";
+            text.innerText = "It is Sunny!";
+            showFeedback("Hot! 😎");
+        } else if (type === 'rainy') {
+            bg.style.background = "#5D6D7E";
+            icon.innerText = "🌧️";
+            text.innerText = "It is Rainy!";
+            startRain();
+            showFeedback("Wet! ☔");
+        } else if (type === 'snowy') {
+            bg.style.background = "#D6EAF8";
+            icon.innerText = "☃️";
+            text.innerText = "It is Snowy!";
+            startSnow();
+            showFeedback("Cold! 🥶");
+        }
+    }
+
+    function startRain() {
+        const container = document.getElementById('particles');
+        particleInterval = setInterval(() => {
+            const d = document.createElement('div');
+            d.className = 'rain-drop';
+            d.style.left = Math.random() * 100 + 'vw';
+            container.appendChild(d);
+            setTimeout(() => d.remove(), 1000);
+        }, 50);
+    }
+
+    function startSnow() {
+        const container = document.getElementById('particles');
+        particleInterval = setInterval(() => {
+            const d = document.createElement('div');
+            d.className = 'snow-flake';
+            d.innerText = "❄️";
+            d.style.left = Math.random() * 100 + 'vw';
+            container.appendChild(d);
+            setTimeout(() => d.remove(), 3000);
+        }, 100);
+    }
+
+    function stopParticles() {
+        clearInterval(particleInterval);
+        document.getElementById('particles').innerHTML = '';
+    }
+
+    // --- GAME 2: BUNNY ---
+    const wordFamilies = {
+        '-at': ['Cat', 'Hat', 'Mat', 'Bat'],
+        '-og': ['Dog', 'Log', 'Frog', 'Fog'],
+        '-en': ['Hen', 'Pen', 'Ten', 'Men'],
+        '-ig': ['Pig', 'Wig', 'Big', 'Dig'],
+        '-et': ['Net', 'Jet', 'Wet', 'Pet']
+    };
+    let currentFam = '';
+
+    function initBunny() {
+        const keys = Object.keys(wordFamilies);
+        currentFam = keys[Math.floor(Math.random() * keys.length)];
+        document.getElementById('target-sound').innerText = currentFam;
+        
+        const container = document.getElementById('bunny-food');
+        container.innerHTML = '';
+        
+        // Get correct words
+        let items = [...wordFamilies[currentFam]];
+        
+        // Get distraction words
+        let distract = keys.filter(k => k !== currentFam)[0];
+        items.push(wordFamilies[distract][0]);
+        items.push(wordFamilies[distract][1]);
+        
+        // Shuffle
+        items.sort(() => Math.random() - 0.5);
+
+        items.forEach(word => {
+            let div = document.createElement('div');
+            div.className = 'food-item';
+            div.innerText = word + " 🥕";
+            div.onclick = () => {
+                if(word.endsWith(currentFam.replace('-','').toLowerCase())) {
+                    showFeedback("Yummy! 😋");
+                    div.style.transform = "scale(0)";
+                    setTimeout(() => {
+                        div.remove();
+                        if(container.children.length <= 2) initBunny(); // Next level
+                    }, 300);
+                } else {
+                    showFeedback("No no! 😝");
+                    div.style.background = "#ccc";
+                }
+            };
+            container.appendChild(div);
+        });
+    }
+
+    // --- GAME 3: HOUSE ---
+    const houseItems = [
+        {name: "Bed", icon: "🛏️", room: "bedroom"},
+        {name: "Lamp", icon: "💡", room: "bedroom"},
+        {name: "Pillow", icon: "☁️", room: "bedroom"},
+        {name: "Bathtub", icon: "🛁", room: "bathroom"},
+        {name: "Soap", icon: "🧼", room: "bathroom"},
+        {name: "Toilet", icon: "🚽", room: "bathroom"},
+        {name: "Duck", icon: "🦆", room: "bathroom"},
+        {name: "Books", icon: "📚", room: "bedroom"}
+    ];
+    let currentItemIndex = 0;
+
+    function initHouse() {
+        currentItemIndex = Math.floor(Math.random() * houseItems.length);
+        loadHouseItem();
+    }
+
+    function loadHouseItem() {
+        const item = houseItems[currentItemIndex];
+        document.getElementById('house-item').innerText = item.icon;
+        document.getElementById('item-name').innerText = item.name;
+    }
+
+    function checkRoom(room) {
+        const item = houseItems[currentItemIndex];
+        if(item.room === room) {
+            showFeedback("Good Job! 🌟");
+            // Animation out
+            document.getElementById('house-item').style.transform = "scale(0)";
+            setTimeout(() => {
+                document.getElementById('house-item').style.transform = "scale(1)";
+                initHouse();
+            }, 500);
+        } else {
+            showFeedback("Oops! 🙈");
+        }
+    }
+
+</script>
+</body>
+</html>

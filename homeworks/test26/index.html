@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test26</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">Test26</h1>
+        <!-- ======================================================= -->
+<!-- СТИЛИ (NEON GLASS - COMPACT) -->
+<!-- ======================================================= -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+    :root {
+        --bg-color: #050505;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --border: 1px solid rgba(255, 255, 255, 0.1);
+        --accent: #b967ff; /* Neon Purple */
+        --text: #ffffff;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(185, 103, 255, 0.15) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 40%);
+        color: var(--text);
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 40px;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .card {
+        background: var(--card-bg);
+        border: var(--border);
+        border-radius: 20px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    h3 {
+        margin-top: 0;
+        font-size: 1.1rem;
+        color: var(--accent);
+        margin-bottom: 15px;
+        text-transform: uppercase;
+    }
+
+    .lesson-img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    audio {
+        width: 100%;
+        height: 35px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        opacity: 0.8;
+    }
+
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: auto;
+    }
+
+    .btn {
+        background: rgba(0,0,0,0.3);
+        border: var(--border);
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn:hover { background: var(--accent); color: black; }
+    .btn.correct { background: #00b09b !important; border-color: #00b09b; }
+    .btn.wrong { background: #ff416c !important; border-color: #ff416c; }
+
+    .header {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .header h1 { font-size: 3rem; margin: 0; background: linear-gradient(to right, #b967ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h1>Local AI Test</h1>
+    </div>
+
+    <!-- ТЕСТ КАРТИНКИ (Flux) -->
+    <div class="card">
+        <h3>1. Visual Test</h3>
+        <img src="img_1767772563_6597.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)">Human</button>
+            <button class="btn" onclick="check(this)" data-correct="true">Robot</button>
+        </div>
+    </div>
+
+    <!-- ТЕСТ АУДИО (Chatterbox) -->
+    <div class="card">
+        <h3>2. Audio Test</h3>
+        <p>Listen to the voice.</p>
+        <!-- GEN_AUDIO: [NARRATOR]: This is a test of the local audio generation system. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <!-- ТЕСТ ДИАЛОГА -->
+    <div class="card">
+        <h3>3. Dialogue Test</h3>
+        <p>Conversation.</p>
+        <!-- GEN_AUDIO: [YOUNG_MAN]: Hello! Is the system working? [YOUNG_WOMAN]: Yes, it is working perfectly! -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+</div>
+
+<script>
+    function check(btn) {
+        if (btn.dataset.correct) btn.classList.add('correct');
+        else btn.classList.add('wrong');
+    }
+</script>
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

@@ -1,0 +1,4 @@
+DEBUG: Инициализация аудио...
+DEBUG: Использую модель: e:\dev\Teacher\MyGenApp\models\Chatterbox\t3_turbo_v1.safetensors
+DEBUG: GPU активен: NVIDIA GeForce RTX 3080 Laptop GPU
+CRITICAL ERROR LOADING MODEL: TextToSpeech.__init__() got an unexpected keyword argument 'autoregressive_model_path'

@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test24</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">Test24</h1>
+        import torch
+import torch.nn as nn
+import os
+import sys
+import argparse
+import torchaudio
+from safetensors.torch import load_file
+from tortoise.api import TextToSpeech
+
+# Настройка путей (относительно скрипта)
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+# Путь к папке с вашей моделью Chatterbox
+MODEL_DIR = os.path.join(CURRENT_DIR, "models", "Chatterbox")
+MODEL_PATH = os.path.join(MODEL_DIR, "t3_turbo_v1.safetensors")
+
+def generate_audio(text, output_path):
+    # 1. Проверка наличия модели
+    if not os.path.exists(MODEL_PATH):
+        print(f"ERROR: Model file not found at {MODEL_PATH}", file=sys.stderr)
+        return False
+
+    try:
+        # 2. Инициализация движка (без авто-загрузки весов)
+        # use_deepspeed=False для стабильности на Windows
+        tts = TextToSpeech(use_deepspeed=False, kv_cache=True)
+        
+        # 3. ХАК АРХИТЕКТУРЫ (Критически важно для Chatterbox!)
+        # Стандартная модель имеет размер 256. Chatterbox - 50276.
+        # Мы вручную расширяем слои перед загрузкой весов.
+        tts.autoregressive.text_token_embedding = nn.Embedding(50276, 1024)
+        tts.autoregressive.text_head = nn.Linear(1024, 50276, bias=False)
+        
+        # 4. Загрузка ваших весов
+        print(f"Loading weights from {MODEL_PATH}...")
+        ar_weights = load_file(MODEL_PATH)
+        tts.autoregressive.load_state_dict(ar_weights, strict=False)
+        
+        # 5. Генерация
+        # preset="fast" или "ultra_fast" для скорости
+        # voice_samples=None, conditioning_latents=None - используем рандомный голос, 
+        # так как у нас нет папки с голосами (voices). 
+        # Если нужно конкретный голос - нужно добавить папку voices/
+        print(f"Generating: {text[:30]}...")
+        
+        # Генерируем с рандомным голосом (пока так, чтобы заработало)
+        gen = tts.tts_with_preset(text, preset="fast")
+        
+        # 6. Сохранение
+        # gen - это тензор (1, samples). Squeeze убирает лишнюю размерность.
+        torchaudio.save(output_path, gen.squeeze(0).cpu(), 24000)
+        
+        print(f"SUCCESS: {output_path}")
+        return True
+
+    except Exception as e:
+        # Выводим полный текст ошибки в stderr, чтобы программа его поймала
+        import traceback
+        traceback.print_exc()
+        print(f"CRITICAL ERROR: {e}", file=sys.stderr)
+        return False
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("text", help="Text to speak")
+    parser.add_argument("--filename", required=True, help="Output file path")
+    
+    args = parser.parse_args()
+
+    generate_audio(args.text, args.filename)
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

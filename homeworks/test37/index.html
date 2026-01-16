@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test37</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">Test37</h1>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full System Stress Test</title>
+    <style>
+        /* СТИЛИ ДЛЯ ТЕСТА */
+        :root {
+            --bg: #0f0c29;
+            --card: #24243e;
+            --text: #ffffff;
+            --accent: #f12711;
+            --accent-2: #f5af19;
+        }
+        body {
+            background: linear-gradient(to right, var(--bg), #302b63, #24243e);
+            color: var(--text);
+            font-family: sans-serif;
+            padding: 40px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 { text-align: center; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; }
+        .test-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .test-card h3 { margin-top: 0; color: var(--accent-2); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .img-box {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        audio { width: 100%; margin-top: 10px; }
+        .status { font-size: 0.8em; color: #888; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>System Stress Test</h1>
+
+    <!-- 
+    ========================================
+    TEST 1: IMAGE GENERATION (FLUX)
+    Цель: Проверить загрузку ComfyUI и последующую выгрузку VRAM.
+    ========================================
+    -->
+    <div class="test-card">
+        <h3>1. Visual Test (Flux)</h3>
+        <p>Generating a complex image to fill VRAM.</p>
+        
+        <!-- GEN_IMG: A futuristic astronaut cat exploring a neon jungle planet, cinematic lighting, 8k, detailed fur, bioluminescent plants -->
+        <div class="img-box">
+            <img src="PLACEHOLDER_IMG_1" alt="AI Generated Image">
+        </div>
+        <div class="status">Flux must unload after this task.</div>
+    </div>
+
+    <!-- 
+    ========================================
+    TEST 2: SHORT AUDIO
+    Цель: Проверка инициализации аудио-движка (Cold Start).
+    ========================================
+    -->
+    <div class="test-card">
+        <h3>2. Short Audio (3 sec)</h3>
+        <p>Simple narrator voice check.</p>
+        
+        <!-- GEN_AUDIO: 
+        [NARRATOR]: Initializing audio test sequence. Systems are green. 
+        -->
+        
+        <audio controls src="PLACEHOLDER_AUDIO_SHORT"></audio>
+    </div>
+
+    <!-- 
+    ========================================
+    TEST 3: DIALOGUE (MEDIUM)
+    Цель: Проверка склейки разных голосов.
+    ========================================
+    -->
+    <div class="test-card">
+        <h3>3. Dialogue Switching (10 sec)</h3>
+        <p>Testing transition between male and female voices.</p>
+        
+        <!-- GEN_AUDIO: 
+        [YOUNG_MAN]: Hey, can you hear me clearly?
+        [YOUNG_WOMAN]: Yes, your voice is crystal clear. The interference is gone.
+        [YOUNG_MAN]: Great! Let's proceed to the final test.
+        -->
+        
+        <audio controls src="PLACEHOLDER_AUDIO_DIALOGUE"></audio>
+    </div>
+
+    <!-- 
+    ========================================
+    TEST 4: LONG COMPLEX AUDIO
+    Цель: Стресс-тест генератора (память, скорость).
+    ========================================
+    -->
+    <div class="test-card">
+        <h3>4. Long Monologue (Stress Test)</h3>
+        <p>Complex sentence structure with pauses.</p>
+        
+        <!-- GEN_AUDIO: 
+        [OLD_MAN]: Listen close, because I will only say this once. 
+        [OLD_MAN]: Long ago, before the machines took over, we used to write code by hand. It was tedious work.
+        [OLD_MAN]: We didn't have fancy neural networks generating art for us. We had pencils, and paper, and patience.
+        [OLD_MAN]: But looking at what you have built today... I have to admit. It is truly impressive.
+        -->
+        
+        <audio controls src="PLACEHOLDER_AUDIO_LONG"></audio>
+    </div>
+
+</div>
+
+</body>
+</html>
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

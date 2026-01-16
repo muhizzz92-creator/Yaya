@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test21</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">test21</h1>
+        <!-- ======================================================= -->
+<!-- СТИЛИ (NEON GLASS - COMPACT) -->
+<!-- ======================================================= -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+    :root {
+        --bg-color: #050505;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --border: 1px solid rgba(255, 255, 255, 0.1);
+        --accent: #b967ff; /* Neon Purple */
+        --text: #ffffff;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(185, 103, 255, 0.15) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 40%);
+        color: var(--text);
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 40px;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* АВТО-СЕТКА */
+        gap: 25px;
+    }
+
+    /* КАРТОЧКА */
+    .card {
+        background: var(--card-bg);
+        border: var(--border);
+        border-radius: 20px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        transition: transform 0.2s;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent);
+    }
+
+    h3 {
+        margin-top: 0;
+        font-size: 1.1rem;
+        color: var(--accent);
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* КАРТИНКИ (Компактные) */
+    .lesson-img {
+        width: 100%;
+        height: 180px; /* Фиксированная высота */
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* АУДИО */
+    audio {
+        width: 100%;
+        height: 35px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        opacity: 0.8;
+    }
+
+    /* КНОПКИ */
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: auto;
+    }
+
+    .btn {
+        background: rgba(0,0,0,0.3);
+        border: var(--border);
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+    }
+
+    .btn:hover { background: var(--accent); color: black; }
+    .btn.correct { background: #00b09b !important; border-color: #00b09b; }
+    .btn.wrong { background: #ff416c !important; border-color: #ff416c; }
+
+    /* ЗАГОЛОВОК СТРАНИЦЫ */
+    .header {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .header h1 { font-size: 3rem; margin: 0; background: linear-gradient(to right, #b967ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h1>Local AI Stress Test</h1>
+        <p>Generating via ComfyUI (Flux) & Chatterbox (Tortoise)</p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ЧАСТЬ 1: ВИЗУАЛЬНЫЙ ТЕСТ (Flux) -->
+    <!-- ========================================== -->
+
+    <div class="card">
+        <h3>1. Cyberpunk Cat</h3>
+        <img src="img_1767616411_2790.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)">Dog</button>
+            <button class="btn" onclick="check(this)" data-correct="true">Cat</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>2. Isometric Room</h3>
+        <img src="img_1767616513_6002.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)" data-correct="true">Room</button>
+            <button class="btn" onclick="check(this)">Kitchen</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>3. Watercolor Flower</h3>
+        <img src="img_1767616571_9091.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)">Rose</button>
+            <button class="btn" onclick="check(this)" data-correct="true">Sunflower</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>4. Pixel Knight</h3>
+        <img src="img_1767616629_5116.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)" data-correct="true">Knight</button>
+            <button class="btn" onclick="check(this)">Wizard</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>5. Realistic Portrait</h3>
+        <img src="img_1767616688_7260.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)">Young</button>
+            <button class="btn" onclick="check(this)" data-correct="true">Old</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>6. Anime Girl</h3>
+        <img src="img_1767616747_8845.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)" data-correct="true">Reading</button>
+            <button class="btn" onclick="check(this)">Sleeping</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>7. Low Poly Tree</h3>
+        <img src="img_1767616806_8083.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)">Bush</button>
+            <button class="btn" onclick="check(this)" data-correct="true">Tree</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>8. Space Nebula</h3>
+        <img src="img_1767616866_6064.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)" data-correct="true">Space</button>
+            <button class="btn" onclick="check(this)">Ocean</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>9. Macro Insect</h3>
+        <img src="img_1767616925_7601.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)">Bee</button>
+            <button class="btn" onclick="check(this)" data-correct="true">Ladybug</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>10. Fantasy Castle</h3>
+        <img src="img_1767616984_3020.png" class="lesson-img">
+        <div class="options">
+            <button class="btn" onclick="check(this)" data-correct="true">Castle</button>
+            <button class="btn" onclick="check(this)">House</button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ЧАСТЬ 2: АУДИО ТЕСТ (Chatterbox) -->
+    <!-- ========================================== -->
+
+    <div class="card">
+        <h3>11. Narrator Intro</h3>
+        <p>Listen to the introduction.</p>
+        <!-- GEN_AUDIO: [NARRATOR]: Welcome to the local AI stress test. All systems are operational. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>12. Young Woman</h3>
+        <p>What is she doing?</p>
+        <!-- GEN_AUDIO: [YOUNG_WOMAN]: I am going to the market to buy some fresh fruit. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>13. Teen Boy</h3>
+        <p>Does he like school?</p>
+        <!-- GEN_AUDIO: [TEEN_BOY]: Math class is so boring today. I want to play football! -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>14. Old Man</h3>
+        <p>Advice.</p>
+        <!-- GEN_AUDIO: [OLD_MAN]: Listen to me carefully. Always look both ways before crossing the street. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>15. Dialogue 1</h3>
+        <p>Meeting.</p>
+        <!-- GEN_AUDIO: [YOUNG_MAN]: Hello! How are you? [YOUNG_WOMAN]: I am fine, thank you. And you? -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>16. Dialogue 2</h3>
+        <p>Shopping.</p>
+        <!-- GEN_AUDIO: [TEEN_GIRL]: Mom, can I have this toy? [OLD_WOMAN]: No dear, it is too expensive. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>17. Dialogue 3</h3>
+        <p>Lost.</p>
+        <!-- GEN_AUDIO: [TEEN_BOY]: Excuse me, where is the library? [PROFESSIONAL_MAN]: Go straight and turn left. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>18. British Accent</h3>
+        <p>Tea time.</p>
+        <!-- GEN_AUDIO: [PROFESSIONAL_WOMAN]: Would you like a cup of tea with milk? -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>19. Robot Voice</h3>
+        <p>System.</p>
+        <!-- GEN_AUDIO: [NARRATOR]: System error. Rebooting. Please wait. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>20. Final Audio</h3>
+        <p>Conclusion.</p>
+        <!-- GEN_AUDIO: [NARRATOR]: This concludes the audio generation test. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ЧАСТЬ 3: СМЕШАННЫЙ ТЕСТ -->
+    <!-- ========================================== -->
+
+    <div class="card">
+        <h3>21. The Dragon</h3>
+        <img src="img_1767617043_971.png" class="lesson-img">
+        <!-- GEN_AUDIO: [NARRATOR]: The dragon is sleeping. Do not wake him up! -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>22. The Future</h3>
+        <img src="img_1767617102_15.png" class="lesson-img">
+        <!-- GEN_AUDIO: [TEEN_BOY]: Look at that car fly! It is so fast. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>23. The Beach</h3>
+        <img src="img_1767617163_3052.png" class="lesson-img">
+        <!-- GEN_AUDIO: [YOUNG_WOMAN]: I love the ocean. The water is so warm. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>24. The Forest</h3>
+        <img src="img_1767617222_711.png" class="lesson-img">
+        <!-- GEN_AUDIO: [OLD_MAN]: Do not go into the forest at night. It is dangerous. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>25. The Party</h3>
+        <img src="img_1767617281_6148.png" class="lesson-img">
+        <!-- GEN_AUDIO: [TEEN_GIRL]: Happy Birthday! Make a wish! -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>26. Rain</h3>
+        <img src="img_1767617341_5547.png" class="lesson-img">
+        <!-- GEN_AUDIO: [YOUNG_MAN]: It is raining again. I forgot my umbrella. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>27. Coffee</h3>
+        <img src="img_1767617402_9931.png" class="lesson-img">
+        <!-- GEN_AUDIO: [PROFESSIONAL_WOMAN]: I need a coffee before work. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>28. Books</h3>
+        <img src="img_1767617464_1747.png" class="lesson-img">
+        <!-- GEN_AUDIO: [NARRATOR]: Once upon a time, in a land far away... -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>29. Music</h3>
+        <img src="img_1767617525_1994.png" class="lesson-img">
+        <!-- GEN_AUDIO: [OLD_WOMAN]: That is beautiful music. Who is playing? -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+    <div class="card">
+        <h3>30. Victory</h3>
+        <img src="img_1767617585_730.png" class="lesson-img">
+        <!-- GEN_AUDIO: [NARRATOR]: Test complete. All systems green. -->
+        <audio controls src="PLACEHOLDER"></audio>
+    </div>
+
+</div>
+
+<script>
+    function check(btn) {
+        const container = btn.parentElement;
+        if (container.dataset.answered) return;
+        container.dataset.answered = "true";
+
+        if (btn.dataset.correct) {
+            btn.classList.add('correct');
+        } else {
+            btn.classList.add('wrong');
+        }
+    }
+</script>
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            
