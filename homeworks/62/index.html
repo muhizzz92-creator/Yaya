@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>62</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">62</h1>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2 English: City Adventure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --accent: #ff9f43;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --card-bg: #ffffff;
+            --bg-color: #f0f2f5;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#dfe6e9 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(78, 84, 200, 0.3);
+        }
+
+        h1 { margin: 0; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle { font-size: 1.2rem; opacity: 0.9; margin-top: 10px; }
+
+        /* Story Section Styles */
+        .story-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+            align-items: center;
+        }
+
+        .visual-card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transform: rotate(-2deg);
+            transition: transform 0.3s;
+        }
+        .visual-card:hover { transform: rotate(0deg) scale(1.02); }
+
+        .visual-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid #eee;
+        }
+
+        .text-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+            transform: rotate(2deg);
+        }
+
+        .audio-player { width: 100%; margin-top: 20px; border-radius: 10px; }
+
+        /* Quiz Section Styles */
+        .quiz-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .section-title {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 40px 0 20px 0;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-bottom: 4px solid #ddd;
+            transition: all 0.2s;
+        }
+
+        .question-card:hover { transform: translateY(-3px); }
+
+        .q-header { font-size: 1.1rem; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .q-icon { font-size: 1.5rem; }
+
+        .options { display: flex; flex-direction: column; gap: 8px; }
+        
+        button.opt-btn {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        button.opt-btn:hover { background: var(--secondary); color: white; border-color: var(--secondary); }
+        
+        button.correct { background: var(--success) !important; color: white !important; border-color: var(--success) !important; }
+        button.wrong { background: var(--error) !important; color: white !important; border-color: var(--error) !important; opacity: 0.6; }
+
+        input.text-input {
+            width: 90%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .check-btn {
+            margin-top: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .story-section { grid-template-columns: 1fr; transform: none; }
+            .visual-card, .text-card { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🏙️ City Life Adventure</h1>
+        <div class="subtitle">Look, Listen & Learn (Level A2)</div>
+    </header>
+
+    <!-- ==================== SCENE 1 ==================== -->
+    <div class="story-section">
+        <div class="visual-card">
+            <!-- GEN_IMG: A busy street cafe in Paris, sunny morning, people drinking coffee, croissant on table, eiffel tower in distance, colorful cartoon style, 4k -->
+            <img src="PLACEHOLDER_IMG_1" alt="Cafe Scene">
+        </div>
+        <div class="text-card">
+            <h3>🥐 Scene 1: Morning Coffee</h3>
+            <p><strong>Listen to the conversation:</strong></p>
+            <!-- GEN_AUDIO: 
+            [NARRATOR]: It is 9 o'clock in the morning. The city is waking up.
+            [YOUNG_MAN]: Good morning! Can I have a black coffee and a croissant, please?
+            [GIRL]: Of course! Would you like sugar with your coffee?
+            [YOUNG_MAN]: No thanks. I like it bitter.
+            [GIRL]: Here you go. Have a nice day!
+            -->
+            <audio controls src="PLACEHOLDER_AUDIO_1" class="audio-player"></audio>
+        </div>
+    </div>
+
+    <!-- ==================== SCENE 2 ==================== -->
+    <div class="story-section">
+        <div class="text-card">
+            <h3>🚌 Scene 2: The Bus Stop</h3>
+            <p><strong>Listen to the conversation:</strong></p>
+            <!-- GEN_AUDIO: 
+            [NARRATOR]: Later, at the central bus station. It is starting to rain.
+            [OLD_MAN]: Excuse me, does this bus go to the museum?
+            [ROBOT]: Negative. This is bus number 5. You need bus number 12.
+            [OLD_MAN]: Oh dear. When does the next one arrive?
+            [ROBOT]: In exactly ten minutes. Please wait under the shelter.
+            -->
+            <audio controls src="PLACEHOLDER_AUDIO_2" class="audio-player"></audio>
+        </div>
+        <div class="visual-card">
+            <!-- GEN_IMG: A futuristic bus stop in the rain, an old man with an umbrella talking to a friendly robot, wet asphalt, reflections, soft lighting, 3d render -->
+            <img src="PLACEHOLDER_IMG_2" alt="Bus Stop">
+        </div>
+    </div>
+
+    <!-- ==================== QUIZ SECTION ==================== -->
+    
+    <div class="section-title">🧠 Part 1: Story Comprehension</div>
+    <div class="quiz-container">
+        <!-- Q1 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">☕</span> What did the man order?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">Tea and cake</button>
+                <button class="opt-btn" onclick="check(this, true)">Coffee and croissant</button>
+                <button class="opt-btn" onclick="check(this, false)">Juice and toast</button>
+            </div>
+        </div>
+        <!-- Q2 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🚌</span> Which bus goes to the museum?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">Number 5</button>
+                <button class="opt-btn" onclick="check(this, true)">Number 12</button>
+                <button class="opt-btn" onclick="check(this, false)">Number 10</button>
+            </div>
+        </div>
+        <!-- Q3 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🍬</span> Did the man want sugar?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">Yes, please</button>
+                <button class="opt-btn" onclick="check(this, true)">No, thanks</button>
+            </div>
+        </div>
+        <!-- Q4 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">☔</span> What was the weather in Scene 2?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">Sunny</button>
+                <button class="opt-btn" onclick="check(this, true)">Rainy</button>
+                <button class="opt-btn" onclick="check(this, false)">Snowy</button>
+            </div>
+        </div>
+        <!-- Q5 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🤖</span> Who did the old man talk to?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">A police officer</button>
+                <button class="opt-btn" onclick="check(this, true)">A robot</button>
+                <button class="opt-btn" onclick="check(this, false)">A taxi driver</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">📚 Part 2: Grammar (A2)</div>
+    <div class="quiz-container">
+        <!-- Q6 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">⏳</span> Past Simple</div>
+            <p>Yesterday, I ______ to the cinema.</p>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">go</button>
+                <button class="opt-btn" onclick="check(this, true)">went</button>
+                <button class="opt-btn" onclick="check(this, false)">gone</button>
+            </div>
+        </div>
+        <!-- Q7 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🔮</span> Future with 'Going to'</div>
+            <p>Look at those clouds! It ______ rain.</p>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, true)">is going to</button>
+                <button class="opt-btn" onclick="check(this, false)">will</button>
+            </div>
+        </div>
+        <!-- Q8 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🆚</span> Comparatives</div>
+            <p>An elephant is ______ than a mouse.</p>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">big</button>
+                <button class="opt-btn" onclick="check(this, true)">bigger</button>
+                <button class="opt-btn" onclick="check(this, false)">biggest</button>
+            </div>
+        </div>
+        <!-- Q9 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">📍</span> Prepositions</div>
+            <p>We usually have lunch ______ 1:00 PM.</p>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, true)">at</button>
+                <button class="opt-btn" onclick="check(this, false)">on</button>
+                <button class="opt-btn" onclick="check(this, false)">in</button>
+            </div>
+        </div>
+        <!-- Q10 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🔄</span> Continuous</div>
+            <p>Please be quiet. The baby ______.</p>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">sleeps</button>
+                <button class="opt-btn" onclick="check(this, true)">is sleeping</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">🔤 Part 3: Vocabulary & Logic</div>
+    <div class="quiz-container">
+        <!-- Q11 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🚫</span> Odd one out</div>
+            <p>Which one is NOT a fruit?</p>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">Apple 🍎</button>
+                <button class="opt-btn" onclick="check(this, false)">Banana 🍌</button>
+                <button class="opt-btn" onclick="check(this, true)">Carrot 🥕</button>
+            </div>
+        </div>
+        <!-- Q12 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🏥</span> Professions</div>
+            <p>I work in a hospital. Who am I?</p>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, true)">Doctor</button>
+                <button class="opt-btn" onclick="check(this, false)">Teacher</button>
+                <button class="opt-btn" onclick="check(this, false)">Chef</button>
+            </div>
+        </div>
+        <!-- Q13 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">📅</span> Days</div>
+            <p>What day comes after Tuesday?</p>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">Monday</button>
+                <button class="opt-btn" onclick="check(this, true)">Wednesday</button>
+                <button class="opt-btn" onclick="check(this, false)">Thursday</button>
+            </div>
+        </div>
+        <!-- Q14 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🥶</span> Opposites</div>
+            <p>The opposite of 'Hot' is...</p>
+            <input type="text" class="text-input" placeholder="Type answer..." id="q14">
+            <button class="check-btn" onclick="checkText('q14', 'cold')">Check</button>
+        </div>
+        <!-- Q15 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">👁️</span> Body Parts</div>
+            <p>You see with your...</p>
+            <input type="text" class="text-input" placeholder="Type answer..." id="q15">
+            <button class="check-btn" onclick="checkText('q15', 'eyes')">Check</button>
+        </div>
+    </div>
+
+    <div class="section-title">🧩 Part 4: True or False</div>
+    <div class="quiz-container">
+        <!-- Q16 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🐟</span> Fish can fly.</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">True</button>
+                <button class="opt-btn" onclick="check(this, true)">False</button>
+            </div>
+        </div>
+        <!-- Q17 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🌍</span> The Earth is round.</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, true)">True</button>
+                <button class="opt-btn" onclick="check(this, false)">False</button>
+            </div>
+        </div>
+        <!-- Q18 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🦷</span> You should brush teeth once a year.</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">True</button>
+                <button class="opt-btn" onclick="check(this, true)">False</button>
+            </div>
+        </div>
+        <!-- Q19 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">❄️</span> Winter is usually cold.</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, true)">True</button>
+                <button class="opt-btn" onclick="check(this, false)">False</button>
+            </div>
+        </div>
+        <!-- Q20 -->
+        <div class="question-card">
+            <div class="q-header"><span class="q-icon">🚗</span> Cars have 5 wheels.</div>
+            <div class="options">
+                <button class="opt-btn" onclick="check(this, false)">True</button>
+                <button class="opt-btn" onclick="check(this, true)">False</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Logic for multiple choice
+    function check(btn, isCorrect) {
+        // Disable sibling buttons
+        let parent = btn.parentElement;
+        let buttons = parent.getElementsByTagName('button');
+        for(let b of buttons) {
+            b.disabled = true;
+            b.style.cursor = 'default';
+        }
+
+        if(isCorrect) {
+            btn.classList.add('correct');
+            btn.innerHTML += " ✅";
+        } else {
+            btn.classList.add('wrong');
+            btn.innerHTML += " ❌";
+        }
+    }
+
+    // Logic for text input
+    function checkText(id, correctAnswer) {
+        let input = document.getElementById(id);
+        let val = input.value.trim().toLowerCase();
+        
+        if(val === correctAnswer) {
+            input.style.border = "3px solid #2ecc71";
+            input.style.backgroundColor = "#e8f8f5";
+        } else {
+            input.style.border = "3px solid #e74c3c";
+            input.style.backgroundColor = "#fdedec";
+        }
+    }
+</script>
+
+</body>
+</html>
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

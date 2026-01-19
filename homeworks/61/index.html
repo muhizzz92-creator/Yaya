@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>61</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">61</h1>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTIMATE AI STRESS TEST: PROJECT NEON</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
+
+        :root {
+            --bg-dark: #050508;
+            --card-bg: #0f1016;
+            --accent-primary: #00f3ff; /* Cyan */
+            --accent-secondary: #bc13fe; /* Purple */
+            --text-main: #e0e6ed;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-image: 
+                linear-gradient(rgba(5, 5, 8, 0.95), rgba(5, 5, 8, 0.95)),
+                url('https://img.freepik.com/free-vector/cyber-code-background_23-2148006565.jpg'); /* Just a texture pattern */
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            border-bottom: 2px solid var(--accent-secondary);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px var(--accent-secondary);
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .scene-card {
+            background: rgba(15, 16, 22, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 5px solid var(--accent-primary);
+            border-radius: 12px;
+            margin-bottom: 40px;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .scene-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.15);
+            border-left-color: var(--accent-secondary);
+        }
+
+        .visual-part img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .audio-part {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h3 {
+            color: var(--accent-primary);
+            margin-top: 0;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .script-display {
+            background: #000;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+            border-left: 2px solid #333;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: auto;
+            filter: invert(0.9) hue-rotate(180deg);
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            background: #333;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .scene-card { grid-template-columns: 1fr; }
+            .visual-part img { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>System Stress Test</h1>
+        <p>Processing Pipeline: Flux.1 [Dev] + Chatterbox TTS [Multi-Speaker]</p>
+        <p style="color: var(--accent-primary);">Total Tasks: 20 Images | 20 Audio Files</p>
+    </header>
+
+    <!-- SCENE 1 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665353_8186.png" alt="Scene 1">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 01 <span class="badge">Narrator</span></h3>
+            <div class="script-display">[NARRATOR]: The year is 2084. The rain never stops in Neo-Tokyo. It washes away the dust, but it can never wash away the sins of this city.</div>
+            
+            <audio controls src="audio_ed60a12e.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 2 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665430_9617.png" alt="Scene 2">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 02 <span class="badge">Hero</span></h3>
+            <div class="script-display">[HERO]: Another night, another dead end. I've been chasing this phantom hacker for three weeks. My cybernetic eye is twitching again. I need a drink.</div>
+            
+            <audio controls src="audio_7d862f21.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 3 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665490_7898.png" alt="Scene 3">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 03 <span class="badge">Hero</span></h3>
+            <div class="script-display">[HERO]: The files don't make sense. The data corruption signature matches Arasaka Corp, but the encryption key is old... Soviet era old.</div>
+            
+            <audio controls src="audio_03b2b78e.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 4 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665552_4026.png" alt="Scene 4">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 04 <span class="badge">Dialogue</span></h3>
+            <div class="script-display">[GIRL]: Are you Detective Vance?
+[HERO]: That depends on who's asking, and how much credits they have.
+[GIRL]: I have information about the Black Protocol.</div>
+            
+            <audio controls src="audio_0ccbb452.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 5 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665613_4592.png" alt="Scene 5">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 05 <span class="badge">Girl</span></h3>
+            <div class="script-display">[GIRL]: They stole my memory core. It contains the blueprints for the new AI synthesis engine. If they unlock it, the whole network will collapse.</div>
+            
+            <audio controls src="audio_f3a3c304.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 6 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665673_2979.png" alt="Scene 6">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 06 <span class="badge">Narrator</span></h3>
+            <div class="script-display">[NARRATOR]: Vance stepped out into the Sector 7 market. The smell of synthetic noodles and ozone filled the air. He knew where to find answers.</div>
+            
+            <audio controls src="audio_4a201f4b.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 7 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665736_6251.png" alt="Scene 7">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 07 <span class="badge">Robot</span></h3>
+            <div class="script-display">[ROBOT]: Greetings, Detective. My sensors indicate elevated stress levels. Would you like the usual neural-dampener cocktail?</div>
+            
+            <audio controls src="audio_eb28349e.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 8 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665799_1846.png" alt="Scene 8">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 08 <span class="badge">Dialogue</span></h3>
+            <div class="script-display">[HERO]: Cut the chatter, Rusty. I need to find the old server farm in the Undercity.
+[ROBOT]: Access to Undercity is restricted. Probability of survival is less than 14 percent.</div>
+            
+            <audio controls src="audio_cd0aa798.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 9 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665862_2368.png" alt="Scene 9">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 09 <span class="badge">Narrator</span></h3>
+            <div class="script-display">[NARRATOR]: The entrance to the Undercity was guarded by silence. Not the peaceful kind, but the kind that waits to scream. Vance checked his plasma revolver.</div>
+            
+            <audio controls src="audio_c2e5b926.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 10 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665924_8910.png" alt="Scene 10">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 10 <span class="badge">Old Man</span></h3>
+            <div class="script-display">[OLD_MAN]: So, the famous detective finally arrives. I expected you sooner, Vance. Time is a luxury we no longer possess.</div>
+            
+            <audio controls src="audio_5a079eb6.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 11 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768665986_1176.png" alt="Scene 11">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 11 <span class="badge">Dialogue</span></h3>
+            <div class="script-display">[HERO]: Hand over the memory core, old man. It's over.
+[OLD_MAN]: Is it? Or is this just the beginning of a new era? The machine god is waking up.</div>
+            
+            <audio controls src="audio_1a3196d7.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 12 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768666049_1237.png" alt="Scene 12">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 12 <span class="badge">Robot</span></h3>
+            <div class="script-display">[ROBOT]: Warning. Temperature critical. Core meltdown imminent. Evacuate immediately. Evacuate immediately.</div>
+            
+            <audio controls src="audio_f264fdeb.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 13 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768666111_6092.png" alt="Scene 13">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 13 <span class="badge">Hero</span></h3>
+            <div class="script-display">[HERO]: Damn it! Every time I take a job, something explodes. Just once I'd like a quiet Tuesday.</div>
+            
+            <audio controls src="audio_33e0b388.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 14 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768666173_5949.png" alt="Scene 14">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 14 <span class="badge">Narrator</span></h3>
+            <div class="script-display">[NARRATOR]: He leaped into the void, glass shattering around him like diamonds. Gravity caught him, but his mag-lev boots kicked in just in time.</div>
+            
+            <audio controls src="audio_177cca27.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 15 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768666233_4495.png" alt="Scene 15">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 15 <span class="badge">Robot (Radio)</span></h3>
+            <div class="script-display">[ROBOT]: Detective, I have hacked the getaway vehicle. Autopilot engaged. Destination: Safe House.</div>
+            
+            <audio controls src="audio_0bc81397.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 16 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768666295_9483.png" alt="Scene 16">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 16 <span class="badge">Hero</span></h3>
+            <div class="script-display">[HERO]: We got it. The chip is safe. But the old man got away. This isn't over yet.</div>
+            
+            <audio controls src="audio_9f5b72dd.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 17 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768666357_5949.png" alt="Scene 17">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 17 <span class="badge">Girl</span></h3>
+            <div class="script-display">[GIRL]: You did it! You actually saved us all. I don't know how to thank you, Detective. You are a true hero.</div>
+            
+            <audio controls src="audio_b8d55a56.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 18 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768666417_1044.png" alt="Scene 18">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 18 <span class="badge">Hero</span></h3>
+            <div class="script-display">[HERO]: Just transfer the credits. I have a bar tab to pay off and a robot that needs new optics.</div>
+            
+            <audio controls src="audio_ac4d326f.mp3"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 19 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768666479_3110.png" alt="Scene 19">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 19 <span class="badge">Narrator</span></h3>
+            <div class="script-display">[NARRATOR]: And so, the sun rose over Sector 7. The shadows retreated, but only for a moment. In a city of light, darkness always finds a way back.</div>
+            <!-- GEN_AUDIO: [NARRATOR]: And so, the sun rose over Sector 7. The shadows retreated, but only for a moment. In a city of light, darkness always finds a way back. -->
+            <audio controls src="PLACEHOLDER_AUDIO_19"></audio>
+        </div>
+    </div>
+
+    <!-- SCENE 20 -->
+    <div class="scene-card">
+        <div class="visual-part">
+            <img src="img_1768666540_9713.png" alt="Scene 20">
+        </div>
+        <div class="audio-part">
+            <h3>Scene 20 <span class="badge">System</span></h3>
+            <div class="script-display">[ROBOT]: Simulation complete. All test parameters nominal. Shutting down system. Goodbye.</div>
+            <!-- GEN_AUDIO: [ROBOT]: Simulation complete. All test parameters nominal. Shutting down system. Goodbye. -->
+            <audio controls src="PLACEHOLDER_AUDIO_20"></audio>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

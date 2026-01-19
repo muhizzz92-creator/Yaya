@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>52</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">52</h1>
+        <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI System Full Test</title>
+    <style>
+        /* Стиль "Киберпанк" */
+        body {
+            background-color: #0d0d12;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #1a1a24;
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h2 { color: #b967ff; border-bottom: 1px solid #444; padding-bottom: 10px; margin-top: 0; }
+        
+        /* Стиль для картинки */
+        .generated-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #b967ff;
+            background: #000;
+        }
+
+        /* Стиль для плеера */
+        audio {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        
+        .script-text {
+            background: #111;
+            padding: 10px;
+            border-left: 3px solid #00e5ff;
+            color: #aaa;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center; color: #fff;">🤖 AI Generation Test</h1>
+
+    <!-- 
+    === ТЕСТ 1: ГЕНЕРАЦИЯ КАРТИНКИ === 
+    Проверяет: ComfyClient, Flux Workflow, сохранение файла.
+    -->
+    <div class="card">
+        <h2>1. Visual Module (Flux)</h2>
+        <p>Generating a high-quality scene to test GPU load.</p>
+        
+        <img src="img_1768647156_4697.png" class="generated-img" alt="Robot Teacher">
+    </div>
+
+    <!-- 
+    === ТЕСТ 2: ПРОСТОЙ ГОЛОС === 
+    Проверяет: AudioStoryGenerator, narrator.wav, ComfyUI TTS.
+    -->
+    <div class="card">
+        <h2>2. Audio Module (Narrator)</h2>
+        <p>Testing single voice generation.</p>
+        
+        <div class="script-text">Script: "System initialization complete. Welcome to the future of education."</div>
+
+        <!-- GEN_AUDIO: 
+        [NARRATOR]: System initialization complete. Welcome to the future of education.
+        -->
+        <audio controls src="PLACEHOLDER_AUDIO_1"></audio>
+    </div>
+
+    <!-- 
+    === ТЕСТ 3: ДИАЛОГ И ПЕРЕКЛЮЧЕНИЕ === 
+    Проверяет: Смену голосов (hero.wav, robot.wav, girl.wav) и склейку файлов.
+    -->
+    <div class="card">
+        <h2>3. Dialogue Module (Multi-Speaker)</h2>
+        <p>Testing voice switching and file stitching.</p>
+
+        <div class="script-text">Script: Dialog between Hero, Robot, and Girl.</div>
+
+        <!-- GEN_AUDIO: 
+        [HERO]: Attention everyone! We have successfully connected the neural link.
+        [ROBOT]: Confirming connection. Bandwidth is stable at 100 percent.
+        [GIRL]: Wow, that sounds amazing! Can we start the lesson now?
+        [HERO]: Yes. Let's begin.
+        -->
+        <audio controls src="PLACEHOLDER_AUDIO_2"></audio>
+    </div>
+
+</body>
+</html>
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

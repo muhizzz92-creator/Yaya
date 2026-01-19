@@ -1,0 +1,322 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>71</title>
+    
+<style>
+    :root {
+        --bg-color: #090A0F;
+        --card-bg: #1a1d28;
+        --text-color: #e0d9cc;
+        --accent-color: #7a52f0;
+        --success-color: #4CAF50;
+        --error-color: #F44336;
+    }
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .homework-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+    .card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .widget-title {
+        color: #e6c384;
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .lesson-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .question-prompt {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .btn-option {
+        background-color: #2a2d44;
+        color: white;
+        border: 2px solid #3a3d54;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.2s;
+    }
+    .btn-option:hover {
+        border-color: var(--accent-color);
+        background-color: #323652;
+    }
+    .btn-option.correct {
+        background-color: var(--success-color) !important;
+        border-color: var(--success-color) !important;
+    }
+    .btn-option.wrong {
+        background-color: var(--error-color) !important;
+        border-color: var(--error-color) !important;
+        opacity: 0.5;
+    }
+    audio {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 30px;
+    }
+    /* Адаптив для мобильных */
+    @media (max-width: 600px) {
+        .options-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+</head>
+<body>
+    <div class="homework-container">
+        <h1 style="text-align: center; color: #e6c384; margin-bottom: 40px;">71</h1>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fantasy Quest Test</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato&display=swap');
+
+        :root {
+            --bg-color: #0f0a15;
+            --card-bg: #1c1525;
+            --border: #3d2c55;
+            --accent: #ffd700; /* Gold */
+            --text: #dcd6e5;
+            --hero-color: #4da6ff;
+            --villain-color: #ff4d4d;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-image: linear-gradient(to bottom, #0f0a15, #1a0f2e);
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            color: var(--accent);
+            font-size: 3.5rem;
+            margin-bottom: 50px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        .scene-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .scene-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .scene-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        /* Стиль для картинок */
+        .img-frame {
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 2px solid #333;
+            background: #000;
+        }
+        
+        .img-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .scene-card:hover .img-frame img {
+            transform: scale(1.02);
+        }
+
+        /* Скрипт диалога */
+        .script-box {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-style: italic;
+            border-left: 3px solid #555;
+        }
+
+        .role { font-weight: bold; font-style: normal; }
+        .role.NARRATOR { color: #aaa; }
+        .role.HERO { color: var(--hero-color); }
+        .role.ORC { color: var(--villain-color); }
+        .role.GIRL { color: #ff80df; }
+
+        audio {
+            width: 100%;
+            filter: sepia(20%) saturate(140%);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>The Crystal of Souls</h1>
+
+    <!-- SCENE 1: THE FOREST -->
+    <div class="scene-card">
+        <div class="scene-header">
+            <h2 class="scene-title">Chapter I: The Whispering Woods</h2>
+        </div>
+        
+        <!-- GEN_IMG: A mystical fantasy forest at night, glowing blue mushrooms, fireflies, magical atmosphere, ancient trees, unreal engine 5 render, 8k, masterpiece -->
+        <div class="img-frame">
+            <img src="PLACEHOLDER_IMG_1" alt="Magic Forest">
+        </div>
+
+        <div class="script-box">
+            <span class="role NARRATOR">NARRATOR:</span> Deep within the Whispering Woods, where the trees speak in riddles, a group of adventurers searched for the lost artifact.
+        </div>
+
+        <!-- GEN_AUDIO: 
+        [NARRATOR]: Deep within the Whispering Woods, where the trees speak in riddles, a group of adventurers searched for the lost artifact.
+        -->
+        <audio controls src="PLACEHOLDER_AUDIO_1"></audio>
+    </div>
+
+    <!-- SCENE 2: THE ENCOUNTER -->
+    <div class="scene-card">
+        <div class="scene-header">
+            <h2 class="scene-title">Chapter II: The Stone Guardian</h2>
+        </div>
+
+        <!-- GEN_IMG: A massive stone golem blocking a cave entrance, glowing red eyes, moss on rocks, warrior standing in front with a sword, cinematic lighting, epic fantasy battle -->
+        <div class="img-frame">
+            <img src="PLACEHOLDER_IMG_2" alt="Stone Golem">
+        </div>
+
+        <div class="script-box">
+            <p><span class="role HERO">HERO:</span> Halt! A Stone Guardian blocks the path. Stand ready!</p>
+            <p><span class="role ORC">ORC (Golem):</span> You... shall not... pass! Tiny humans squash like bugs!</p>
+            <p><span class="role HERO">HERO:</span> We don't want to fight. Just let us through!</p>
+        </div>
+
+        <!-- GEN_AUDIO: 
+        [HERO]: Halt! A Stone Guardian blocks the path. Stand ready!
+        [ORC]: You... shall not... pass! Tiny humans squash like bugs!
+        [HERO]: We don't want to fight. Just let us through!
+        -->
+        <audio controls src="PLACEHOLDER_AUDIO_2"></audio>
+    </div>
+
+    <!-- SCENE 3: THE TREASURE -->
+    <div class="scene-card">
+        <div class="scene-header">
+            <h2 class="scene-title">Chapter III: The Reward</h2>
+        </div>
+
+        <!-- GEN_IMG: An open treasure chest overflowing with gold and a glowing purple crystal, inside a dark cave, god rays, sparkles, magical dust, highly detailed -->
+        <div class="img-frame">
+            <img src="PLACEHOLDER_IMG_3" alt="Treasure">
+        </div>
+
+        <div class="script-box">
+            <p><span class="role GIRL">GIRL:</span> Look! It's actually here. The Crystal of Souls.</p>
+            <p><span class="role NARRATOR">NARRATOR:</span> And so, they found their fortune. But they knew the real adventure was just beginning.</p>
+        </div>
+
+        <!-- GEN_AUDIO: 
+        [GIRL]: Look! It's actually here. The Crystal of Souls.
+        [NARRATOR]: And so, they found their fortune. But they knew the real adventure was just beginning.
+        -->
+        <audio controls src="PLACEHOLDER_AUDIO_3"></audio>
+    </div>
+
+</div>
+
+</body>
+</html>
+    </div>
+    
+<script>
+function checkAnswer(btn) {
+    const container = btn.closest('.options-grid') || btn.parentElement;
+    if (container.classList.contains('answered')) return;
+    container.classList.add('answered');
+
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+
+    if (isCorrect) {
+        btn.classList.add('correct');
+        btn.innerText += " ✅";
+    } else {
+        btn.classList.add('wrong');
+        btn.innerText += " ❌";
+        // Подсветка правильного
+        const allBtns = container.querySelectorAll('button');
+        allBtns.forEach(b => {
+            if (b.getAttribute('data-correct') === 'true') {
+                b.classList.add('correct');
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
+            

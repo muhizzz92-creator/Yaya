@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stability Test: The Forest Meeting</title>
+    <style>
+        body {
+            background-color: #1a1a1d;
+            color: #ecf0f1;
+            font-family: 'Verdana', sans-serif;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 { color: #e58e26; text-align: center; border-bottom: 2px solid #e58e26; padding-bottom: 20px; }
+        
+        .scene {
+            background: #2c2c34;
+            padding: 20px;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-left: 5px solid #e58e26;
+        }
+
+        .img-box {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .dialogue {
+            background: #000;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .char { font-weight: bold; }
+        .char.NARRATOR { color: #f1c40f; }
+        .char.HERO { color: #3498db; }
+        .char.ORC { color: #e74c3c; }
+
+        audio { width: 100%; height: 40px; }
+    </style>
+</head>
+<body>
+
+    <h1>🔮 Stability Test</h1>
+
+    <!-- SCENE 1: Narrator + Image -->
+    <div class="scene">
+        <h3>📍 Scene 1: The Ancient Tree</h3>
+        
+        
+        <div class="img-box">
+            <img src="img_1768848767_489.png" alt="Tree">
+        </div>
+
+        <div class="dialogue">
+            <span class="char NARRATOR">NARRATOR:</span> The forest was old. Older than the stones, older than the stars. It watched, and it waited.
+        </div>
+
+        <!-- GEN_AUDIO: 
+        [NARRATOR]: The forest was old. Older than the stones, older than the stars. It watched, and it waited.
+        -->
+        <audio controls src="PLACEHOLDER_AUDIO_1"></audio>
+    </div>
+
+    <!-- SCENE 2: Hero vs Orc + Image -->
+    <div class="scene">
+        <h3>⚔️ Scene 2: The Confrontation</h3>
+        
+        
+        <div class="img-box">
+            <img src="img_1768848836_4775.png" alt="Battle">
+        </div>
+
+        <div class="dialogue">
+            <p><span class="char HERO">HERO:</span> Step aside, monster! I seek the crystal.</p>
+            <p><span class="char ORC">ORC:</span> Tiny human... you make good snack!</p>
+            <p><span class="char HERO">HERO:</span> I warned you.</p>
+        </div>
+
+        <!-- GEN_AUDIO: 
+        [HERO]: Step aside, monster! I seek the crystal.
+        [ORC]: Tiny human... you make good snack!
+        [HERO]: I warned you.
+        -->
+        <audio controls src="PLACEHOLDER_AUDIO_2"></audio>
+    </div>
+
+    <!-- SCENE 3: Victory -->
+    <div class="scene">
+        <h3>🏆 Scene 3: Victory</h3>
+        
+        
+        <div class="img-box">
+            <img src="img_1768848899_2305.png" alt="Victory">
+        </div>
+
+        <div class="dialogue">
+            <span class="char NARRATOR">NARRATOR:</span> And so, courage prevailed over strength. The legend continues.
+        </div>
+
+        <!-- GEN_AUDIO: 
+        [NARRATOR]: And so, courage prevailed over strength. The legend continues.
+        -->
+        <audio controls src="PLACEHOLDER_AUDIO_3"></audio>
+    </div>
+
+</body>
+</html>
