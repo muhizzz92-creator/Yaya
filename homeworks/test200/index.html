@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW: Tech & AI Review (Emir)</title>
+    <style>
+        :root {
+            --bg-color: #161625;
+            --card-bg: #2a2d44;
+            --accent: #00d2ff;
+            --secondary: #70a1ff;
+            --text: #ffffff;
+            --success: #00b894;
+            --error: #ff7675;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1, h2 {
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 10px;
+            border: 2px solid var(--secondary);
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        /* Quiz Styles */
+        .question-block {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #dfe6e9;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button.option-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--secondary);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 0.95em;
+        }
+
+        button.option-btn:hover {
+            background: rgba(0, 210, 255, 0.2);
+        }
+
+        button.correct {
+            background: var(--success) !important;
+            border-color: var(--success) !important;
+            color: black !important;
+        }
+
+        button.wrong {
+            background: var(--error) !important;
+            border-color: var(--error) !important;
+            opacity: 0.7;
+        }
+
+        .result-box {
+            text-align: center;
+            font-size: 2em;
+            color: var(--accent);
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .dialogue-text {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-style: italic;
+            color: #b2bec3;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER & INTRO -->
+    <div class="card" style="text-align: center;">
+        <h1>Mission: AI & Tech</h1>
+        <p>Student: <strong>Emir</strong> | Level: <strong>B1+</strong></p>
+        
+        
+        <img src="img_1768854125_4378.png" alt="AI Tech World">
+
+        <h3>Audio Briefing</h3>
+        <!-- GEN_AUDIO: [TEACHER]: Hello Emir. Welcome to your homework mission. Today we will review everything we learned about Artificial Intelligence, cybersecurity, and linking words. Listen to the dialogue first, then complete the 30 questions. Good luck! -->
+        <audio controls src="PLACEHOLDER_AUDIO_INTRO"></audio>
+    </div>
+
+    <!-- DIALOGUE REVIEW -->
+    <div class="card">
+        <h2>Review Dialogue: Humans vs AI</h2>
+        <p><em>Listen to the debate about the future of work.</em></p>
+
+        
+        <img src="img_1768854197_8948.png" alt="Robot vs Human">
+
+        <!-- GEN_AUDIO: 
+        [TEACHER]: Some people say AI is a threat to our jobs. What do you think?
+        [BOY]: From my perspective, AI is useful. It increases efficiency.
+        [TEACHER]: That is true. However, it cannot replace human creativity.
+        [BOY]: Exactly. Therefore, we must learn to use it as a tool, not a rival.
+        -->
+        <audio controls src="PLACEHOLDER_AUDIO_DIALOGUE"></audio>
+        
+        <div class="dialogue-text">
+            Key Grammar: <strong>However</strong> (contrast), <strong>Therefore</strong> (result), <strong>Efficiency</strong> (vocab).
+        </div>
+    </div>
+
+    <!-- QUIZ SECTION -->
+    <div class="card">
+        <h2>30-Question Challenge</h2>
+        <div id="quiz-container">
+            <!-- JS will inject 30 questions here -->
+        </div>
+        <div class="result-box" id="final-score"></div>
+    </div>
+
+</div>
+
+<script>
+    const questions = [
+        // VOCABULARY
+        {q: "1. Computer systems that can think like humans are called...", opts: ["Virtual Reality", "Artificial Intelligence", "Cybersecurity"], a: 1},
+        {q: "2. A small, useful electronic device is a...", opts: ["Glitch", "Threat", "Gadget"], a: 2},
+        {q: "3. If a program has a sudden error, it is a...", opts: ["Glitch", "Benefit", "Skill"], a: 0},
+        {q: "4. Protecting data from hackers is called...", opts: ["Wireless", "Cybersecurity", "Automation"], a: 1},
+        {q: "5. 'VR' stands for...", opts: ["Very Real", "Virtual Reality", "Visual Robot"], a: 1},
+        {q: "6. Technology without cables is...", opts: ["Wired", "Connective", "Wireless"], a: 2},
+        {q: "7. To improve your computer to a better version means to...", opts: ["Upload", "Upgrade", "Download"], a: 1},
+        {q: "8. An idea that is new and advanced is...", opts: ["Ancient", "Innovative", "Boring"], a: 1},
+        {q: "9. Doing something quickly without wasting time is...", opts: ["Efficiency", "Laziness", "Difficulty"], a: 0},
+        {q: "10. Something that is absolutely necessary is...", opts: ["Optional", "Indispensable", "Useless"], a: 1},
+        
+        // CONTEXT & MEANING
+        {q: "11. Robots might ______ humans in dangerous jobs.", opts: ["Replace", "Respect", "Repair"], a: 0},
+        {q: "12. We need to ______ to the changes in technology.", opts: ["Adopt", "Adapt", "Adept"], a: 1},
+        {q: "13. AI can ______ diseases earlier than doctors.", opts: ["Predict", "Pretend", "Protect"], a: 0},
+        {q: "14. Self-driving cars are...", opts: ["Automatic", "Autonomous", "Automobile"], a: 1},
+        {q: "15. A major ______ of AI is that it saves time.", opts: ["Benefit", "Threat", "Glitch"], a: 0},
+
+        // GRAMMAR (LINKING WORDS)
+        {q: "16. AI is fast. ______, it makes mistakes sometimes.", opts: ["Therefore", "However", "Because"], a: 1},
+        {q: "17. Robots are cheap. ______, companies buy them.", opts: ["However", "Although", "Therefore"], a: 2},
+        {q: "18. ______ it was raining, we went outside.", opts: ["Despite", "Although", "However"], a: 1},
+        {q: "19. ______ the rain, we went outside.", opts: ["Despite", "Although", "But"], a: 0},
+        {q: "20. The car is smart. ______, it is expensive.", opts: ["Furthermore", "But", "So"], a: 0},
+
+        // GRAMMAR & STRUCTURE
+        {q: "21. Who is ______ for the accident? The robot or the human?", opts: ["Responsible", "Response", "Responsibility"], a: 0},
+        {q: "22. If I ______ more money, I would buy a VR headset.", opts: ["Have", "Had", "Has"], a: 1},
+        {q: "23. The data ______ by the computer yesterday.", opts: ["Was processed", "Is processed", "Processing"], a: 0},
+        {q: "24. I look forward ______ the new iPhone.", opts: ["To see", "To seeing", "See"], a: 1},
+        {q: "25. He is interested ______ learning coding.", opts: ["On", "In", "At"], a: 1},
+
+        // LOGIC & FLOW
+        {q: "26. Choose the correct order: [ is / changing / technology / fast ]", opts: ["Technology is changing fast.", "Fast is technology changing.", "Changing is technology fast."], a: 0},
+        {q: "27. Which word is a synonym for 'Rival'?", opts: ["Friend", "Competitor", "Partner"], a: 1},
+        {q: "28. 'On the other hand' is used to show...", opts: ["A result", "An addition", "A contrast"], a: 2},
+        {q: "29. 'Consequently' is used to show...", opts: ["A result", "A contrast", "A time"], a: 0},
+        {q: "30. Did you enjoy this homework?", opts: ["Yes, it was useful!", "No, I hate robots.", "Maybe."], a: 0}
+    ];
+
+    const quizContainer = document.getElementById('quiz-container');
+    let score = 0;
+
+    questions.forEach((item, index) => {
+        let html = `<div class="question-block">
+            <div class="question-text">${item.q}</div>
+            <div class="options">`;
+        
+        item.opts.forEach((opt, optIndex) => {
+            html += `<button class="option-btn" onclick="checkAnswer(this, ${optIndex === item.a})">${opt}</button>`;
+        });
+
+        html += `</div></div>`;
+        quizContainer.innerHTML += html;
+    });
+
+    function checkAnswer(btn, isCorrect) {
+        // Disable buttons in this group
+        let parent = btn.parentElement;
+        let btns = parent.getElementsByTagName('button');
+        for(let b of btns) {
+            b.disabled = true;
+            if (b !== btn) b.style.opacity = "0.5";
+        }
+
+        if(isCorrect) {
+            btn.classList.add('correct');
+            score++;
+        } else {
+            btn.classList.add('wrong');
+        }
+
+        // Check if all answered (simple check for demo)
+        let totalClicked = document.querySelectorAll('button[disabled]').length;
+        // Since each question has 3 options and we disable all 3 after click
+        // Wait, logic above disables 3 buttons per click. 
+        // 30 questions * 3 buttons = 90 buttons.
+        // We can just update score text.
+        
+        document.getElementById('final-score').innerText = `Score: ${score} / 30`;
+    }
+
+</script>
+</body>
+</html>
