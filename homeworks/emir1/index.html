@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Explorer: Emir's Mission</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Merriweather:wght@300;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --nat-geo-yellow: #FFC200;
+        --dark-blue: #1A1A1A;
+        --light-gray: #F4F4F4;
+        --white: #FFFFFF;
+        --text: #333333;
+        --correct: #2ECC71;
+        --wrong: #E74C3C;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background-color: #E0E0E0;
+        color: var(--text);
+    }
+
+    /* --- LAYOUT CONTAINER --- */
+    .app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    }
+
+    /* --- HEADER --- */
+    header {
+        background-color: var(--dark-blue);
+        color: white;
+        padding: 20px 40px;
+        border-bottom: 6px solid var(--nat-geo-yellow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+
+    h1 {
+        font-family: 'Merriweather', serif;
+        margin: 0;
+        font-size: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .status-bar {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: var(--nat-geo-yellow);
+    }
+
+    /* --- NAVIGATION --- */
+    .nav-tabs {
+        display: flex;
+        background: #333;
+    }
+
+    .tab-btn {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #aaa;
+        padding: 20px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: 0.3s;
+        border-right: 1px solid #444;
+    }
+
+    .tab-btn:hover { background: #444; color: white; }
+    .tab-btn.active { background: white; color: var(--dark-blue); border-bottom: 5px solid var(--nat-geo-yellow); }
+
+    /* --- CONTENT AREA --- */
+    .content-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 40px;
+        background: #fafafa;
+        scroll-behavior: smooth;
+    }
+
+    .section { display: none; animation: fadeEffect 0.6s; }
+    .section.active { display: block; }
+
+    @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
+
+    /* --- ARTICLE STYLE --- */
+    .article-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+        margin-bottom: 50px;
+    }
+
+    .article-text {
+        font-family: 'Merriweather', serif;
+        font-size: 1.3rem;
+        line-height: 1.8;
+        color: #2c3e50;
+    }
+
+    .drop-cap {
+        float: left;
+        font-size: 4.5rem;
+        line-height: 0.8;
+        padding-top: 4px;
+        padding-right: 8px;
+        padding-left: 3px;
+        color: var(--dark-blue); 
+        font-weight: bold;
+    }
+
+    .sidebar {
+        background: #fff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-top: 5px solid var(--nat-geo-yellow);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        height: fit-content;
+    }
+
+    .vocab-title { font-weight: bold; color: var(--dark-blue); text-transform: uppercase; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 15px; }
+    .vocab-item { margin-bottom: 15px; font-size: 1.1rem; }
+    .v-word { color: #C0392B; font-weight: bold; }
+
+    /* --- CUSTOM MEDIA --- */
+    .hero-img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        background-color: #eee;
+        border: 1px solid #ccc;
+    }
+
+    .audio-player-custom {
+        background: var(--dark-blue);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+        cursor: pointer;
+        transition: 0.2s;
+        border-left: 5px solid var(--nat-geo-yellow);
+    }
+    
+    .audio-player-custom:hover { background: #000; }
+    .play-icon { font-size: 2rem; }
+    .track-info { display: flex; flex-direction: column; }
+    .track-title { font-weight: bold; }
+    .track-status { font-size: 0.8rem; color: #ccc; }
+
+    /* --- EXERCISES --- */
+    .quiz-section {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        margin-top: 30px;
+    }
+
+    .quiz-title { font-size: 1.5rem; color: var(--dark-blue); margin-bottom: 20px; border-left: 5px solid var(--dark-blue); padding-left: 15px; }
+
+    .question-block { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed #eee; }
+    .q-text { font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; display: block; }
+    
+    .btn-option {
+        display: inline-block;
+        background: #f8f9fa;
+        border: 1px solid #ced4da;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.2s;
+        width: 100%;
+        text-align: left;
+    }
+
+    .btn-option:hover { background: #e9ecef; }
+    
+    .btn-option.correct { background: var(--correct); color: white; border-color: var(--correct); }
+    .btn-option.wrong { background: var(--wrong); color: white; border-color: var(--wrong); opacity: 0.6; }
+    .btn-option.locked { pointer-events: none; }
+
+    /* --- MATCHING GAME STYLE --- */
+    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .match-card {
+        padding: 15px; background: #e8f4f8; border: 2px solid #bce0fd;
+        text-align: center; cursor: pointer; font-weight: bold; border-radius: 8px;
+    }
+    .match-card.selected { background: #fff3cd; border-color: #ffeeba; }
+    .match-card.solved { background: var(--correct); color: white; border-color: var(--correct); opacity: 0.5; pointer-events: none; }
+
+    /* --- SCRAMBLE STYLE --- */
+    .scramble-box {
+        background: #fdfdfd; border: 2px dashed #ccc; padding: 15px; min-height: 50px;
+        display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;
+    }
+    .word-chip {
+        background: var(--dark-blue); color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <header>
+        <h1>Reading Explorer <span style="font-weight:300; font-size:0.8em;">| B1+ Level</span></h1>
+        <div class="status-bar">Score: <span id="total-score">0</span> / 40</div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('unit1', this)">1. Nature 🌿</button>
+        <button class="tab-btn" onclick="switchTab('unit2', this)">2. History 🏛️</button>
+        <button class="tab-btn" onclick="switchTab('unit3', this)">3. Science 🚀</button>
+        <button class="tab-btn" onclick="switchTab('review', this)">Summary 📊</button>
+    </div>
+
+    <div class="content-area">
+
+        <!-- ================= UNIT 1: NATURE ================= -->
+        <div id="unit1" class="section active">
+            
+            <!-- GEN_IMG: A mysterious forest floor with glowing connections between tree roots, scientific illustration style, cross-section view of soil -->
+            <img src="https://via.placeholder.com/1200x400/2c3e50/ffffff?text=Image:+The+Wood+Wide+Web" class="hero-img" alt="Forest Roots">
+            
+            <div class="article-container">
+                <div class="article-text">
+                    <h2 style="margin-top:0; color:var(--dark-blue);">The Wood Wide Web</h2>
+                    
+                    <!-- CUSTOM AUDIO PLAYER -->
+                    <div class="audio-player-custom" onclick="toggleAudio('audio1')">
+                        <div class="play-icon">▶</div>
+                        <div class="track-info">
+                            <span class="track-title">Listen to the Article</span>
+                            <span class="track-status" id="status1">Click to play</span>
+                        </div>
+                        <!-- GEN_AUDIO: [NARRATOR]: Unit 1. The Wood Wide Web. When you walk in a forest, you might think trees are individuals. But underground, there is a secret world. -->
+                        <audio id="audio1" src="PLACEHOLDER_AUDIO_1"></audio>
+                    </div>
+
+                    <p><span class="drop-cap">I</span>magine a social network, but for trees. Scientists have discovered that forests are not just collections of individual trees. They are connected underground by a complex system called <strong>mycelium</strong>. This is a network of fungi that links the roots of different plants together.</p>
+                    <p>Through this "Wood Wide Web," trees can share resources. A large, old tree (often called a "Mother Tree") can send sugar and water to smaller trees growing in the shade. Furthermore, they can use this network to send warnings. If a tree is attacked by insects, it sends chemical signals through the roots to warn its neighbors to raise their defenses.</p>
+                </div>
+
+                <aside class="sidebar">
+                    <div class="vocab-title">Word Focus</div>
+                    <div class="vocab-item"><span class="v-word">Network:</span> A system of connected parts.</div>
+                    <div class="vocab-item"><span class="v-word">Resource:</span> Something valuable like food or water.</div>
+                    <div class="vocab-item"><span class="v-word">Individual:</span> Single; separate.</div>
+                    <div class="vocab-item"><span class="v-word">To Warn:</span> To tell someone about danger.</div>
+                    <div class="vocab-item"><span class="v-word">Defense:</span> Protection against attack.</div>
+                </aside>
+            </div>
+
+            <!-- EXERCISES UNIT 1 -->
+            <div class="quiz-section">
+                <div class="quiz-title">Part A: Vocabulary Match (Questions 1-5)</div>
+                <div id="match-u1" class="match-grid"></div> <!-- JS Injects -->
+
+                <div class="quiz-title" style="margin-top:30px;">Part B: Comprehension (Questions 6-13)</div>
+                <div id="mcq-u1"></div> <!-- JS Injects -->
+            </div>
+        </div>
+
+        <!-- ================= UNIT 2: HISTORY ================= -->
+        <div id="unit2" class="section">
+            
+            <!-- GEN_IMG: The ancient city of Petra in Jordan, carved into red rock cliffs, sunny day, tourists walking, wide angle, realistic -->
+            <img src="https://via.placeholder.com/1200x400/c0392b/ffffff?text=Image:+The+Lost+City+of+Petra" class="hero-img" alt="Petra">
+
+            <div class="article-container">
+                <div class="article-text">
+                    <h2 style="margin-top:0; color:var(--dark-blue);">The City Carved in Stone</h2>
+                    
+                    <div class="audio-player-custom" onclick="toggleAudio('audio2')">
+                        <div class="play-icon">▶</div>
+                        <div class="track-info">
+                            <span class="track-title">Listen to the Article</span>
+                            <span class="track-status" id="status2">Click to play</span>
+                        </div>
+                        <!-- GEN_AUDIO: [NARRATOR]: Unit 2. History. Deep in the desert of Jordan lies a city hidden for centuries. This is Petra. -->
+                        <audio id="audio2" src="PLACEHOLDER_AUDIO_2"></audio>
+                    </div>
+
+                    <p><span class="drop-cap">P</span>etra is one of the most famous archaeological sites in the world. Located in Jordan, it was the capital of the Nabataean Empire over 2,000 years ago. Unlike other cities built <em>on</em> the ground, Petra was <strong>carved</strong> directly <em>into</em> pink and red sandstone cliffs.</p>
+                    <p>It was a wealthy city because it sat on a major trade route. Traders carrying spices and silk stopped there. However, Petra was eventually <strong>abandoned</strong> after earthquakes destroyed its water system. It remained lost to the Western world until 1812. Today, it is known as the "Rose City" due to the color of the stone.</p>
+                </div>
+
+                <aside class="sidebar">
+                    <div class="vocab-title">Word Focus</div>
+                    <div class="vocab-item"><span class="v-word">Carved:</span> Cut into a hard material to make a shape.</div>
+                    <div class="vocab-item"><span class="v-word">Abandoned:</span> Left empty; deserted.</div>
+                    <div class="vocab-item"><span class="v-word">Wealthy:</span> Rich; having lots of money.</div>
+                    <div class="vocab-item"><span class="v-word">Route:</span> A way or path to get somewhere.</div>
+                </aside>
+            </div>
+
+            <div class="quiz-section">
+                <div class="quiz-title">Part A: True or False? (Questions 14-20)</div>
+                <div id="mcq-u2"></div>
+
+                <div class="quiz-title" style="margin-top:30px;">Part B: Sentence Building (Questions 21-25)</div>
+                <p>Click the words in the correct order.</p>
+                <div id="scramble-u2"></div>
+            </div>
+        </div>
+
+        <!-- ================= UNIT 3: SCIENCE ================= -->
+        <div id="unit3" class="section">
+            
+            <!-- GEN_IMG: A futuristic colony on Mars, red dust, glass domes, earth in the sky, cinematic sci-fi style -->
+            <img src="https://via.placeholder.com/1200x400/8e44ad/ffffff?text=Image:+Colonizing+Mars" class="hero-img" alt="Mars">
+
+            <div class="article-container">
+                <div class="article-text">
+                    <h2 style="margin-top:0; color:var(--dark-blue);">Living on the Red Planet</h2>
+                    
+                    <div class="audio-player-custom" onclick="toggleAudio('audio3')">
+                        <div class="play-icon">▶</div>
+                        <div class="track-info">
+                            <span class="track-title">Listen to the Article</span>
+                            <span class="track-status" id="status3">Click to play</span>
+                        </div>
+                        <!-- GEN_AUDIO: [NARRATOR]: Unit 3. Science. Would you move to Mars? It sounds like science fiction, but it might happen soon. -->
+                        <audio id="audio3" src="PLACEHOLDER_AUDIO_3"></audio>
+                    </div>
+
+                    <p><span class="drop-cap">H</span>umans have always wanted to explore. The next big step is Mars. But living there will be extremely difficult. The atmosphere is thin and contains mostly carbon dioxide. There is no breathable air.</p>
+                    <p>To survive, humans would need to build <strong>sealed</strong> habitats. We would need to generate oxygen and grow food using high-tech methods. Another danger is radiation from the sun. Despite these risks, many people volunteer to go. They believe it is <strong>essential</strong> for the future of humanity to become a multi-planetary species.</p>
+                </div>
+
+                <aside class="sidebar">
+                    <div class="vocab-title">Word Focus</div>
+                    <div class="vocab-item"><span class="v-word">Sealed:</span> Closed tightly so air cannot escape.</div>
+                    <div class="vocab-item"><span class="v-word">Essential:</span> Absolutely necessary.</div>
+                    <div class="vocab-item"><span class="v-word">Atmosphere:</span> The layer of gas around a planet.</div>
+                    <div class="vocab-item"><span class="v-word">Species:</span> A group of living organisms (e.g., humans).</div>
+                </aside>
+            </div>
+
+            <div class="quiz-section">
+                <div class="quiz-title">Part A: Logic & Vocab (Questions 26-33)</div>
+                <div id="mcq-u3"></div>
+
+                <div class="quiz-title" style="margin-top:30px;">Part B: Grammar (Conditionals) (Questions 34-40)</div>
+                <div id="grammar-u3"></div>
+            </div>
+        </div>
+
+        <!-- ================= REVIEW ================= -->
+        <div id="review" class="section">
+            <div style="text-align: center; padding: 50px;">
+                <h1>Mission Complete!</h1>
+                <p style="font-size:1.5rem;">Total Score: <span id="final-score" style="color:var(--correct); font-weight:bold;">0</span> / 40</p>
+                <div style="font-size: 5rem;">🏆</div>
+                <p>Emir, please take a screenshot of this page and send it to Andrew!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- GLOBAL VARS ---
+    let score = 0;
+    const totalQ = 40;
+
+    // --- NAVIGATION ---
+    function switchTab(tabId, btn) {
+        // Hide all sections
+        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+        // Show target
+        document.getElementById(tabId).classList.add('active');
+        
+        // Update buttons
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Scroll top
+        document.querySelector('.content-area').scrollTop = 0;
+    }
+
+    // --- AUDIO ---
+    function toggleAudio(id) {
+        const audio = document.getElementById(id);
+        const status = document.getElementById(id.replace('audio', 'status'));
+        
+        // Stop others
+        document.querySelectorAll('audio').forEach(a => {
+            if(a.id !== id) { a.pause(); a.currentTime = 0; }
+        });
+
+        if (audio.paused) {
+            audio.play();
+            status.innerText = "Playing...";
+            status.style.color = "#2ECC71";
+        } else {
+            audio.pause();
+            status.innerText = "Paused";
+            status.style.color = "#ccc";
+        }
+    }
+
+    // --- QUIZ GENERATORS ---
+
+    // 1. MATCHING LOGIC
+    function initMatch(divId, pairs) {
+        const container = document.getElementById(divId);
+        let selectedWord = null;
+        let selectedDef = null;
+
+        // Create arrays
+        let words = pairs.map(p => ({id: p.id, text: p.word, type: 'w'}));
+        let defs = pairs.map(p => ({id: p.id, text: p.def, type: 'd'}));
+        
+        // Shuffle defs
+        defs.sort(() => Math.random() - 0.5);
+
+        words.forEach(w => {
+            let d = document.createElement('div');
+            d.className = 'match-card';
+            d.innerText = w.text;
+            d.onclick = () => handleMatchClick(d, w.id, 'w');
+            container.appendChild(d);
+        });
+
+        defs.forEach(def => {
+            let d = document.createElement('div');
+            d.className = 'match-card';
+            d.innerText = def.text;
+            d.onclick = () => handleMatchClick(d, def.id, 'd');
+            container.appendChild(d);
+        });
+
+        let currentSelection = null;
+
+        function handleMatchClick(el, id, type) {
+            if(el.classList.contains('solved')) return;
+
+            if(!currentSelection) {
+                // First click
+                currentSelection = {el, id, type};
+                el.classList.add('selected');
+            } else {
+                // Second click
+                if(currentSelection.el === el) {
+                    // Deselect
+                    el.classList.remove('selected');
+                    currentSelection = null;
+                    return;
+                }
+
+                if(currentSelection.type === type) {
+                    // Clicked same type (word + word), switch selection
+                    currentSelection.el.classList.remove('selected');
+                    currentSelection = {el, id, type};
+                    el.classList.add('selected');
+                    return;
+                }
+
+                // Check match
+                if(currentSelection.id === id) {
+                    // Match!
+                    el.classList.add('solved');
+                    currentSelection.el.classList.add('solved');
+                    el.classList.remove('selected');
+                    currentSelection.el.classList.remove('selected');
+                    addPoint();
+                } else {
+                    // Wrong
+                    el.style.background = "#fab1a0";
+                    currentSelection.el.style.background = "#fab1a0";
+                    setTimeout(() => {
+                        el.style.background = "#e8f4f8";
+                        currentSelection.el.style.background = "#e8f4f8";
+                        el.classList.remove('selected');
+                        currentSelection.el.classList.remove('selected');
+                    }, 500);
+                }
+                currentSelection = null;
+            }
+        }
+    }
+
+    // 2. MCQ LOGIC
+    function initMCQ(divId, qList) {
+        const container = document.getElementById(divId);
+        qList.forEach(q => {
+            let d = document.createElement('div');
+            d.className = 'question-block';
+            d.innerHTML = `<span class="q-text">${q.id}. ${q.text}</span>`;
+            
+            q.opts.forEach((opt, idx) => {
+                let btn = document.createElement('button');
+                btn.className = 'btn-option';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if(btn.parentElement.dataset.locked) return;
+                    btn.parentElement.dataset.locked = "true";
+                    
+                    if(idx === q.ans) {
+                        btn.classList.add('correct');
+                        addPoint();
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                };
+                d.appendChild(btn);
+            });
+            container.appendChild(d);
+        });
+    }
+
+    // 3. SCRAMBLE LOGIC
+    function initScramble(divId, data) {
+        const container = document.getElementById(divId);
+        data.forEach(item => {
+            let wrapper = document.createElement('div');
+            wrapper.className = "question-block";
+            wrapper.innerHTML = `<span class="q-text">${item.id}. Build the sentence:</span>`;
+            
+            let dropZone = document.createElement('div');
+            dropZone.className = "scramble-box";
+            dropZone.style.background = "#fff";
+            
+            let bank = document.createElement('div');
+            bank.className = "scramble-box";
+            
+            let shuffled = [...item.words].sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach(w => {
+                let chip = document.createElement('div');
+                chip.className = "word-chip";
+                chip.innerText = w;
+                chip.onclick = () => {
+                    if(chip.parentElement === bank) dropZone.appendChild(chip);
+                    else bank.appendChild(chip);
+                };
+                bank.appendChild(chip);
+            });
+
+            let checkBtn = document.createElement('button');
+            checkBtn.innerText = "Check";
+            checkBtn.className = "btn-option";
+            checkBtn.style.width = "auto";
+            checkBtn.style.background = "var(--nat-geo-yellow)";
+            checkBtn.onclick = () => {
+                if(wrapper.dataset.locked) return;
+                let ans = Array.from(dropZone.children).map(c => c.innerText).join(" ");
+                if(ans === item.correct) {
+                    dropZone.style.border = "2px solid green";
+                    addPoint();
+                    wrapper.dataset.locked = "true";
+                } else {
+                    dropZone.style.border = "2px solid red";
+                }
+            };
+
+            wrapper.appendChild(dropZone);
+            wrapper.appendChild(bank);
+            wrapper.appendChild(checkBtn);
+            container.appendChild(wrapper);
+        });
+    }
+
+    function addPoint() {
+        score++;
+        document.getElementById('total-score').innerText = score;
+        document.getElementById('final-score').innerText = score;
+    }
+
+    // --- DATA INJECTION ---
+
+    // UNIT 1 MATCH
+    initMatch('match-u1', [
+        {id: 1, word: 'Mycelium', def: 'A fungus network underground'},
+        {id: 2, word: 'Resource', def: 'Useful things like water/food'},
+        {id: 3, word: 'Individual', def: 'One single person or thing'},
+        {id: 4, word: 'To Warn', def: 'To tell about danger'},
+        {id: 5, word: 'Network', def: 'A system of connected parts'}
+    ]);
+
+    // UNIT 1 MCQ
+    initMCQ('mcq-u1', [
+        {id: 6, text: "Trees are connected by...", opts: ["Wires", "Roots and Fungi", "Insects"], ans: 1},
+        {id: 7, text: "What can a 'Mother Tree' do?", opts: ["Eat other trees", "Move to a new place", "Send sugar to small trees"], ans: 2},
+        {id: 8, text: "Why do trees send signals?", opts: ["To say hello", "To warn about attacks", "To sleep"], ans: 1},
+        {id: 9, text: "The text compares the forest to...", opts: ["A social network", "A war zone", "A desert"], ans: 0},
+        {id: 10, text: "Fungi are...", opts: ["Plants", "Animals", "Organisms like mushrooms"], ans: 2},
+        {id: 11, text: "If a tree is in the shade, it needs...", opts: ["Less water", "More energy/sugar", "To be cut down"], ans: 1},
+        {id: 12, text: "Which word means 'protection'?", opts: ["Defense", "Attack", "Signal"], ans: 0},
+        {id: 13, text: "Is the forest competitive or cooperative?", opts: ["Only competitive", "Cooperative (helping)", "Silent"], ans: 1}
+    ]);
+
+    // UNIT 2 MCQ
+    initMCQ('mcq-u2', [
+        {id: 14, text: "Petra was built ON TOP of the mountains.", opts: ["True", "False (Carved INTO)"], ans: 1},
+        {id: 15, text: "Petra was rich because of trade.", opts: ["True", "False"], ans: 0},
+        {id: 16, text: "The city was never lost; people always lived there.", opts: ["True", "False (Abandoned)"], ans: 1},
+        {id: 17, text: "Petra is called the 'Blue City'.", opts: ["True", "False (Rose City)"], ans: 1},
+        {id: 18, text: "What destroyed the water system?", opts: ["War", "Earthquakes", "Floods"], ans: 1},
+        {id: 19, text: "Which word means 'empty/left alone'?", opts: ["Carved", "Abandoned", "Route"], ans: 1},
+        {id: 20, text: "Who built Petra?", opts: ["The Romans", "The Nabataeans", "The Greeks"], ans: 1}
+    ]);
+
+    // UNIT 2 SCRAMBLE
+    initScramble('scramble-u2', [
+        {id: 21, words: ["Petra", "is", "carved", "into", "stone"], correct: "Petra is carved into stone"},
+        {id: 22, words: ["It", "was", "a", "wealthy", "city"], correct: "It was a wealthy city"},
+        {id: 23, words: ["Earthquakes", "destroyed", "the", "water", "system"], correct: "Earthquakes destroyed the water system"},
+        {id: 24, words: ["Tourists", "visit", "Jordan", "every", "year"], correct: "Tourists visit Jordan every year"},
+        {id: 25, words: ["The", "city", "was", "hidden", "for", "centuries"], correct: "The city was hidden for centuries"}
+    ]);
+
+    // UNIT 3 MCQ
+    initMCQ('mcq-u3', [
+        {id: 26, text: "Can humans breathe on Mars?", opts: ["Yes, easily", "No, no oxygen", "Maybe a little"], ans: 1},
+        {id: 27, text: "What is 'hydroponics'?", opts: ["Flying cars", "Growing food in water", "Robots"], ans: 1},
+        {id: 28, text: "Why is Mars dangerous?", opts: ["Monsters", "Radiation and cold", "Too hot"], ans: 1},
+        {id: 29, text: "What does 'Essential' mean?", opts: ["Necessary", "Optional", "Fun"], ans: 0},
+        {id: 30, text: "A 'Habitat' is...", opts: ["A habit", "A place to live", "A hobby"], ans: 1},
+        {id: 31, text: "Why do we need sealed habitats?", opts: ["To keep air inside", "To keep aliens out", "To sleep"], ans: 0},
+        {id: 32, text: "Mars is called...", opts: ["The Blue Planet", "The Red Planet", "The Sun"], ans: 1},
+        {id: 33, text: "Who wants to go there?", opts: ["NASA", "Nobody", "Only robots"], ans: 0}
+    ]);
+
+    // UNIT 3 GRAMMAR
+    initMCQ('grammar-u3', [
+        {id: 34, text: "If we ___ to Mars, we will need suits. (1st Cond)", opts: ["go", "went", "gone"], ans: 0},
+        {id: 35, text: "If I ___ an astronaut, I would fly. (2nd Cond)", opts: ["am", "was", "were"], ans: 2},
+        {id: 36, text: "The city ___ built by robots. (Passive)", opts: ["will be", "will", "is being"], ans: 0},
+        {id: 37, text: "We look forward to ___ Mars. (Gerund)", opts: ["visit", "visiting", "visited"], ans: 1},
+        {id: 38, text: "Food ___ be grown indoors. (Modal)", opts: ["must", "has", "did"], ans: 0},
+        {id: 39, text: "Mars ___ visited by rovers. (Present Perfect)", opts: ["has been", "was", "is"], ans: 0},
+        {id: 40, text: "Unless we have air, we ___ survive.", opts: ["can", "cannot", "will"], ans: 1}
+    ]);
+
+</script>
+</body>
+</html>

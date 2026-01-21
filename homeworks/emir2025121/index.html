@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emir's Explorer Mission</title>
+<style>
+    :root {
+        --primary: #005f73;
+        --secondary: #0a9396;
+        --accent: #ee9b00;
+        --bg: #e9d8a6;
+        --text: #2b2d42;
+        --white: #ffffff;
+        --card-bg: #fdfcdc;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    /* HEADER */
+    .header {
+        background-color: var(--primary);
+        color: var(--white);
+        padding: 20px;
+        border-radius: 15px 15px 0 0;
+        border-bottom: 5px solid var(--accent);
+        text-align: center;
+        position: relative;
+    }
+
+    .header h1 { margin: 0; font-size: 2.5em; text-transform: uppercase; letter-spacing: 2px; }
+    .header p { margin: 5px 0 0; font-size: 1.2em; font-weight: bold; color: var(--accent); }
+
+    /* NAVIGATION */
+    .nav-bar {
+        display: flex;
+        background-color: var(--secondary);
+        padding: 10px;
+        gap: 10px;
+        overflow-x: auto;
+    }
+
+    .nav-btn {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        flex: 1;
+        transition: 0.3s;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+        background: var(--accent);
+        color: var(--text);
+    }
+
+    /* SECTIONS */
+    .section {
+        display: none;
+        background-color: var(--white);
+        padding: 30px;
+        min-height: 500px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .section.active { display: block; }
+
+    /* READING STYLE */
+    .article-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+    }
+
+    .article-text {
+        font-size: 1.1em;
+        line-height: 1.8;
+        text-align: justify;
+    }
+
+    .drop-cap {
+        float: left;
+        font-size: 4em;
+        line-height: 0.8;
+        padding-right: 10px;
+        color: var(--primary);
+        font-weight: bold;
+    }
+
+    .sidebar {
+        background-color: var(--card-bg);
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid var(--secondary);
+        height: fit-content;
+    }
+
+    .sidebar h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 5px; }
+
+    .vocab-item { margin-bottom: 10px; }
+    .vocab-word { font-weight: bold; color: #d00000; }
+
+    /* IMAGES & AUDIO */
+    img.generated-img {
+        width: 100%;
+        border-radius: 8px;
+        border: 3px solid var(--text);
+        margin-bottom: 15px;
+    }
+
+    audio { width: 100%; margin: 15px 0; }
+
+    /* QUIZ ELEMENTS */
+    .quiz-container {
+        margin-top: 30px;
+        border-top: 2px dashed var(--secondary);
+        padding-top: 20px;
+    }
+
+    .question-card {
+        background: #f8f9fa;
+        border-left: 5px solid var(--primary);
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    .q-title { font-weight: bold; margin-bottom: 10px; display: block; }
+
+    .btn-opt {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        background: white;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: 0.2s;
+    }
+    .btn-opt:hover { background: #e9ecef; border-color: var(--secondary); }
+    .btn-opt.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+    .btn-opt.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+    /* SCRAMBLE GAME */
+    .scramble-box {
+        background: #e9ecef;
+        padding: 15px;
+        min-height: 50px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    .word-chip {
+        background: var(--primary);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    /* SCORE */
+    .scoreboard {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--text);
+        color: var(--accent);
+        padding: 15px 25px;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 1.2em;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 1000;
+    }
+</style>
+</head>
+<body>
+
+<div class="scoreboard">Score: <span id="score">0</span> / 40</div>
+
+<div class="container">
+    <div class="header">
+        <h1>Reading Explorer: Mission B1+</h1>
+        <p>Student: Emir | 3 Stories | 40 Challenges</p>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="showSection('unit1')">1. The Deep Ocean 🌊</button>
+        <button class="nav-btn" onclick="showSection('unit2')">2. Ancient Secrets 🏛️</button>
+        <button class="nav-btn" onclick="showSection('unit3')">3. Future Tech 🤖</button>
+        <button class="nav-btn" onclick="showSection('final')">Final Boss 🏆</button>
+    </div>
+
+    <!-- UNIT 1: NATURE -->
+    <div id="unit1" class="section active">
+        <h2>Unit 1: Mysteries of the Deep</h2>
+        
+        <div class="article-layout">
+            <div class="main-content">
+                
+                <img src="img_1768994587_2250.png" class="generated-img" alt="Deep Ocean">
+                
+<!-- GEN_AUDIO: 
+[NARRATOR]: The ocean is the last great frontier on Earth. We have explored more of the surface of Mars than the bottom of our own ocean. Today, Emir, we dive into the Midnight Zone.
+[TEACHER]: Listen carefully to how creatures survive without sunlight.
+-->
+                <audio controls src="PLACEHOLDER"></audio>
+
+                <div class="article-text">
+                    <p><span class="drop-cap">I</span>magine a world of total darkness, crushing pressure, and freezing temperatures. This is the "Midnight Zone" of the ocean. For a long time, scientists believed life could not exist here. They were wrong.</p>
+                    <p>In this harsh environment, creatures have adapted in amazing ways. Some animals, like the Anglerfish, create their own light through a process called <strong>bioluminescence</strong>. They use this light to attract prey in the dark. Others, like the Giant Squid, have eyes the size of basketballs to see the faintest glimmer of light. It is a dangerous but fascinating world.</p>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h3>Vocabulary Focus</h3>
+                <div class="vocab-item"><span class="vocab-word">Pressure:</span> The force produced by the weight of water.</div>
+                <div class="vocab-item"><span class="vocab-word">Harsh:</span> Unpleasantly rough or jarring to the senses; cruel.</div>
+                <div class="vocab-item"><span class="vocab-word">To Adapt:</span> To change in order to survive.</div>
+                <div class="vocab-item"><span class="vocab-word">Prey:</span> An animal that is hunted and killed by another for food.</div>
+            </div>
+        </div>
+
+        <div class="quiz-container">
+            <h3>Part A: Comprehension (Questions 1-5)</h3>
+            <div id="quiz-u1"></div>
+            <h3>Part B: Vocabulary Match (Questions 6-10)</h3>
+            <p>Click the word, then click the meaning.</p>
+            <div id="match-u1" class="scramble-box" style="background:#fff; border:1px solid #ccc;"></div>
+        </div>
+    </div>
+
+    <!-- UNIT 2: HISTORY -->
+    <div id="unit2" class="section">
+        <h2>Unit 2: The Lost Empire</h2>
+        
+        <div class="article-layout">
+            <div class="main-content">
+                
+                <img src="img_1768994660_5380.png" class="generated-img" alt="Mayan Temple">
+                
+<!-- GEN_AUDIO: 
+[NARRATOR]: Deep in the jungles of Central America, a great civilization vanished. The Maya built massive pyramids and mapped the stars. But why did they disappear?
+[BOY]: Maybe it was aliens?
+[TEACHER]: No, Emir, historians think it was something else. Let's read.
+-->
+                <audio controls src="PLACEHOLDER"></audio>
+
+                <div class="article-text">
+                    <p><span class="drop-cap">T</span>he Maya civilization was one of the most advanced in the ancient world. They built towering stone pyramids, developed a complex writing system, and were master astronomers. However, around 900 AD, their great cities were suddenly <strong>abandoned</strong>.</p>
+                    <p>Historians have debated the cause for decades. Was it war? Disease? Today, the leading theory is <strong>drought</strong>. Scientists analyzing the soil have found evidence of a severe lack of rain during that time. Without water for their crops, the large population could not be supported, leading to the <strong>collapse</strong> of their society.</p>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h3>Vocabulary Focus</h3>
+                <div class="vocab-item"><span class="vocab-word">Abandoned:</span> Left empty or inhabited.</div>
+                <div class="vocab-item"><span class="vocab-word">Astronomer:</span> A scientist who studies stars and planets.</div>
+                <div class="vocab-item"><span class="vocab-word">Drought:</span> A long period of time with little or no rain.</div>
+                <div class="vocab-item"><span class="vocab-word">Collapse:</span> To fall down or fail suddenly.</div>
+            </div>
+        </div>
+
+        <div class="quiz-container">
+            <h3>Part A: True or False? (Questions 11-15)</h3>
+            <div id="quiz-u2"></div>
+            <h3>Part B: Sentence Building (Questions 16-20)</h3>
+            <p>Reorder the words to make a correct sentence.</p>
+            <div id="scramble-u2"></div>
+        </div>
+    </div>
+
+    <!-- UNIT 3: SCIENCE -->
+    <div id="unit3" class="section">
+        <h2>Unit 3: Rise of the Robots</h2>
+        
+        <div class="article-layout">
+            <div class="main-content">
+                
+                <img src="img_1768994723_8531.png" class="generated-img" alt="Future Robots">
+                
+<!-- GEN_AUDIO: 
+[ROBOT]: Hello Emir. I am Unit 734. I can do your homework.
+[BOY]: Really? That's awesome!
+[TEACHER]: Wait a minute. AI is helpful, but we must use it wisely. Let's discuss the ethics of AI.
+-->
+                <audio controls src="PLACEHOLDER"></audio>
+
+                <div class="article-text">
+                    <p><span class="drop-cap">A</span>rtificial Intelligence (AI) is changing our world faster than ever before. From self-driving cars to smart assistants like Siri, machines are becoming smarter. But is this a good thing?</p>
+                    <p>On one hand, robots can perform dangerous jobs, keeping humans safe. They can process data faster than any person, leading to medical breakthroughs. On the other hand, many people worry about <strong>unemployment</strong>. If robots can do everything, what will humans do? It is <strong>crucial</strong> that we develop AI responsibly to ensure it remains a tool for good, not a replacement for humanity.</p>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h3>Vocabulary Focus</h3>
+                <div class="vocab-item"><span class="vocab-word">Unemployment:</span> The state of not having a job.</div>
+                <div class="vocab-item"><span class="vocab-word">Breakthrough:</span> A sudden, important discovery or development.</div>
+                <div class="vocab-item"><span class="vocab-word">Crucial:</span> Extremely important.</div>
+                <div class="vocab-item"><span class="vocab-word">To Ensure:</span> To make certain that something happens.</div>
+            </div>
+        </div>
+
+        <div class="quiz-container">
+            <h3>Part A: Logic & Vocabulary (Questions 21-25)</h3>
+            <div id="quiz-u3"></div>
+            <h3>Part B: Grammar in Context (Questions 26-30)</h3>
+            <div id="grammar-u3"></div>
+        </div>
+    </div>
+
+    <!-- FINAL REVIEW -->
+    <div id="final" class="section">
+        <h2 style="text-align:center; color:var(--accent);">Final Challenge: The Ultimate Test</h2>
+        <p style="text-align:center;">Emir, answer these last 10 questions to complete your mission!</p>
+        
+        
+        <img src="img_1768994786_2406.png" class="generated-img" style="width:50%; margin:0 auto; display:block;" alt="Treasure">
+
+        <div class="quiz-container">
+            <div id="quiz-final"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// --- NAVIGATION ---
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+}
+
+// --- SCORING ---
+let score = 0;
+function addPoint() {
+    score++;
+    document.getElementById('score').innerText = score;
+}
+
+// --- QUIZ GENERATORS ---
+
+// 1. Multiple Choice Generator
+function renderMCQ(targetId, qList, startNum) {
+    const container = document.getElementById(targetId);
+    qList.forEach((q, idx) => {
+        const div = document.createElement('div');
+        div.className = 'question-card';
+        div.innerHTML = `<span class="q-title">Q${startNum + idx}: ${q.text}</span>`;
+
+        q.opts.forEach((opt, oIdx) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-opt';
+            btn.innerText = opt;
+            btn.onclick = function() {
+                if(this.parentElement.dataset.locked) return;
+                this.parentElement.dataset.locked = "true";
+
+                if(oIdx === q.ans) {
+                    this.classList.add('correct');
+                    addPoint();
+                } else {
+                    this.classList.add('wrong');
+                }
+            };
+            div.appendChild(btn);
+        });
+        container.appendChild(div);
+    });
+}
+
+// 2. Sentence Scramble Generator
+function renderScramble(targetId, data, startNum) {
+    const container = document.getElementById(targetId);
+    data.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'question-card';
+        div.innerHTML = `<span class="q-title">Q${startNum + idx}: Reorder the sentence</span>`;
+
+        const dropZone = document.createElement('div');
+        dropZone.className = 'scramble-box';
+        dropZone.style.background = '#fff';
+
+        const bank = document.createElement('div');
+        bank.className = 'scramble-box';
+
+        // Shuffle
+        let words = [...item.words].sort(() => Math.random() - 0.5);
+
+        words.forEach(w => {
+            let chip = document.createElement('div');
+            chip.className = 'word-chip';
+            chip.innerText = w;
+            chip.onclick = function() {
+                if(this.parentElement === bank) dropZone.appendChild(this);
+                else bank.appendChild(this);
+            };
+            bank.appendChild(chip);
+        });
+
+        let checkBtn = document.createElement('button');
+        checkBtn.innerText = "CHECK";
+        checkBtn.className = "nav-btn";
+        checkBtn.style.background = "var(--primary)";
+        checkBtn.style.marginTop = "10px";
+        checkBtn.onclick = function() {
+            if(div.dataset.locked) return;
+            const ans = Array.from(dropZone.children).map(c => c.innerText).join(' ');
+            if(ans === item.correct) {
+                dropZone.style.border = "2px solid green";
+                addPoint();
+                div.dataset.locked = "true";
+            } else {
+                dropZone.style.border = "2px solid red";
+            }
+        };
+
+        div.appendChild(dropZone);
+        div.appendChild(bank);
+        div.appendChild(checkBtn);
+        container.appendChild(div);
+    });
+}
+
+// --- DATA & INIT ---
+
+// UNIT 1: NATURE
+const qU1 = [
+    {text: "What does 'bioluminescence' mean?", opts: ["Living in the dark", "Creating own light", "Eating fish"], ans: 1},
+    {text: "Why did scientists think life couldn't exist in the Midnight Zone?", opts: ["Too cold and dark", "Too many monsters", "No water"], ans: 0},
+    {text: "The Giant Squid has huge eyes to...", opts: ["Scare fish", "See in the dark", "Sleep better"], ans: 1},
+    {text: "The 'Midnight Zone' is characterized by...", opts: ["Bright sun", "High pressure", "Warm water"], ans: 1},
+    {text: "Animals adapt to...", opts: ["Die", "Survive", "Play"], ans: 1}
+];
+renderMCQ('quiz-u1', qU1, 1);
+
+// Matching for U1
+document.getElementById('match-u1').innerHTML = `
+<div style="display:flex; justify-content:space-between; width:100%">
+    <div>
+        <button class="word-chip" onclick="alert('Find: Force produced by weight')">Pressure</button><br><br>
+        <button class="word-chip" onclick="alert('Find: Animal that is hunted')">Prey</button>
+    </div>
+    <div>
+        <button class="word-chip" onclick="alert('Match: Prey')">Hunted Animal</button><br><br>
+        <button class="word-chip" onclick="alert('Match: Pressure')">Weight Force</button>
+    </div>
+</div>
+<p style="font-size:0.8em; color:gray;">(Self-check exercise for vocabulary)</p>
+`;
+
+// UNIT 2: HISTORY
+const qU2 = [
+    {text: "The Maya cities were abandoned.", opts: ["True", "False"], ans: 0},
+    {text: "The Maya were not good at astronomy.", opts: ["True", "False"], ans: 1},
+    {text: "Drought means a lot of rain.", opts: ["True", "False"], ans: 1},
+    {text: "Collapse means to fall down or fail.", opts: ["True", "False"], ans: 0},
+    {text: "Scientists study soil to learn history.", opts: ["True", "False"], ans: 0}
+];
+renderMCQ('quiz-u2', qU2, 11);
+
+const sU2 = [
+    {words: ["The", "cities", "were", "abandoned", "suddenly"], correct: "The cities were abandoned suddenly"},
+    {words: ["They", "built", "massive", "stone", "pyramids"], correct: "They built massive stone pyramids"},
+    {words: ["A", "drought", "caused", "the", "collapse"], correct: "A drought caused the collapse"},
+    {words: ["Emir", "likes", "ancient", "history", "books"], correct: "Emir likes ancient history books"},
+    {words: ["Scientists", "found", "evidence", "in", "soil"], correct: "Scientists found evidence in soil"}
+];
+renderScramble('scramble-u2', sU2, 16);
+
+// UNIT 3: SCIENCE
+const qU3 = [
+    {text: "Why are robots good for factories?", opts: ["They are slow", "They improve safety", "They like coffee"], ans: 1},
+    {text: "What is a 'breakthrough'?", opts: ["Breaking a toy", "A major discovery", "A car accident"], ans: 1},
+    {text: "Unemployment means...", opts: ["Having a job", "Having no job", "Loving work"], ans: 1},
+    {text: "The text says we must control AI to...", opts: ["Stop it", "Ensure it helps humanity", "Make it evil"], ans: 1},
+    {text: "Crucial means...", opts: ["Not important", "Very important", "Funny"], ans: 1}
+];
+renderMCQ('quiz-u3', qU3, 21);
+
+const gU3 = [
+    {text: "If robots do everything, humans ___ lazy. (1st Conditional)", opts: ["became", "will become", "become"], ans: 1},
+    {text: "The car ___ by a computer. (Passive)", opts: ["is driven", "drives", "driving"], ans: 0},
+    {text: "I look forward ___ the new robot. (Gerund)", opts: ["to see", "to seeing", "see"], ans: 1},
+    {text: "AI ___ used in hospitals today. (Passive)", opts: ["is", "are", "were"], ans: 0},
+    {text: "If I ___ a robot, I would fly. (2nd Conditional)", opts: ["am", "was", "were"], ans: 2}
+];
+renderMCQ('grammar-u3', gU3, 26);
+
+// FINAL REVIEW
+const qFinal = [
+    {text: "Synonym for 'Abandon'", opts: ["Keep", "Leave", "Build"], ans: 1},
+    {text: "Antonym for 'Ancient'", opts: ["Old", "Modern", "Historic"], ans: 1},
+    {text: "Definition of 'Prey'", opts: ["Hunter", "Hunted animal", "Plant"], ans: 1},
+    {text: "Past participle of 'Write'", opts: ["Wrote", "Written", "Writing"], ans: 1},
+    {text: "Emir ___ finished his homework. (Present Perfect)", opts: ["have", "has", "had"], ans: 1},
+    {text: "Bioluminescence is...", opts: ["Sound", "Light", "Heat"], ans: 1},
+    {text: "The Maya lived in...", opts: ["Europe", "Central America", "Asia"], ans: 1},
+    {text: "Hydroponics grows plants in...", opts: ["Soil", "Water", "Air"], ans: 1},
+    {text: "A 'Habitat' is a place to...", opts: ["Live", "Work", "Shop"], ans: 0},
+    {text: "This homework was made for...", opts: ["Emir", "Someone else", "Nobody"], ans: 0}
+];
+renderMCQ('quiz-final', qFinal, 31);
+
+</script>
+</body>
+</html>

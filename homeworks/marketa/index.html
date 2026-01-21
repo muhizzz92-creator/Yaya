@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supermarket Learning Adventure</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'Nunito', sans-serif;
+    }
+    
+    /* FIX: HIDE SCROLLBARS BUT KEEP SCROLLING */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+    
+    @keyframes bounce-soft {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(255,200,0,0.5); }
+      50% { box-shadow: 0 0 20px rgba(255,200,0,0.8); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-5px) rotate(2deg); }
+      75% { transform: translateY(5px) rotate(-2deg); }
+    }
+    
+    @keyframes cart-shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px) rotate(-2deg); }
+      75% { transform: translateX(3px) rotate(2deg); }
+    }
+    
+    .bounce-soft { animation: bounce-soft 2s ease-in-out infinite; }
+    .wiggle { animation: wiggle 1s ease-in-out infinite; }
+    .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .float { animation: float 3s ease-in-out infinite; }
+    .cart-shake { animation: cart-shake 0.5s ease-in-out; }
+    
+    .food-item {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .food-item:hover {
+      transform: scale(1.05);
+      border-color: #10b981;
+    }
+    
+    .tab-btn {
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    
+    .tab-btn.active {
+      transform: scale(1.05);
+    }
+
+    .story-card {
+        transition: transform 0.3s ease;
+    }
+    .story-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .cart-item {
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .category-card {
+      transition: all 0.3s ease;
+    }
+    
+    .category-card:hover {
+      transform: translateY(-5px);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-gradient-to-br from-amber-50 via-orange-50 to-pink-50 overflow-auto">
+  <div id="app" class="min-h-full w-full">
+   
+   <!-- Header -->
+   <header class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white p-4 shadow-lg">
+    <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
+     <div class="flex items-center gap-3">
+      <div class="text-4xl bounce-soft">🛒</div>
+      <div>
+       <h1 id="store-title" class="text-2xl font-extrabold">Happy Market 开心超市</h1>
+       <p id="welcome-text" class="text-emerald-100 text-sm">Learn English while shopping! 边购物边学英语!</p>
+      </div>
+     </div>
+     <div class="bg-white/20 backdrop-blur rounded-2xl p-3 flex items-center gap-3 pulse-glow">
+      <div class="text-3xl wiggle">👛</div>
+      <div>
+       <div class="text-xs text-emerald-100">My Wallet 我的钱包</div>
+       <div class="flex items-center gap-2">
+        <span class="text-2xl font-bold" id="wallet-display">$50.00</span> 
+        <button onclick="openWalletModal()" class="bg-yellow-400 text-yellow-800 px-2 py-1 rounded-full text-xs font-bold hover:bg-yellow-300 transition"> Edit 编辑 </button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </header>
+   
+   <!-- Navigation Tabs (Fixed Scrollbars) -->
+   <nav class="bg-white shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto flex overflow-x-auto no-scrollbar pb-1">
+        <button onclick="switchTab('shop')" id="tab-shop" class="tab-btn active flex-1 py-4 px-6 font-bold text-emerald-600 border-b-4 border-emerald-500 bg-emerald-50 flex items-center justify-center gap-2"> 
+            <span class="text-2xl">🏪</span> <span>Shop 购物</span> 
+        </button> 
+        <button onclick="switchTab('cart')" id="tab-cart" class="tab-btn flex-1 py-4 px-6 font-bold text-gray-500 border-b-4 border-transparent hover:bg-gray-50 flex items-center justify-center gap-2"> 
+            <span class="text-2xl">🛒</span> <span>Cart (<span id="cart-count">0</span>)</span> 
+        </button> 
+        <button onclick="switchTab('cooking')" id="tab-cooking" class="tab-btn flex-1 py-4 px-6 font-bold text-gray-500 border-b-4 border-transparent hover:bg-gray-50 flex items-center justify-center gap-2"> 
+            <span class="text-2xl">👨‍🍳</span> <span>Cook 烹饪</span> 
+        </button> 
+        <button onclick="switchTab('vocab')" id="tab-vocab" class="tab-btn flex-1 py-4 px-6 font-bold text-gray-500 border-b-4 border-transparent hover:bg-gray-50 flex items-center justify-center gap-2"> 
+            <span class="text-2xl">📚</span> <span>Words 词汇</span> 
+        </button> 
+        <!-- New Stories Tab -->
+        <button onclick="switchTab('stories')" id="tab-stories" class="tab-btn flex-1 py-4 px-6 font-bold text-gray-500 border-b-4 border-transparent hover:bg-gray-50 flex items-center justify-center gap-2"> 
+            <span class="text-2xl">📖</span> <span>Stories 故事</span> 
+        </button>
+        <button onclick="switchTab('kitchen')" id="tab-kitchen" class="tab-btn flex-1 py-4 px-6 font-bold text-gray-500 border-b-4 border-transparent hover:bg-gray-50 flex items-center justify-center gap-2"> 
+            <span class="text-2xl">🧊</span> <span>Kitchen 厨房</span> 
+        </button>
+    </div>
+   </nav>
+
+   <main class="max-w-7xl mx-auto p-4 pb-32">
+    <!-- Shopping Section -->
+    <section id="section-shop" class="space-y-6">
+     <!-- Category Cards -->
+     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <button onclick="filterCategory('all')" class="category-card bg-gradient-to-br from-purple-400 to-purple-600 text-white p-4 rounded-2xl text-center shadow-lg">
+            <div class="text-4xl mb-2">🌟</div>
+            <div class="font-bold">All Items</div>
+        </button> 
+        <button onclick="filterCategory('fruits')" class="category-card bg-gradient-to-br from-red-400 to-orange-500 text-white p-4 rounded-2xl text-center shadow-lg">
+            <div class="text-4xl mb-2">🍎</div>
+            <div class="font-bold">Fruits</div>
+        </button> 
+        <button onclick="filterCategory('vegetables')" class="category-card bg-gradient-to-br from-green-400 to-emerald-600 text-white p-4 rounded-2xl text-center shadow-lg">
+            <div class="text-4xl mb-2">🥬</div>
+            <div class="font-bold">Vegetables</div>
+        </button> 
+        <button onclick="filterCategory('drinks')" class="category-card bg-gradient-to-br from-blue-400 to-cyan-500 text-white p-4 rounded-2xl text-center shadow-lg">
+            <div class="text-4xl mb-2">🥤</div>
+            <div class="font-bold">Drinks</div>
+        </button> 
+        <button onclick="filterCategory('dairy')" class="category-card bg-gradient-to-br from-yellow-300 to-amber-500 text-white p-4 rounded-2xl text-center shadow-lg">
+            <div class="text-4xl mb-2">🥛</div>
+            <div class="font-bold">Dairy</div>
+        </button> 
+        <button onclick="filterCategory('meat')" class="category-card bg-gradient-to-br from-rose-400 to-red-600 text-white p-4 rounded-2xl text-center shadow-lg">
+            <div class="text-4xl mb-2">🥩</div>
+            <div class="font-bold">Meat</div>
+        </button> 
+        <button onclick="filterCategory('bakery')" class="category-card bg-gradient-to-br from-amber-400 to-orange-600 text-white p-4 rounded-2xl text-center shadow-lg">
+            <div class="text-4xl mb-2">🍞</div>
+            <div class="font-bold">Bakery</div>
+        </button> 
+        <button onclick="filterCategory('snacks')" class="category-card bg-gradient-to-br from-pink-400 to-fuchsia-500 text-white p-4 rounded-2xl text-center shadow-lg">
+            <div class="text-4xl mb-2">🍪</div>
+            <div class="font-bold">Snacks</div>
+        </button>
+     </div>
+     <!-- Products Grid -->
+     <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+    </section>
+
+    <!-- Cart Section -->
+    <section id="section-cart" class="hidden space-y-4">
+     <div class="bg-white rounded-3xl shadow-xl p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-3xl">🛒</span> Shopping Cart 购物车</h2>
+      <div id="cart-items" class="space-y-3"></div>
+      <div id="cart-empty" class="text-center py-12 text-gray-400">
+       <div class="text-6xl mb-4">🛒</div>
+       <p class="text-xl">Your cart is empty!</p>
+       <p class="text-sm">Add some items 添加一些商品吧</p>
+      </div>
+      <div id="cart-summary" class="hidden mt-6 pt-6 border-t-2 border-dashed border-gray-200">
+       <div class="flex justify-between items-center text-lg mb-2"><span class="text-gray-600">Subtotal:</span> <span id="subtotal" class="font-bold">$0.00</span></div>
+       <div class="flex justify-between items-center text-2xl font-bold text-emerald-600"><span>Total:</span> <span id="total">$0.00</span></div>
+       <div id="budget-warning" class="hidden mt-4 bg-red-100 text-red-600 p-3 rounded-xl text-center">⚠️ Not enough money! 钱不够了!</div>
+       <div id="budget-ok" class="hidden mt-4 bg-green-100 text-green-600 p-3 rounded-xl text-center">✅ You can afford this! 你买得起!</div>
+       <button onclick="clearCart()" class="w-full mt-4 bg-gray-200 text-gray-600 py-3 rounded-xl font-bold hover:bg-gray-300 transition"> Clear Cart 清空购物车 </button>
+      </div>
+     </div>
+    </section>
+
+    <!-- Cooking Section -->
+    <section id="section-cooking" class="hidden space-y-6">
+     <div class="bg-white rounded-3xl shadow-xl p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-3xl">🔪</span> Cooking Actions 烹饪动作</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="cooking-actions"></div>
+     </div>
+     <div class="bg-white rounded-3xl shadow-xl p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-3xl">📖</span> Simple Recipes 简单食谱</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="recipes-grid"></div>
+     </div>
+    </section>
+
+    <!-- Vocabulary Section -->
+    <section id="section-vocab" class="hidden space-y-6">
+     <div class="bg-white rounded-3xl shadow-xl p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-3xl">📚</span> Food Vocabulary 食物词汇</h2>
+      <p class="text-gray-500 mb-4 text-sm">Click to listen! 点击收听!</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="vocab-grid"></div>
+     </div>
+     <div class="bg-white rounded-3xl shadow-xl p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-3xl">💰</span> Money Words 金钱词汇</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="money-vocab"></div>
+     </div>
+    </section>
+
+    <!-- NEW STORIES SECTION with ANTI-BLUR PROMPTS -->
+    <section id="section-stories" class="hidden space-y-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-3xl">📖</span> Mini Stories 迷你故事
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Story 1 -->
+            <div class="story-card bg-white rounded-3xl overflow-hidden shadow-lg border-2 border-emerald-100">
+                <div class="aspect-video w-full bg-gray-100 relative">
+                    
+                    <img src="img_1768988336_5615.png" alt="Anna and Banana" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Anna likes Bananas</h3>
+                    <p class="text-gray-600 mb-4">Anna slices a banana. She likes yellow bananas!</p>
+                    
+                    
+                    <audio controls src="audio_04511b8a.mp3" class="w-full"></audio>
+                </div>
+            </div>
+
+            <!-- Story 2 -->
+            <div class="story-card bg-white rounded-3xl overflow-hidden shadow-lg border-2 border-red-100">
+                <div class="aspect-video w-full bg-gray-100 relative">
+                    
+                    <img src="img_1768988407_1510.png" alt="Tom and Apple" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Tom's Red Apple</h3>
+                    <p class="text-gray-600 mb-4">Tom has an apple. It is a sweet red apple.</p>
+                    
+                    
+                    <audio controls src="audio_32742441.mp3" class="w-full"></audio>
+                </div>
+            </div>
+
+            <!-- Story 3 -->
+            <div class="story-card bg-white rounded-3xl overflow-hidden shadow-lg border-2 border-blue-100">
+                <div class="aspect-video w-full bg-gray-100 relative">
+                    
+                    <img src="img_1768988470_9449.png" alt="Cat and Milk" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">The Thirsty Cat</h3>
+                    <p class="text-gray-600 mb-4">The cat drinks milk. Milk is yummy!</p>
+                    
+                    
+                    <audio controls src="audio_b48882c8.mp3" class="w-full"></audio>
+                </div>
+            </div>
+
+            <!-- Story 4 -->
+            <div class="story-card bg-white rounded-3xl overflow-hidden shadow-lg border-2 border-orange-100">
+                <div class="aspect-video w-full bg-gray-100 relative">
+                    
+                    <img src="img_1768988533_1037.png" alt="Fresh Bread" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Fresh Bread</h3>
+                    <p class="text-gray-600 mb-4">Mom buys bread. The bread is warm and soft.</p>
+                    
+                    
+                    <audio controls src="audio_98881159.mp3" class="w-full"></audio>
+                </div>
+            </div>
+
+            <!-- Story 5 -->
+            <div class="story-card bg-white rounded-3xl overflow-hidden shadow-lg border-2 border-yellow-100">
+                <div class="aspect-video w-full bg-gray-100 relative">
+                    
+                    <img src="img_1768988617_2559.png" alt="Cooking Eggs" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Cooking Eggs</h3>
+                    <p class="text-gray-600 mb-4">I cook two eggs. One for me, one for you.</p>
+                    
+                    
+                    <audio controls src="audio_03cab128.mp3" class="w-full"></audio>
+                </div>
+            </div>
+
+            <!-- Story 6 -->
+            <div class="story-card bg-white rounded-3xl overflow-hidden shadow-lg border-2 border-pink-100">
+                <div class="aspect-video w-full bg-gray-100 relative">
+                    
+                    <img src="img_1768988682_2572.png" alt="Ice Cream Time" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="font-bold text-xl text-gray-800 mb-2">Ice Cream Time</h3>
+                    <p class="text-gray-600 mb-4">It is hot today. Let's eat ice cream!</p>
+                    
+                    
+                    <audio controls src="audio_c9dabd57.mp3" class="w-full"></audio>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kitchen Section -->
+    <section id="section-kitchen" class="hidden space-y-6">
+     <div class="bg-white rounded-3xl shadow-xl p-6">
+      <div class="flex items-center justify-between mb-4">
+       <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2"><span class="text-3xl">🧊</span> My Fridge 我的冰箱</h2>
+       <button onclick="transferToFridge()" class="bg-emerald-500 text-white px-4 py-2 rounded-xl font-bold hover:bg-emerald-600 transition"> Move Cart to Fridge 把购物车放入冰箱 </button>
+      </div>
+      <div id="fridge-items" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 min-h-[100px]"></div>
+      <div id="fridge-empty" class="text-center py-8 text-gray-400">
+       <div class="text-5xl mb-2">🧊</div>
+       <p class="text-lg">Your fridge is empty! 冰箱是空的!</p>
+       <p class="text-sm">Buy items and move them here 购买商品并放入这里</p>
+      </div>
+     </div>
+     <div class="bg-white rounded-3xl shadow-xl p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><span class="text-3xl">🍳</span> What Can I Cook? 我能做什么菜?</h2>
+      <div id="recipe-suggestions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+     </div>
+     <!-- Game UI -->
+     <div id="cooking-game" class="hidden bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-3xl shadow-xl p-6 text-white">
+      <div class="flex items-center justify-between mb-6">
+       <h2 class="text-2xl font-bold flex items-center gap-2">👨‍🍳 <span id="game-recipe-name">Cooking...</span></h2>
+       <button onclick="exitCookingGame()" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl font-bold transition"> Exit 退出 </button>
+      </div>
+      <div class="bg-white/20 backdrop-blur rounded-3xl p-8 mb-6 relative overflow-hidden min-h-[300px]">
+       <div class="absolute top-4 left-1/2 -translate-x-1/2"><div class="text-6xl" id="cooking-container-emoji">🍽️</div></div>
+       <div id="cooking-bowl" class="flex flex-wrap justify-center items-center gap-3 pt-20"></div>
+       <div id="cooking-status" class="text-center mt-4 text-2xl font-bold">Let's start cooking! 开始烹饪吧!</div>
+      </div>
+      <div class="space-y-3" id="cooking-steps"></div>
+      <div id="cooking-complete" class="hidden text-center py-8">
+       <div class="text-8xl mb-4 bounce-soft">🎉</div>
+       <h3 class="text-3xl font-bold mb-2">Delicious! 美味!</h3>
+       <p class="text-xl opacity-90 mb-6">You made <span id="completed-dish-name"></span>!</p>
+       <button onclick="exitCookingGame()" class="bg-white text-purple-600 px-8 py-3 rounded-xl font-bold hover:bg-purple-50 transition"> Cook Another Dish 再做一道菜 </button>
+      </div>
+     </div>
+    </section>
+   </main>
+   
+   <!-- Calculator -->
+   <div id="calculator" class="fixed bottom-4 right-4 bg-white rounded-3xl shadow-2xl p-4 w-72 z-50 border-4 border-emerald-400">
+    <div class="flex items-center justify-between mb-3">
+     <h3 class="font-bold text-gray-800 flex items-center gap-2"><span class="text-xl">🧮</span> Calculator 计算器</h3><button onclick="toggleCalculator()" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+    </div><input type="text" id="calc-display" readonly class="w-full bg-gray-100 rounded-xl p-3 text-right text-2xl font-mono font-bold text-gray-800 mb-3" value="0">
+    <div class="grid grid-cols-4 gap-2"><button onclick="calcInput('C')" class="bg-red-400 text-white p-3 rounded-xl font-bold hover:bg-red-500 transition">C</button> <button onclick="calcInput('±')" class="bg-gray-300 text-gray-700 p-3 rounded-xl font-bold hover:bg-gray-400 transition">±</button> <button onclick="calcInput('%')" class="bg-gray-300 text-gray-700 p-3 rounded-xl font-bold hover:bg-gray-400 transition">%</button> <button onclick="calcInput('÷')" class="bg-orange-400 text-white p-3 rounded-xl font-bold hover:bg-orange-500 transition">÷</button> <button onclick="calcInput('7')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">7</button> <button onclick="calcInput('8')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">8</button> <button onclick="calcInput('9')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">9</button> <button onclick="calcInput('×')" class="bg-orange-400 text-white p-3 rounded-xl font-bold hover:bg-orange-500 transition">×</button> <button onclick="calcInput('4')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">4</button> <button onclick="calcInput('5')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">5</button> <button onclick="calcInput('6')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">6</button> <button onclick="calcInput('-')" class="bg-orange-400 text-white p-3 rounded-xl font-bold hover:bg-orange-500 transition">−</button> <button onclick="calcInput('1')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">1</button> <button onclick="calcInput('2')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">2</button> <button onclick="calcInput('3')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">3</button> <button onclick="calcInput('+')" class="bg-orange-400 text-white p-3 rounded-xl font-bold hover:bg-orange-500 transition">+</button> <button onclick="calcInput('0')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition col-span-2">0</button> <button onclick="calcInput('.')" class="bg-gray-100 text-gray-800 p-3 rounded-xl font-bold hover:bg-gray-200 transition">.</button> <button onclick="calcInput('=')" class="bg-emerald-500 text-white p-3 rounded-xl font-bold hover:bg-emerald-600 transition">=</button>
+    </div>
+   </div>
+   <button id="calc-toggle" onclick="toggleCalculator()" class="hidden fixed bottom-4 right-4 bg-emerald-500 text-white p-4 rounded-full shadow-2xl z-50 hover:bg-emerald-600 transition"> <span class="text-2xl">🧮</span> </button>
+
+   <!-- Wallet Modal -->
+   <div id="wallet-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-md">
+     <h3 class="text-2xl font-bold text-gray-800 mb-4">Edit Wallet 编辑钱包</h3>
+     <div class="flex items-center gap-2 mb-6"><span class="text-3xl font-bold text-gray-400">$</span> <input type="number" id="wallet-input" class="flex-1 text-4xl font-bold text-emerald-600 border-b-4 border-emerald-400 focus:outline-none focus:border-emerald-600 bg-transparent" value="50.00"></div>
+     <div class="grid grid-cols-3 gap-2 mb-6"><button onclick="setWallet(20)" class="bg-green-100 text-green-700 p-3 rounded-xl font-bold hover:bg-green-200 transition">$20</button> <button onclick="setWallet(50)" class="bg-green-100 text-green-700 p-3 rounded-xl font-bold hover:bg-green-200 transition">$50</button> <button onclick="setWallet(100)" class="bg-green-100 text-green-700 p-3 rounded-xl font-bold hover:bg-green-200 transition">$100</button></div>
+     <div class="flex gap-3"><button onclick="closeWalletModal()" class="flex-1 bg-gray-200 text-gray-600 py-3 rounded-xl font-bold hover:bg-gray-300 transition"> Cancel 取消 </button> <button onclick="saveWallet()" class="flex-1 bg-emerald-500 text-white py-3 rounded-xl font-bold hover:bg-emerald-600 transition"> Save 保存 </button></div>
+    </div>
+   </div>
+
+   <!-- Toast -->
+   <div id="toast" class="hidden fixed top-24 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-6 py-3 rounded-full shadow-xl z-50 font-bold"><span class="text-xl mr-2">✓</span> <span id="toast-text">Added to cart!</span></div>
+   
+   <!-- HIDDEN AUDIO BANKS (SPLIT) -->
+   <div id="vocab-audio-fruits" class="hidden">
+      
+      <audio id="audio-word-1" src="audio_d517d548.mp3"></audio>
+      
+      <audio id="audio-word-2" src="audio_e75ebba1.mp3"></audio>
+      
+      <audio id="audio-word-3" src="audio_3dfa349f.mp3"></audio>
+      
+      <audio id="audio-word-4" src="audio_e662454b.mp3"></audio>
+      
+      <audio id="audio-word-5" src="audio_79ccd47f.mp3"></audio>
+      
+      <audio id="audio-word-6" src="audio_d4474eee.mp3"></audio>
+      
+      <audio id="audio-word-7" src="audio_e93fe024.mp3"></audio>
+      
+      <audio id="audio-word-8" src="audio_3c7f91fc.mp3"></audio>
+      
+      <audio id="audio-word-9" src="audio_9edd92b3.mp3"></audio>
+      
+      <audio id="audio-word-10" src="audio_f296f4a2.mp3"></audio>
+   </div>
+   
+   <div id="vocab-audio-veg" class="hidden">
+      
+      <audio id="audio-word-11" src="audio_33295e4e.mp3"></audio>
+      
+      <audio id="audio-word-12" src="audio_22d77505.mp3"></audio>
+      
+      <audio id="audio-word-13" src="audio_cab09cb9.mp3"></audio>
+      
+      <audio id="audio-word-14" src="audio_eac37ab5.mp3"></audio>
+      
+      <audio id="audio-word-15" src="audio_3f2ad7a9.mp3"></audio>
+      
+      <audio id="audio-word-16" src="audio_5d419da5.mp3"></audio>
+      
+      <audio id="audio-word-17" src="audio_53c6eeb6.mp3"></audio>
+      
+      <audio id="audio-word-18" src="audio_99329e6b.mp3"></audio>
+      
+      <audio id="audio-word-19" src="audio_7e255f8a.mp3"></audio>
+      
+      <audio id="audio-word-20" src="audio_e5a1ee1f.mp3"></audio>
+   </div>
+
+   <div id="vocab-audio-drinks" class="hidden">
+      
+      <audio id="audio-word-21" src="audio_df90cecf.mp3"></audio>
+      
+      <audio id="audio-word-22" src="audio_b923d15d.mp3"></audio>
+      
+      <audio id="audio-word-23" src="audio_7489235e.mp3"></audio>
+      
+      <audio id="audio-word-24" src="audio_6c389c5a.mp3"></audio>
+      
+      <audio id="audio-word-25" src="audio_50694dc3.mp3"></audio>
+      
+      <audio id="audio-word-26" src="audio_86934261.mp3"></audio>
+   </div>
+
+   <div id="vocab-audio-other" class="hidden">
+      
+      <audio id="audio-word-27" src="audio_9080928e.mp3"></audio>
+      
+      <audio id="audio-word-28" src="audio_cb69d74e.mp3"></audio>
+      
+      <audio id="audio-word-29" src="audio_234ac2e2.mp3"></audio>
+      
+      <audio id="audio-word-30" src="audio_924ad9e6.mp3"></audio>
+      
+      <audio id="audio-word-31" src="audio_205d42d2.mp3"></audio>
+      
+      <audio id="audio-word-32" src="audio_1c32b372.mp3"></audio>
+      
+      <audio id="audio-word-33" src="audio_5a55338a.mp3"></audio>
+      
+      <audio id="audio-word-34" src="audio_957ff33e.mp3"></audio>
+      
+      <audio id="audio-word-35" src="audio_c980d853.mp3"></audio>
+      
+      <audio id="audio-word-36" src="audio_57cf4923.mp3"></audio>
+      
+      <audio id="audio-word-37" src="audio_9dbec368.mp3"></audio>
+      
+      <audio id="audio-word-38" src="audio_241b181b.mp3"></audio>
+      
+      <audio id="audio-word-39" src="audio_b9f6cb0b.mp3"></audio>
+      
+      <audio id="audio-word-40" src="audio_e28c2da3.mp3"></audio>
+      
+      <audio id="audio-word-41" src="audio_bffc5e37.mp3"></audio>
+      
+      <audio id="audio-word-42" src="audio_65d2606f.mp3"></audio>
+      
+      <audio id="audio-word-43" src="audio_f7ed70f4.mp3"></audio>
+      
+      <audio id="audio-word-44" src="audio_e1ffdddc.mp3"></audio>
+      
+      <audio id="audio-word-45" src="audio_0440b70a.mp3"></audio>
+      
+      <audio id="audio-word-46" src="audio_e9f5a4ef.mp3"></audio>
+      
+      <audio id="audio-word-47" src="audio_f8bfb4b4.mp3"></audio>
+   </div>
+   
+  </div>
+  <script>
+    // FULL JAVASCRIPT LOGIC RESTORED
+    const defaultConfig = {
+      store_name: "Happy Market 开心超市",
+      welcome_message: "Learn English while shopping! 边购物边学英语!",
+      primary_color: "#10b981",
+      secondary_color: "#f59e0b",
+      background_color: "#fffbeb",
+      text_color: "#1f2937",
+      accent_color: "#ec4899"
+    };
+
+    // App state
+    let wallet = 50.00;
+    let cart = [];
+    let fridge = [];
+    let currentCategory = 'all';
+    let calcValue = '0';
+    let calcOperator = null;
+    let calcPrevValue = null;
+    let calcNewNumber = true;
+    let currentCookingRecipe = null;
+    let currentCookingStep = 0;
+
+    const products = [
+      // Fruits
+      { id: 1, emoji: '🍎', en: 'Apple', zh: '苹果', price: 1.50, category: 'fruits' },
+      { id: 2, emoji: '🍌', en: 'Banana', zh: '香蕉', price: 0.80, category: 'fruits' },
+      { id: 3, emoji: '🍊', en: 'Orange', zh: '橙子', price: 1.20, category: 'fruits' },
+      { id: 4, emoji: '🍇', en: 'Grapes', zh: '葡萄', price: 3.50, category: 'fruits' },
+      { id: 5, emoji: '🍓', en: 'Strawberry', zh: '草莓', price: 4.00, category: 'fruits' },
+      { id: 6, emoji: '🍑', en: 'Peach', zh: '桃子', price: 2.00, category: 'fruits' },
+      { id: 7, emoji: '🍒', en: 'Cherry', zh: '樱桃', price: 5.00, category: 'fruits' },
+      { id: 8, emoji: '🥝', en: 'Kiwi', zh: '猕猴桃', price: 1.80, category: 'fruits' },
+      { id: 9, emoji: '🍋', en: 'Lemon', zh: '柠檬', price: 0.90, category: 'fruits' },
+      { id: 10, emoji: '🍉', en: 'Watermelon', zh: '西瓜', price: 6.00, category: 'fruits' },
+      
+      // Vegetables
+      { id: 11, emoji: '🥬', en: 'Lettuce', zh: '生菜', price: 2.50, category: 'vegetables' },
+      { id: 12, emoji: '🥕', en: 'Carrot', zh: '胡萝卜', price: 1.00, category: 'vegetables' },
+      { id: 13, emoji: '🥦', en: 'Broccoli', zh: '西兰花', price: 2.80, category: 'vegetables' },
+      { id: 14, emoji: '🍅', en: 'Tomato', zh: '番茄', price: 1.50, category: 'vegetables' },
+      { id: 15, emoji: '🥒', en: 'Cucumber', zh: '黄瓜', price: 1.20, category: 'vegetables' },
+      { id: 16, emoji: '🧅', en: 'Onion', zh: '洋葱', price: 0.80, category: 'vegetables' },
+      { id: 17, emoji: '🧄', en: 'Garlic', zh: '大蒜', price: 0.60, category: 'vegetables' },
+      { id: 18, emoji: '🌽', en: 'Corn', zh: '玉米', price: 1.00, category: 'vegetables' },
+      { id: 19, emoji: '🥔', en: 'Potato', zh: '土豆', price: 0.70, category: 'vegetables' },
+      { id: 20, emoji: '🌶️', en: 'Pepper', zh: '辣椒', price: 1.50, category: 'vegetables' },
+      
+      // Drinks
+      { id: 21, emoji: '🥛', en: 'Milk', zh: '牛奶', price: 3.50, category: 'drinks' },
+      { id: 22, emoji: '🧃', en: 'Juice', zh: '果汁', price: 2.50, category: 'drinks' },
+      { id: 23, emoji: '🥤', en: 'Soda', zh: '汽水', price: 1.80, category: 'drinks' },
+      { id: 24, emoji: '💧', en: 'Water', zh: '水', price: 1.00, category: 'drinks' },
+      { id: 25, emoji: '🍵', en: 'Tea', zh: '茶', price: 2.00, category: 'drinks' },
+      { id: 26, emoji: '☕', en: 'Coffee', zh: '咖啡', price: 4.50, category: 'drinks' },
+      
+      // Dairy
+      { id: 27, emoji: '🧀', en: 'Cheese', zh: '奶酪', price: 5.00, category: 'dairy' },
+      { id: 28, emoji: '🥚', en: 'Eggs', zh: '鸡蛋', price: 3.00, category: 'dairy' },
+      { id: 29, emoji: '🧈', en: 'Butter', zh: '黄油', price: 4.00, category: 'dairy' },
+      { id: 30, emoji: '🍦', en: 'Ice Cream', zh: '冰淇淋', price: 4.50, category: 'dairy' },
+      
+      // Meat
+      { id: 31, emoji: '🥩', en: 'Steak', zh: '牛排', price: 12.00, category: 'meat' },
+      { id: 32, emoji: '🍗', en: 'Chicken', zh: '鸡肉', price: 6.00, category: 'meat' },
+      { id: 33, emoji: '🥓', en: 'Bacon', zh: '培根', price: 5.50, category: 'meat' },
+      { id: 34, emoji: '🍖', en: 'Pork', zh: '猪肉', price: 7.00, category: 'meat' },
+      { id: 35, emoji: '🐟', en: 'Fish', zh: '鱼', price: 8.00, category: 'meat' },
+      { id: 36, emoji: '🦐', en: 'Shrimp', zh: '虾', price: 10.00, category: 'meat' },
+      
+      // Bakery
+      { id: 37, emoji: '🍞', en: 'Bread', zh: '面包', price: 2.50, category: 'bakery' },
+      { id: 38, emoji: '🥐', en: 'Croissant', zh: '牛角包', price: 2.00, category: 'bakery' },
+      { id: 39, emoji: '🥯', en: 'Bagel', zh: '百吉饼', price: 1.50, category: 'bakery' },
+      { id: 40, emoji: '🎂', en: 'Cake', zh: '蛋糕', price: 15.00, category: 'bakery' },
+      { id: 41, emoji: '🧁', en: 'Cupcake', zh: '纸杯蛋糕', price: 3.00, category: 'bakery' },
+      
+      // Snacks
+      { id: 42, emoji: '🍪', en: 'Cookie', zh: '饼干', price: 2.50, category: 'snacks' },
+      { id: 43, emoji: '🍫', en: 'Chocolate', zh: '巧克力', price: 3.50, category: 'snacks' },
+      { id: 44, emoji: '🍬', en: 'Candy', zh: '糖果', price: 1.50, category: 'snacks' },
+      { id: 45, emoji: '🍿', en: 'Popcorn', zh: '爆米花', price: 2.00, category: 'snacks' },
+      { id: 46, emoji: '🥜', en: 'Peanuts', zh: '花生', price: 2.50, category: 'snacks' },
+      { id: 47, emoji: '🍩', en: 'Donut', zh: '甜甜圈', price: 1.80, category: 'snacks' },
+    ];
+
+    const cookingActions = [
+      { emoji: '🔪', en: 'Cut', zh: '切' },
+      { emoji: '🔪', en: 'Slice', zh: '切片' },
+      { emoji: '🔪', en: 'Chop', zh: '剁碎' },
+      { emoji: '🔪', en: 'Dice', zh: '切丁' },
+      { emoji: '🥣', en: 'Mix', zh: '混合' },
+      { emoji: '🥣', en: 'Stir', zh: '搅拌' },
+      { emoji: '🍳', en: 'Fry', zh: '煎' },
+      { emoji: '🍳', en: 'Deep fry', zh: '油炸' },
+      { emoji: '♨️', en: 'Boil', zh: '煮' },
+      { emoji: '♨️', en: 'Steam', zh: '蒸' },
+      { emoji: '🔥', en: 'Bake', zh: '烤' },
+      { emoji: '🔥', en: 'Roast', zh: '烘烤' },
+      { emoji: '🔥', en: 'Grill', zh: '烧烤' },
+      { emoji: '❄️', en: 'Freeze', zh: '冷冻' },
+      { emoji: '🧊', en: 'Chill', zh: '冷却' },
+      { emoji: '💧', en: 'Wash', zh: '洗' },
+      { emoji: '🥄', en: 'Pour', zh: '倒' },
+      { emoji: '🥄', en: 'Measure', zh: '量' },
+      { emoji: '🍽️', en: 'Serve', zh: '上菜' },
+      { emoji: '👃', en: 'Taste', zh: '品尝' },
+    ];
+
+    const recipes = [
+      {
+        name: 'Scrambled Eggs 炒鸡蛋',
+        emoji: '🍳',
+        ingredients: ['🥚 Eggs 鸡蛋', '🧈 Butter 黄油', '🧂 Salt 盐'],
+        steps: ['Crack 打破', 'Beat 打散', 'Heat 加热', 'Pour 倒入', 'Stir 搅拌', 'Serve 上菜'],
+        color: 'from-yellow-400 to-orange-400'
+      },
+      {
+        name: 'Fruit Salad 水果沙拉',
+        emoji: '🥗',
+        ingredients: ['🍎 Apple 苹果', '🍌 Banana 香蕉', '🍇 Grapes 葡萄', '🍊 Orange 橙子'],
+        steps: ['Wash 清洗', 'Cut 切', 'Mix 混合', 'Serve 上菜'],
+        color: 'from-green-400 to-emerald-500'
+      },
+      {
+        name: 'Grilled Cheese 烤奶酪三明治',
+        emoji: '🧀',
+        ingredients: ['🍞 Bread 面包', '🧀 Cheese 奶酪', '🧈 Butter 黄油'],
+        steps: ['Spread 涂抹', 'Layer 放置', 'Heat 加热', 'Flip 翻面', 'Serve 上菜'],
+        color: 'from-amber-400 to-yellow-500'
+      },
+      {
+        name: 'Smoothie 果昔',
+        emoji: '🥤',
+        ingredients: ['🍌 Banana 香蕉', '🍓 Strawberry 草莓', '🥛 Milk 牛奶'],
+        steps: ['Cut 切', 'Add 加入', 'Blend 搅拌', 'Pour 倒入', 'Serve 上菜'],
+        color: 'from-pink-400 to-rose-500'
+      },
+    ];
+
+    const detailedRecipes = [
+      {
+        id: 'fruit-salad', name: 'Fruit Salad 水果沙拉', emoji: '🥗', container: '🥗', category: 'fruits',
+        requiredIngredients: ['Apple', 'Banana'], optionalIngredients: ['Orange', 'Grapes', 'Strawberry', 'Kiwi', 'Peach'],
+        steps: [
+          { action: 'wash', text: 'Wash all fruits 清洗所有水果', emoji: '💧', verb: 'Wash 清洗' },
+          { action: 'cut', text: 'Cut fruits into pieces 把水果切成块', emoji: '🔪', verb: 'Cut 切' },
+          { action: 'mix', text: 'Mix everything in bowl 在碗里混合', emoji: '🥣', verb: 'Mix 混合' },
+          { action: 'chill', text: 'Chill for freshness 冷藏保鲜', emoji: '❄️', verb: 'Chill 冷却' },
+          { action: 'serve', text: 'Serve and enjoy! 上菜享用!', emoji: '🍽️', verb: 'Serve 上菜' }
+        ]
+      },
+      {
+        id: 'smoothie', name: 'Smoothie 果昔', emoji: '🥤', container: '🥤', category: 'fruits',
+        requiredIngredients: ['Banana', 'Milk'], optionalIngredients: ['Strawberry', 'Grapes', 'Ice Cream'],
+        steps: [
+          { action: 'cut', text: 'Cut fruits into pieces 把水果切成块', emoji: '🔪', verb: 'Cut 切' },
+          { action: 'add', text: 'Add ingredients to blender 加入搅拌机', emoji: '➕', verb: 'Add 加入' },
+          { action: 'blend', text: 'Blend until smooth 搅拌至顺滑', emoji: '🌪️', verb: 'Blend 搅拌' },
+          { action: 'pour', text: 'Pour into glass 倒入杯中', emoji: '🥤', verb: 'Pour 倒' },
+          { action: 'serve', text: 'Serve cold! 冷饮上桌!', emoji: '🍽️', verb: 'Serve 上菜' }
+        ]
+      },
+      {
+        id: 'scrambled-eggs', name: 'Scrambled Eggs 炒鸡蛋', emoji: '🍳', container: '🍳', category: 'dairy',
+        requiredIngredients: ['Eggs', 'Butter'], optionalIngredients: ['Milk', 'Cheese'],
+        steps: [
+          { action: 'crack', text: 'Crack eggs into bowl 把鸡蛋打入碗中', emoji: '🥚', verb: 'Crack 打破' },
+          { action: 'beat', text: 'Beat eggs well 把鸡蛋打散', emoji: '🥄', verb: 'Beat 打散' },
+          { action: 'heat', text: 'Heat pan with butter 用黄油加热锅', emoji: '🔥', verb: 'Heat 加热' },
+          { action: 'pour', text: 'Pour eggs into pan 把鸡蛋倒入锅中', emoji: '🍳', verb: 'Pour 倒入' },
+          { action: 'stir', text: 'Stir gently 轻轻搅拌', emoji: '🥄', verb: 'Stir 搅拌' },
+          { action: 'serve', text: 'Serve warm! 趁热上菜!', emoji: '🍽️', verb: 'Serve 上菜' }
+        ]
+      },
+      {
+        id: 'grilled-cheese', name: 'Grilled Cheese 烤奶酪三明治', emoji: '🥪', container: '🍞', category: 'bakery',
+        requiredIngredients: ['Bread', 'Cheese', 'Butter'], optionalIngredients: ['Tomato'],
+        steps: [
+          { action: 'spread', text: 'Spread butter on bread 在面包上涂黄油', emoji: '🧈', verb: 'Spread 涂抹' },
+          { action: 'layer', text: 'Layer cheese on bread 在面包上放奶酪', emoji: '🧀', verb: 'Layer 放置' },
+          { action: 'heat', text: 'Heat pan 加热锅', emoji: '🔥', verb: 'Heat 加热' },
+          { action: 'grill', text: 'Grill until golden 烤至金黄', emoji: '🍳', verb: 'Grill 烧烤' },
+          { action: 'flip', text: 'Flip to other side 翻到另一面', emoji: '🔄', verb: 'Flip 翻面' },
+          { action: 'serve', text: 'Serve hot! 趁热上桌!', emoji: '🍽️', verb: 'Serve 上菜' }
+        ]
+      }
+    ];
+
+    const moneyVocab = [
+      { emoji: '💵', en: 'Money', zh: '钱' }, { emoji: '💰', en: 'Price', zh: '价格' },
+      { emoji: '🛒', en: 'Buy', zh: '买' }, { emoji: '💳', en: 'Pay', zh: '支付' },
+      { emoji: '🧾', en: 'Receipt', zh: '收据' }, { emoji: '💲', en: 'Dollar', zh: '美元' },
+      { emoji: '🪙', en: 'Coin', zh: '硬币' }, { emoji: '💸', en: 'Spend', zh: '花费' },
+      { emoji: '💹', en: 'Total', zh: '总计' }, { emoji: '🏷️', en: 'Discount', zh: '折扣' },
+      { emoji: '👛', en: 'Wallet', zh: '钱包' }, { emoji: '🤑', en: 'Cheap', zh: '便宜' },
+      { emoji: '💎', en: 'Expensive', zh: '贵' }, { emoji: '✅', en: 'Afford', zh: '买得起' }
+    ];
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          document.getElementById('store-title').textContent = config.store_name || defaultConfig.store_name;
+          document.getElementById('welcome-text').textContent = config.welcome_message || defaultConfig.welcome_message;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [], borderables: [], fontEditable: undefined, fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['store_name', config.store_name || defaultConfig.store_name],
+          ['welcome_message', config.welcome_message || defaultConfig.welcome_message]
+        ])
+      });
+    }
+
+    // AUDIO HELPER
+    function playProductAudio(id) {
+        const audioElement = document.getElementById(`audio-word-${id}`);
+        if (audioElement) { audioElement.play(); }
+    }
+
+    // RENDER FUNCTIONS
+    function renderProducts() {
+      const grid = document.getElementById('products-grid');
+      const filtered = currentCategory === 'all' 
+        ? products 
+        : products.filter(p => p.category === currentCategory);
+      
+      grid.innerHTML = filtered.map(product => `
+        <div class="food-item bg-white rounded-2xl p-4 shadow-lg text-center relative" onclick="addToCart(${product.id}); playProductAudio(${product.id});">
+          <div class="absolute top-2 right-2 text-gray-300 opacity-50 text-xs">🔊</div>
+          <div class="text-5xl mb-2 float" style="animation-delay: ${Math.random() * 2}s">${product.emoji}</div>
+          <div class="font-bold text-gray-800">${product.en}</div>
+          <div class="text-gray-500 text-sm">${product.zh}</div>
+          <div class="mt-2 bg-emerald-100 text-emerald-700 rounded-full py-1 px-3 text-sm font-bold inline-block">
+            $${product.price.toFixed(2)}
+          </div>
+          <button class="mt-2 w-full bg-emerald-500 text-white py-2 rounded-xl font-bold hover:bg-emerald-600 transition text-sm">
+            Add 添加 +
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function renderCart() {
+      const itemsEl = document.getElementById('cart-items');
+      const emptyEl = document.getElementById('cart-empty');
+      const summaryEl = document.getElementById('cart-summary');
+      const countEl = document.getElementById('cart-count');
+      
+      countEl.textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+      
+      if (cart.length === 0) {
+        itemsEl.innerHTML = '';
+        emptyEl.classList.remove('hidden');
+        summaryEl.classList.add('hidden');
+        return;
+      }
+      
+      emptyEl.classList.add('hidden');
+      summaryEl.classList.remove('hidden');
+      
+      itemsEl.innerHTML = cart.map(item => `
+        <div class="cart-item flex items-center gap-4 bg-gray-50 rounded-2xl p-4">
+          <div class="text-4xl">${item.emoji}</div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800">${item.en}</div>
+            <div class="text-emerald-600 font-bold">$${item.price.toFixed(2)}</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="updateQty(${item.id}, -1); event.stopPropagation();" class="w-8 h-8 bg-gray-200 rounded-full">-</button>
+            <span class="w-8 text-center font-bold">${item.qty}</span>
+            <button onclick="updateQty(${item.id}, 1); event.stopPropagation();" class="w-8 h-8 bg-emerald-500 text-white rounded-full">+</button>
+          </div>
+          <div class="text-right">
+            <div class="font-bold text-lg">$${(item.price * item.qty).toFixed(2)}</div>
+            <button onclick="removeFromCart(${item.id}); event.stopPropagation();" class="text-red-400 hover:text-red-600 text-sm">Remove</button>
+          </div>
+        </div>
+      `).join('');
+      
+      const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      document.getElementById('subtotal').textContent = `$${total.toFixed(2)}`;
+      document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+      
+      const warningEl = document.getElementById('budget-warning');
+      const okEl = document.getElementById('budget-ok');
+      if (total > wallet) {
+        warningEl.classList.remove('hidden');
+        okEl.classList.add('hidden');
+      } else {
+        warningEl.classList.add('hidden');
+        okEl.classList.remove('hidden');
+      }
+    }
+
+    function renderCookingActions() {
+      const grid = document.getElementById('cooking-actions');
+      grid.innerHTML = cookingActions.map((action, i) => `
+        <div class="bg-gradient-to-br from-orange-100 to-amber-100 rounded-2xl p-4 text-center hover:scale-105 transition cursor-pointer">
+          <div class="text-4xl mb-2">${action.emoji}</div>
+          <div class="font-bold text-orange-700">${action.en}</div>
+          <div class="text-orange-500 text-sm">${action.zh}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderRecipes() {
+      const grid = document.getElementById('recipes-grid');
+      grid.innerHTML = recipes.map(recipe => `
+        <div class="bg-gradient-to-br ${recipe.color} rounded-2xl p-6 text-white">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="text-5xl">${recipe.emoji}</div>
+            <h3 class="text-xl font-bold">${recipe.name}</h3>
+          </div>
+          <div class="mb-4">
+            <h4 class="font-bold mb-2 opacity-90">Ingredients:</h4>
+            <div class="flex flex-wrap gap-2">
+              ${recipe.ingredients.map(i => `<span class="bg-white/20 px-2 py-1 rounded-lg text-sm">${i}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderVocab() {
+      const grid = document.getElementById('vocab-grid');
+      const allVocab = products.map(p => ({ id: p.id, emoji: p.emoji, en: p.en, zh: p.zh }));
+      const uniqueVocab = allVocab.filter((v, i, arr) => arr.findIndex(x => x.en === v.en) === i);
+      
+      grid.innerHTML = uniqueVocab.slice(0, 47).map((word, i) => `
+        <div class="bg-gradient-to-br from-violet-100 to-purple-100 rounded-2xl p-3 text-center hover:scale-105 transition cursor-pointer relative" onclick="playProductAudio(${word.id})">
+          <div class="absolute top-2 right-2 text-violet-400 text-xs">🔊</div>
+          <div class="text-3xl mb-1">${word.emoji}</div>
+          <div class="font-bold text-violet-700 text-sm">${word.en}</div>
+          <div class="text-violet-500 text-xs">${word.zh}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderMoneyVocab() {
+      const grid = document.getElementById('money-vocab');
+      grid.innerHTML = moneyVocab.map((word, i) => `
+        <div class="bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl p-3 text-center hover:scale-105 transition cursor-pointer">
+          <div class="text-3xl mb-1">${word.emoji}</div>
+          <div class="font-bold text-emerald-700 text-sm">${word.en}</div>
+          <div class="text-emerald-500 text-xs">${word.zh}</div>
+        </div>
+      `).join('');
+    }
+
+    function switchTab(tab) {
+      ['shop', 'cart', 'cooking', 'vocab', 'kitchen', 'stories'].forEach(t => {
+        const section = document.getElementById(`section-${t}`);
+        const btn = document.getElementById(`tab-${t}`);
+        if(section) section.classList.add('hidden');
+        if(btn) {
+            btn.classList.remove('active', 'text-emerald-600', 'border-emerald-500', 'bg-emerald-50');
+            btn.classList.add('text-gray-500', 'border-transparent');
+        }
+      });
+      
+      const section = document.getElementById(`section-${tab}`);
+      const btn = document.getElementById(`tab-${tab}`);
+      if(section) section.classList.remove('hidden');
+      if(btn) {
+          btn.classList.add('active', 'text-emerald-600', 'border-emerald-500', 'bg-emerald-50');
+          btn.classList.remove('text-gray-500', 'border-transparent');
+      }
+      
+      if (tab === 'kitchen') {
+        renderFridge();
+        renderRecipeSuggestions();
+      }
+    }
+
+    function filterCategory(category) {
+      currentCategory = category;
+      renderProducts();
+    }
+
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      const existing = cart.find(item => item.id === productId);
+      if (existing) { existing.qty++; } else { cart.push({ ...product, qty: 1 }); }
+      
+      renderCart();
+      showToast(`Added ${product.en}!`);
+      document.getElementById('tab-cart').classList.add('cart-shake');
+      setTimeout(() => document.getElementById('tab-cart').classList.remove('cart-shake'), 500);
+    }
+
+    function updateQty(productId, delta) {
+      const item = cart.find(i => i.id === productId);
+      if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) { removeFromCart(productId); } else { renderCart(); }
+      }
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(i => i.id !== productId);
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      renderCart();
+      showToast('Cart cleared!');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2000);
+    }
+
+    // Wallet Logic
+    function openWalletModal() {
+      document.getElementById('wallet-input').value = wallet.toFixed(2);
+      document.getElementById('wallet-modal').classList.remove('hidden');
+    }
+    function closeWalletModal() { document.getElementById('wallet-modal').classList.add('hidden'); }
+    function setWallet(amount) { document.getElementById('wallet-input').value = amount.toFixed(2); }
+    function saveWallet() {
+      const input = document.getElementById('wallet-input');
+      wallet = parseFloat(input.value) || 0;
+      document.getElementById('wallet-display').textContent = `$${wallet.toFixed(2)}`;
+      closeWalletModal();
+      renderCart();
+      showToast(`Wallet updated!`);
+    }
+
+    // Calculator Logic
+    function toggleCalculator() {
+      const calc = document.getElementById('calculator');
+      const toggle = document.getElementById('calc-toggle');
+      calc.classList.toggle('hidden');
+      toggle.classList.toggle('hidden');
+    }
+    function calcInput(key) {
+      const display = document.getElementById('calc-display');
+      if (key === 'C') {
+        calcValue = '0'; calcOperator = null; calcPrevValue = null; calcNewNumber = true;
+      } else if (key === '±') {
+        calcValue = (parseFloat(calcValue) * -1).toString();
+      } else if (key === '%') {
+        calcValue = (parseFloat(calcValue) / 100).toString();
+      } else if (['+', '-', '×', '÷'].includes(key)) {
+        calcPrevValue = calcValue; calcOperator = key; calcNewNumber = true;
+      } else if (key === '=') {
+        if (calcOperator && calcPrevValue !== null) {
+          const a = parseFloat(calcPrevValue);
+          const b = parseFloat(calcValue);
+          let result;
+          switch (calcOperator) {
+            case '+': result = a + b; break;
+            case '-': result = a - b; break;
+            case '×': result = a * b; break;
+            case '÷': result = b !== 0 ? a / b : 'Error'; break;
+          }
+          calcValue = typeof result === 'number' ? result.toFixed(2).replace(/\.?0+$/, '') : result;
+          calcOperator = null; calcPrevValue = null; calcNewNumber = true;
+        }
+      } else if (key === '.') {
+        if (!calcValue.includes('.')) { calcValue += '.'; }
+      } else {
+        if (calcNewNumber) { calcValue = key; calcNewNumber = false; } else { calcValue = calcValue === '0' ? key : calcValue + key; }
+      }
+      display.value = calcValue;
+    }
+
+    // Kitchen Logic
+    function transferToFridge() {
+      if (cart.length === 0) { showToast('Cart is empty!'); return; }
+      const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      if (total > wallet) { showToast('Not enough money!'); return; }
+      
+      wallet -= total;
+      document.getElementById('wallet-display').textContent = `$${wallet.toFixed(2)}`;
+      
+      cart.forEach(cartItem => {
+        const existingInFridge = fridge.find(f => f.id === cartItem.id);
+        if (existingInFridge) { existingInFridge.qty += cartItem.qty; } else { fridge.push({ ...cartItem }); }
+      });
+      
+      cart = [];
+      renderCart();
+      renderFridge();
+      renderRecipeSuggestions();
+      showToast('Moved to fridge!');
+    }
+    
+    function renderFridge() {
+      const itemsEl = document.getElementById('fridge-items');
+      const emptyEl = document.getElementById('fridge-empty');
+      if (fridge.length === 0) {
+        itemsEl.innerHTML = ''; emptyEl.classList.remove('hidden'); return;
+      }
+      emptyEl.classList.add('hidden');
+      itemsEl.innerHTML = fridge.map(item => `
+        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-3 text-center relative group">
+          <div class="text-4xl mb-1">${item.emoji}</div>
+          <div class="text-xs font-bold text-gray-700">${item.en}</div>
+          <div class="mt-1 bg-cyan-500 text-white rounded-full text-xs font-bold px-2 py-0.5 inline-block">${item.qty}</div>
+        </div>
+      `).join('');
+    }
+    
+    function renderRecipeSuggestions() {
+      const suggestionsEl = document.getElementById('recipe-suggestions');
+      if (fridge.length === 0) {
+        suggestionsEl.innerHTML = `<div class="col-span-full text-center py-8 text-gray-400"><p>No ingredients yet!</p></div>`;
+        return;
+      }
+      
+      const fridgeItemNames = fridge.map(f => f.en);
+      const possibleRecipes = detailedRecipes.filter(recipe => {
+        return recipe.requiredIngredients.every(ing => fridgeItemNames.includes(ing));
+      });
+      
+      if (possibleRecipes.length === 0) {
+        suggestionsEl.innerHTML = `<div class="col-span-full text-center py-8 text-gray-400"><p>Can't cook anything yet!</p></div>`;
+        return;
+      }
+      
+      suggestionsEl.innerHTML = possibleRecipes.map(recipe => `
+          <div class="bg-gradient-to-br from-orange-400 to-rose-500 rounded-2xl p-5 text-white relative overflow-hidden">
+            <div class="relative">
+              <div class="text-5xl mb-3">${recipe.emoji}</div>
+              <h3 class="text-xl font-bold mb-3">${recipe.name}</h3>
+              <button onclick="startCooking('${recipe.id}')" class="w-full bg-white text-orange-600 py-2 rounded-xl font-bold">Start Cooking!</button>
+            </div>
+          </div>
+      `).join('');
+    }
+    
+    function startCooking(recipeId) {
+      currentCookingRecipe = detailedRecipes.find(r => r.id === recipeId);
+      currentCookingStep = 0;
+      document.getElementById('game-recipe-name').textContent = currentCookingRecipe.name;
+      document.getElementById('cooking-container-emoji').textContent = currentCookingRecipe.container;
+      document.getElementById('cooking-game').classList.remove('hidden');
+      document.getElementById('cooking-complete').classList.add('hidden');
+      document.getElementById('cooking-steps').classList.remove('hidden');
+      
+      // Ingredients in bowl
+      const fridgeItemNames = fridge.map(f => f.en);
+      const availableIngredients = [...currentCookingRecipe.requiredIngredients, ...currentCookingRecipe.optionalIngredients]
+        .filter(ing => fridgeItemNames.includes(ing));
+      
+      const bowlEl = document.getElementById('cooking-bowl');
+      bowlEl.innerHTML = availableIngredients.map(ing => {
+        const prod = products.find(p => p.en === ing);
+        return `<div class="text-4xl float">${prod?.emoji}</div>`;
+      }).join('');
+      
+      document.getElementById('cooking-status').textContent = `Let's cook ${currentCookingRecipe.name}!`;
+      renderCookingSteps();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    function renderCookingSteps() {
+      const stepsEl = document.getElementById('cooking-steps');
+      stepsEl.innerHTML = currentCookingRecipe.steps.map((step, index) => {
+        const isCompleted = index < currentCookingStep;
+        const isCurrent = index === currentCookingStep;
+        return `
+          <div class="flex items-center gap-4 bg-white/20 backdrop-blur rounded-2xl p-4 ${isCompleted ? 'opacity-60' : ''} ${isCurrent ? 'ring-4 ring-white' : ''}">
+            <div class="text-5xl ${isCurrent ? 'wiggle' : ''}">${step.emoji}</div>
+            <div class="flex-1">
+              <div class="font-bold text-lg mb-1">${step.verb}</div>
+              <div class="text-sm opacity-90">${step.text}</div>
+            </div>
+            ${isCompleted ? '<div class="text-4xl">✅</div>' : isCurrent ? `
+              <button onclick="completeCookingStep()" class="bg-white text-purple-600 px-6 py-3 rounded-xl font-bold">Do It!</button>
+            ` : '<div class="text-3xl opacity-40">🔒</div>'}
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function completeCookingStep() {
+      const step = currentCookingRecipe.steps[currentCookingStep];
+      document.getElementById('cooking-status').textContent = `${step.verb} ✓ Great job!`;
+      currentCookingStep++;
+      
+      if (currentCookingStep >= currentCookingRecipe.steps.length) {
+        setTimeout(() => {
+          document.getElementById('cooking-steps').classList.add('hidden');
+          document.getElementById('cooking-complete').classList.remove('hidden');
+          document.getElementById('completed-dish-name').textContent = currentCookingRecipe.name;
+          
+          // Remove from fridge
+          const usedIngredients = [...currentCookingRecipe.requiredIngredients, ...currentCookingRecipe.optionalIngredients];
+          usedIngredients.forEach(ing => {
+            const fridgeItem = fridge.find(f => f.en === ing);
+            if (fridgeItem) {
+              fridgeItem.qty--;
+              if (fridgeItem.qty <= 0) fridge = fridge.filter(f => f.id !== fridgeItem.id);
+            }
+          });
+          renderFridge();
+        }, 1000);
+      } else {
+        renderCookingSteps();
+      }
+    }
+    
+    function exitCookingGame() {
+      document.getElementById('cooking-game').classList.add('hidden');
+      renderRecipeSuggestions();
+    }
+
+    // Initialize
+    renderProducts();
+    renderCart();
+    renderCookingActions();
+    renderRecipes();
+    renderVocab();
+    renderMoneyVocab();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bfe100c61fc20e9',t:'MTc2ODczODk5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
